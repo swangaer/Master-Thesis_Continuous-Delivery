@@ -225,9 +225,9 @@
 		- CD stellt klaren Prozess mit Vorgaben zu Automatisierung / Konfigurationsmanagement / Qualität / Def of Done / Verantwortlichkeiten bereit.
 		- CD unterstützt ITIL Change und Release Management, wenn ITIL in leichtgewichtiger Art und Weise betrieben wird.
 
-Deployment Pipeline und Liefersystem
+	3. Deployment Pipeline und Liefersystem
 	
-	Einleitung:
+		Einleitung:
 		- Bezug zu DevOps: DevOps kann die Deployment-Pipeline als Realisierung eines Liefersystems betrachtet werden
 			-> Deployment-Pipeline bildet den Prozess auf ein Liefersystems ab
 		- Bezug zu untersuchenden Werkzeugen: Soll den Kontext der Werkzeuge zeigen und Vergleich zum derzeitigen Lieferprozess ermöglichen
@@ -236,294 +236,316 @@ Deployment Pipeline und Liefersystem
 		- Deployment-Pipeline untersucht den Aufbau -> Build und Deployment-Skripting für Automatisierung
 			- automatisches Deployment in die Produktivumgebung erfordert Erfüllung aller aktzeptanz Kriterien, funktional als auch nicht funktional
 			- manuelle Test sind aufwändig und Kostenintensiv, Exploratives Testen ist aber nur manuell möglich
-		- Liefersystem befasst sich mit Infrastruktur und Umgebung die CD ermöglicht / Untersuchung von Problemstellung aus Datenbanken, wenn automatisiert ausgeleifert wird / Umgang mit neuen noch nicht vollständigen Funktionalitäten / Konflikte durch Versionsmanagement vermeiden
+		- Liefersystem befasst sich mit Infrastruktur und Umgebung die CD ermöglicht / Untersuchung von Problemstellung aus Datenbanken, wenn automatisiert ausgeleifert wird / Konflikte durch Versionsmanagement vermeiden
 			- Um Test in Produktivumgebung ähnlicher Umgebung durchzuführen ist schnelle proivisionierung von Infrastruktur notwendig und Verteilung der RC, in der (Web-)Produktivumgebung muss die Aktualisierung der 
 				-> Liefersystem muss durchdacht und geplant sein
 				
-	Deployment Pipeline nach HF:
-		DP-Einleitung:
-			- Deployment-Pipeline ist Grundkonzept des Liefersystems, welches auf CI aufbaut.
-				- Exkurs CI:
-					Features von CI nach Duvall:
-						- Frühere Problemidentifizierung durch CI \cite[S. 6]{Duvall07}
-							- arbeiten alle Softwarekomponenten zusammen
-							- Wie komplex ist der Quellcode
-							- Werdem im Tema Coding standards umgesetzt
-							- Wie hoch ist die Testabdeckung
-							- Alle Tests auch nach letzten Änderung erfolgreich
-							- Werden die Kapazitätsanforderungen erfüllt
-							- Funktionierte das letzte Deployment
-						- "Build Software at Every Change" \cite[S. 4]{Duvall07}
-							- 
-						- CI-Szenario \cite[S. 5]{Duvall07}
-							-> Abbildung in \cite[S. 5]{Duvall07}
-				- frühe und kontinuierliche Integration der Software gibt schnelles und frühes Feedback, ob alle Komponenten in späterer Produktionsumgebung zusammenspielen 
-				- Abrenzung zu CI: -> CD = CI + automatisierte Akeptanztests + Deployment in Produktion  \cite[S. 105]{CD}
-				-> Grafik von Schlegel: Javamagazin: CD-CI
-			- CI nicht genug:
-				- HF sehen, CI ist nicht genug da nur auf Dev-Teams fokussiert -> Output von CI ist Input für manuelles Testen und den Rest des Release-Systems  \cite[S. 105]{CD}				
-		Ziele der DP:
-			Problembeschreibung:
-				- Verschwendung in Release-System durch: \cite[S. 105]{CD}
-					- Dokumente oder Fixes auf die Build / Ops warten
-					- Tester warten auf gute "Builds" 
-					- Dev erhält Bug-Reports wochen nach dem schon zu neuen Funktionalitäten übergegangen wird
-					- Entdeckung am Ende des Dev-Prozesses, das die Architektur nicht die nicht-funktionalen Anforderungen erfüllt
-				-> erhöht die Gefahr von fehlerhafter Software durch lange Feedback-Zyklen zwischen Dev - Test und Ops
-				- Problem des Release: bei Scheitern, Business muss auf neue Funktionalitäten warten oder kritische Betriebsressourcen sind gestört. Lösung:
-					- Release Plan bei dem jeder zugriff hat
-					- maximale Automatisierung / minimale fehlerbehaftete manuelle Eingriffe
-					- routiniertes Training in Produktions-ähnlicher Umgebung
-					- Möglichkeit des Zurückgehensm wenn etwas schief geht
-					- Strategie, Konfiguration und Produktions-Daten als Teil des Updates / Rollback \cite[S. 129]{CD}
-			Lösungsansatz nach HF:
-				Technisch.- organisatorische Lösung:
-					- HF schlagen eine automatisierte DP vor -> da automatische Manifestierung des Lieferprozesses
-					- Entwicklung eines Modells, um Software vom Check-In zum Release zu bekommen -> "Concept to Cash" (Wertstromanalyse des Lieferprozesses)
-					- Neu Form der Zusammenarbeit wird benötigt: 
-					- Deployment Pipeline kann nur durch gute Zusammenarbeit zwischen den beteiligten Individuen entstehen
-				Prozessvorschlag:
-					- das Build durchläuft die Pipeline bis zum Release mehrfach -> in Stufen: 
-						- Delivery Team
-						- Version Control
-						- Build & Test
-						- Automated Acceptance Test
-						- User Acceptance Test
-						- Release
-					- Grafik -> Sequenzdiagramm \cite[S. 109]{CD}
-					- automatisierung der Teilschritte durch Skripte und Tool-Chain
-						-> Fundamental: eine automatisierter Softwarelieferprozess schließt menschliche Handlung nicht aus, 
-							-> stellt sicher das fehleranfällige und komplexe schritte automatisiert, wiederholbar und verlässlich sind!					
-				Vorteile:
-					- HF sehen in dieser Strategie folgende Vorteile:
-						- effektiv wenn nur gründlich getestet SW in Produktion geliefert wird -> Test bei jedem Durchlauf der Deployment-Pipeline
-							- wird nur durch Reihe von automatisierten Akzeptanztests möglich
-						- Ein derartiger Process ist schnell, wiederholbar und verlässlich
-						- auch dringende Bugfixes durchlaufen den gleichen Prozess und werden auf gleiche Weise getestet wie normales Release
-						- Disziplin der Deployment Pipeline schwächt Fehler ab, die durch neue Konfiguration oder unvorhersehbare Interaktion der beteiligen Komponenten der Systemumgebung entstehen können
-		Struktur der DP:
-			- Grafik -> Basic deployment pipeline \cite[S. 111]{CD}
-			- Pipeline kann in Stages untergliedert werden, Einheiten im Lieferprozess: Commit-Stage, Autom. Akzeptance Stage, Man- test-Stage, Release-Stage \cite[S. 109-110]{CD}
-				-> Commit Stage: 
-					-> Prozess von CI
-					- stellt sicher, das das System auf dem technischen Niveau arbeitet -> es kompiliert, Komponententests sind erfolgreich und Code-Analyse ist erfolgreich
-					- beginnt mit Commit von Änderungen die ein Entwickler am Quellcode vorgenommen hat -> Versionskontrollsystem
-					- CI-System reagiert mit neuer Instanz des Softwarelieferprozesses -> Laufzeit sollte 5-10 Minuten (ideal) -> Paralellisierung \cite[S. 105-120]{CD}
-					- Schritte: Kompilieren / Commit-Test (Komponententests) / Binärdaten erzeugen / statische Codeanalyse (White-Box) / Artefakte wie Testdantebank erstellen \cite[S. 120]{CD}
-					- Metriken: Testabdeckung / Kodedubletten / Zyklomatische Komplexität / Afferente und efferente Kopplung / Anzahl von Warnungen / Code Style \cite[S. 121]{CD}
-						-> Testabdeckung: Tools wie Sonar berechnen die Abdeckung von Code-zeilen, die von einem Test abgedeckt werden. \cite{sonar_testcoverage}
-						-> Zyklomatische Zahl misst die strukturelle Komplexität des Quellcodes an hand des Kontrollflussgraphen und gibt die menge unabhängiger Pfade im Programmfluss an. Wird jeder Pfade des Kontrollflussgraphen einmal durchlaufen, ergibt sich eine Abdeckung von 100 % \cite[S. 100 f]{sl_basiswissen_sw_test}
-						-> afferrente Kopplung beschreibt die Anzahl der Klassen außerhalb eines Paketes, die von Klassen innerhalb des Paktes abhängen (incomming), efferente Kopplung hingegen ist die Anzalh von Klassen außerhalb eines Paketes von denen Klassen innerhalb des Paketes abhängen (outgoing). Beschreibung für stabilität -> I = Ce / Ca + Ce -> Range [0,1] 0 ist stabil. \cite[S. 23-24]{martin_design_principles}
-!						-> Warnungen und Code-Style sind nicht beseitigte Schwachstellen -> Java Code Conventions, welche Sun folgt und empfiehlt -> filenmaes, file-organisation, Einrückung, Kommentatare, Declarationen, Namensvergabe \cite{java_code_conv}
-					- CI-System speichert Artefakte in einem Repository oder es können Systeme wie Nexus oder Artifactory genutzt werden -> Links zu Nexus und Artifactory
-					- Binärdateien einer Version nur einmal kompilieren -> wird in allen Stages (Test etc.) benötigt -> mehrfaches Erstellen nicht empfohlen weil: \cite[S. 113]{CD}
-						- kosten Zeit und ist deshalb nich effektiv
-						- Binärdaten die in Produktion geliefert werden, sollten exakt identisch mit denen des Akzeptanztests sein.
-						-> Gefahr, dass Änderungen während der Pipeline an der Quellcodebasis vorgenommen werden -> Dann unterschied zwischen getesteter und in Produktion released (Revisionssicherheit)
-						-> Konfigurationsmanagement notwendig, da Binärdateien nicht für eine bestimmte Umgebung erstellt werden können -> felxibilität und wartbarkeit werden reduziert
-				-> Automated Acceptance test stages:
-					-> Prüft ob eine Anwendung in Produktion gehen kann -> RC?
-					- Akzeptanztests: werden Kundenanforderungen erfüllt, ist die Spezifikation erfüllt, kann die Anwendung in Produktion deployt werden? \cite[S. 124]{CD}
-					- System erfüllt funktionale und nicht-funktionale Anforderungen, Verhalten erfüllt die Bedürfnisse des Nutzers und die Spezifikation des Auftraggebers 
-						-> Nichtfunktionale Tests: Kapazität / Sicherheit / Service-Level-Agreement \cite[S. 128]{CD}			
-					- Regressionstest das keine Fehler sich in bestehendes Verhalten geschlichen haben \cite[S. 124]{CD}
-					- Produktionsumgebung wenn komplex und teuer -> kleiner skallierte Version nutzen (kleine Anzahl von Middleware-Server)
-					- Verhalten: schlägt eine Pipeline fehl, sollte dies unverzüglich behoben werden -> Verantwortung beim ganzen Team \cite[S. 125]{CD}
-					- Fail bedeutet -> nicht fähig ausgeliefert zu werden \cite[S. 126]{CD}
-					- längerlaufende Akzeptanztests -> Aufteilung in Suits (User Akzeptanz / Kapazität) für parallele Ausführung
-				-> Manuell test stages: 
-					- Das System ist bedienbar und erfüllt die Anforderungen. Hier werden Fehler aufgedeckt, die nicht durch automatisierte Tests abgedeckt werden können - Verifiziert, das Wert für den Anwender produziert wurde
-					- Tester prüfen ob Akzeptanztests das Verhalten des Systems testen durch Validierung der Akzeptanzkriterien \cite[S. 128]{CD}
-				-> Release stage / Deployment: 
-					- Liefert das System aus (Paket oder Deployment in Staging / Produktivumgebung
-					- Deployment muss auch Test-Systeme berücksichtigen \cite[S. 126]{CD}
-					- Ansicht was aktuelle deployt ist! \cite[S. 126]{CD}
-					- Visualisierung / Berichte / Autorisierung \cite[S. 126]{CD}
-					- -> eigenes System: liste mit release-Kandidaten / Button zum deployen für Version und Umgebung der Wahl \cite[S. 126]{CD}
-					- SSP für Tester, die eine bestimmte Version zum testen wählen können. \cite[S. 126]{CD}
-				-> Zusätzliche Stages je nach Art des Lieferprozesses, müssen hinzugefügt werden			
-		Ablaufsteuerung:
-			- Gleiches Skript für Deployment, unterschiedliche Umgebungseinstellungen können Properties Files / Datenbanken / LDAP gehalten werden \cite[S. 115-116]{CD} 		
-			- Pipeline-Trigger: \cite[S. 118-119]{CD}
-				- SVN-Check-In -> erfolgreiche Stage triggert die nächste
-				- Bsp: Build-Stage triggert Akzeptanz-Stage -> SVN-Ckeck-in einer neuen Version -> Build der jeweils neusten Version, Check-Ins dazwischen sollten ignoriert werden, wenn Akzeptanz-Stage fertig, neustes Build testen ....
-			- Building on success / Bedingungen für den RC \cite[S. 132]{CD}
-				- Code kompiliert
-				- Code macht das was der Entwickler denkt, was er machen sollte (Unit-Test)
-				- System macht, was die Analysten / Nutzer denken, was es sollte (Akzeptanztests)
-				- Konfiguration und Infrastruktur wird gemanaged / analog zur Produktivumgebung
-				- Alle Komponenten am Platz, da deployt werden konnte
-				- Deployment System selbst arbeitet -> da es bei Entwicklungsumgebung / Akzeptanzumgebung / Testumgebung für Deployment schon angewandt wurde
-				- Versionskontrolle hällt alles für das Deployment bereit, ohne manuelle eingriffe -> System wurde bereits mehrfach deployt
-			- Nach Deployment Smoke-Test, der prüft ob die Anwendung läuft, sowie jeder abhängige Dienst (z.B. Datenbank) \cite[S. 117]{CD}
-		Vorraussetzungen für DP:
-			- Planung:
-			- Vorgehensweise bei der Erstellung der Pipeline \cite[S. 133]{CD}
-				- Wertstromanalyse des Prozesses + lauffähiges Skelett
-					- Schritte niederschreiben mit Stift und Papier die im Prozess derzeit ablaufen
-					- Stage für Stage konstruieren (Commit-Stage mit Test / Akzeptance-Stage / ...)
-					- Neues Projekt -> lauffähiges Skelett mit Hello World (am besten vor der eigentlichen Arbeit)
-				- Build + Deployment-Prozess automatisieren
-					- Quellcode als Input -> Binärdatein als Output
-					- jedes Mal nach Check-In -> CI-System
-					- Deployen nach UAT env + Push-Button Deployment in Umgebung -> für jedes Build der Applikation (von CI) + Deplyoment-Test (Smoke)
-				- Autom. Unit-Tests + Code-Analyse \cite[S. 135]{CD}
-					- Teil der Commit-Stage
-					- benötigen kein komplexes Set-Up / benötigen keine laufende Instanz der Anwendung
-					- Laufzeit > 5 Minuten -> Aufsplitten in paralell laufende Suites
-				- Autom. Akzeptanz-Tests
-					- Akzeptance-Test-Framework Start-up -> Reports einsammeln am Ende des Durchlaufs
-					- funktionale / nicht funktionale Anfordeurngen
-				- Autom. Release auf Produktion
-				- Komplexe Anwendungen / Komponenten
-					- komplexe Anwendungen in kleinen eigenen Pipelines bauen und testen
-					- alles zusammenfügen und Komplettsystem testen
-				-> inkrementell implementieren
-				-> Daten sammeln, wann gestarten, wann welche stage ... -> auswertung
-				-> Pipeline ist eine "lebendes System" und muss stetig weiterentwickelt und angepasst werden \cite[S. 137]{CD}
-			- Infrastruktur:
-				- Test ~= Produktion: netzwerk-Topologie / firewall, OS + patchen, App-Stack, Applikationsdaten
-			- Organisation:
-				- Automatisiertes Deployment: Problem häufig da nicht ausreichende Kontrolle über Produktionssystem \cite[S. 129]{CD}
-					-> Alle Änderungen am System sollten automatisiert erfolgen (Konfiguration / SW-Stack / Netzwerk-Topologie / State)
-					-> Probleme lassen sich schnell verfolgen / Konfigurationen zurücksetzen ... (bei Skripte + SVN) -> bessere Wartbarkeit
-		Exk.: Build und Deployment Skripting:
-			- Ermöglicht die Pipeline und ist Grundtechnik um Binaries zu erstellen 
-				-> auch unterstützung zur Auslieferung auf die Zielplattform vorhanden.
-			- "Skript" als weiter Bereich der Automatisierung von Aufgaben gemeint
-			- Build-Tool - Aufgabe: Netzwerk von Abhängigkeiten modelieren
-			- Verschiedene Tools am Markt, im Java-Umfeld Ant und Maven \cite[S. 147-149]{CD}
-				- ant \cite[S. 147-148]{CD}
-					- Task-orientiert
-					- XML als DSL zur def von Tasks
-					- Kompilierung / Filesystem-Tasks
-					- cross-plattform Kompatibel
-				- maven \cite[S. 149-]{CD}
-					- onvention over configuration -> Projektstruktur durch Maven vorgegeben
-					- automatisches Management von Java libs
-					-> Maven Autoupdate kann Build-fehler verursachen -> unvorhersehbar  -> mglw. nicht reproduzierbare Build!
-			- Prinzipien:
-				- Je Stage eine Build-Skript
-					-> dem Domain-Driven-Design entlehnt \cite[S. 152]{CD}
-					-> Deployment-Pipeline hat organisationsprinzip um Verantwortlichkeiten zwischen Build-Skripts aufzuteilen
-				- Erfordert Zusammenarbeit von Entwicklern und IT-Betrieb -> DevOps
-				- OS-Spezifisches Packetierungs-Werkzeug nutzen, da dann Tools wie Puppet genutzt werden können, um Pakete zu verteilen:
-				- ....
-				- Zurückverfolgung von deployten Binärdaten zur Versionsnummer der Versionsverwaltung \cite[S. 165]{CD}
-				- Binärdatein sollten nicht in das Versionsverwaltungssystem eingecheckt werden \cite[S. 166]{CD}
-					-> steht in Konflikt mit Nummernsystem der Versionsverwaltung
-					-> geteiltes Dateisystem (e.g. Netzlaufwerk / FTP ...) um Binärdatein und Berichte zu verwalten
-			- Schritte:
-				- Umgebung einrichten: Script muss häufig auf verschiedenen Systemen laufen
-					-> Datenbank upgraden, neue Binärdatei deployen, Dienst von dem die Anwendung abhängt aktualisieren \cite[S. 161]{CD}
-					-> Software-Layer muss beachtet werden (Hardware - OS - Middleware - App / Service / Komponenten + jeweilige Konfiguration) \cite[S. 162]{CD}
-					-> nach HF drei Möglichkeiten: \cite[S. 161]{CD}
-						- Skript, welches sich auf die Systeme einloggt und Änderungen durchführt 
-						- Lokales Skript, wird durch Agents auf allen Systemen ausgeführt
-						- Package der genutzten Platform bauen + Infrastruktur-Management-Tool das die Änderungen übernimmt (besste Option)
+		- Deployment Pipeline nach HF:
+			DP-Einleitung:
+				- Deployment-Pipeline ist Grundkonzept des Liefersystems, welches auf CI aufbaut.
+				- Abgrenzung zu CI notwendig
+					- Exkurs CI:
+						Features von CI nach Duvall:
+							- Ziel ist deploybare SW zu erstellen. 
+							- "Build Software at Every Change" \cite[S. 4]{Duvall07}							
+							- Kleine Änderungen am Quellcode führen zu einer Integration in die Code-Basis in Form einer regulären Aufgabe\cite[S. 6]{Duvall07}
+							- frühe und kontinuierliche Integration der Software gibt schnelles und frühes Feedback, ob alle Komponenten in späterer Produktionsumgebung zusammenspielen 
+							- Frühe Problemidentifizierung durch CI \cite[S. 6]{Duvall07}
+								- arbeiten alle Softwarekomponenten zusammen
+								- Wie komplex ist der Quellcode
+								- Werdem im Tema Coding standards umgesetzt
+								- Wie hoch ist die Testabdeckung
+								- Alle Tests auch nach letzten Änderung erfolgreich
+								- Werden die Kapazitätsanforderungen erfüllt
+								- Funktionierte das letzte Deployment
+							- CI-Szenario \cite[S. 5]{Duvall07}
+								-> Abbildung in \cite[S. 5]{Duvall07}
+					- Abrenzung zu CI: -> CD = CI + automatisierte Akeptanztests + Deployment in Produktion  \cite[S. 105]{CD}
+					-> Grafik von Schlegel: Javamagazin: CD-CI
+				- CI nicht genug:
+					- HF sehen, CI ist nicht genug da nur auf Dev-Teams fokussiert -> Output von CI ist Input für manuelles Testen und den Rest des Release-Systems  \cite[S. 105]{CD}				
+					- CI nimmt die frühe Integration der SW in den Fokus
+					- DP schließt CI-Konzept mit ein und erweitert dieses, der Fokus wird weiter in Richtung Release gerückt.
+					
+			3.1 Ziele der DP:
+				Problembeschreibung:
+					- Verschwendung in Release-System durch: \cite[S. 105]{CD}
+						- Dokumente oder Fixes auf die Build / Ops warten
+						- Tester warten auf gute "Builds" 
+						- Dev erhält Bug-Reports wochen nach dem schon zu neuen Funktionalitäten übergegangen wird
+						- Entdeckung am Ende des Dev-Prozesses, das die Architektur nicht die nicht-funktionalen Anforderungen erfüllt
+					-> erhöht die Gefahr von fehlerhafter Software durch lange Feedback-Zyklen zwischen Dev - Test und Ops
+					- Problem des Release: bei Scheitern, Business muss auf neue Funktionalitäten warten oder kritische Betriebsressourcen sind gestört. 
+					- Ziele der DP:
+						- Release Plan bei dem jeder zugriff hat
+						- maximale Automatisierung / minimale fehlerbehaftete manuelle Eingriffe
+						- routiniertes Training in Produktions-ähnlicher Umgebung
+						- Möglichkeit des Zurückgehensm wenn etwas schief geht
+						- Strategie, Konfiguration und Produktions-Daten (DB) als Teil des Updates / Rollback \cite[S. 129]{CD}
+			3.2 Lösungsansatz nach HF:
+					Technisch.- organisatorische Lösung:
+						- HF schlagen eine automatisierte DP vor -> da automatische Manifestierung des Lieferprozesses
+						- Entwicklung eines Modells, um Software vom Check-In zum Release zu bekommen -> "Concept to Cash" (Wertstromanalyse des Lieferprozesses)
+						- DP ist nicht nur ein technisches als auch eine organisatorisches Problem, bei dem Prozesse und Beteiligte eine Rolle spielen. -> DevOps zusammenwirken von IT-Betrieb, Entwicklungsteam.
+						- Neu Form der Zusammenarbeit wird vorgeschlagen: Deployment Pipeline kann nur durch gute Zusammenarbeit zwischen den beteiligten Individuen entstehen
+					Prozessvorschlag:
+						- das Build durchläuft die Pipeline bis zum Release mehrfach -> in Stufen: 
+							- Delivery Team
+							- Version Control
+							- Build & Test
+							- Automated Acceptance Test
+							- User Acceptance Test
+							- Release
+						- Grafik -> Sequenzdiagramm \cite[S. 109]{CD}
+						- Automatisierung der Teilschritte durch Skripte und Tool-Chain
+							-> Fundamental: eine automatisierter Softwarelieferprozess schließt menschliche Handlung nicht aus -> Prozesse sollten hierfür aber definiert sein.
+								-> stellt sicher das fehleranfällige und komplexe schritte automatisiert, wiederholbar und verlässlich sind!					
+					Vorteile:
+						- HF sehen in dieser Strategie folgende Vorteile:
+							- effektiv wenn nur gründlich getestet SW in Produktion geliefert wird -> Test bei jedem Durchlauf der Deployment-Pipeline
+								- wird nur durch Reihe von automatisierten Akzeptanztests möglich
+							- Ein derartiger Process ist schnell, wiederholbar und verlässlich
+							- auch dringende Bugfixes durchlaufen den gleichen Prozess und werden auf gleiche Weise getestet wie normales Release
+							- Disziplin der Deployment Pipeline schwächt Fehler ab, die durch neue Konfiguration oder unvorhersehbare Interaktion der beteiligen Komponenten der Systemumgebung entstehen können
+			3.3 Struktur der DP:
+				- Grafik -> Basic deployment pipeline \cite[S. 111]{CD}
+				- Pipeline kann in Stages untergliedert werden, Einheiten im Lieferprozess: Commit-Stage, Autom. Akzeptance Stage, Man- test-Stage, Release-Stage \cite[S. 109-110]{CD}
+					-> Commit Stage: 
+						-> Prozess von CI
+						- stellt sicher, das das System auf dem technischen Niveau arbeitet -> es kompiliert, Komponententests sind erfolgreich und Code-Analyse ist erfolgreich
+						- beginnt mit Commit von Änderungen die ein Entwickler am Quellcode vorgenommen hat -> Versionskontrollsystem
+						- CI-System reagiert mit neuer Instanz des Softwarelieferprozesses -> Laufzeit sollte 5-10 Minuten (ideal) -> Paralellisierung \cite[S. 105-120]{CD}
+						- Schritte: Kompilieren / Commit-Test (Komponententests) / Binärdaten erzeugen / statische Codeanalyse (White-Box) / Artefakte wie Testdantebank erstellen \cite[S. 120]{CD}
+						- Metriken: Testabdeckung / Kodedubletten / Zyklomatische Komplexität / Afferente und efferente Kopplung / Anzahl von Warnungen / Code Style \cite[S. 121]{CD}
+							-> Testabdeckung: Tools wie Sonar berechnen die Abdeckung von Code-zeilen, die von einem Test abgedeckt werden. \cite{sonar_testcoverage}
+							-> Zyklomatische Zahl misst die strukturelle Komplexität des Quellcodes an hand des Kontrollflussgraphen und gibt die menge unabhängiger Pfade im Programmfluss an. Wird jeder Pfade des Kontrollflussgraphen einmal durchlaufen, ergibt sich eine Abdeckung von 100 % \cite[S. 100 f]{sl_basiswissen_sw_test}
+							-> afferrente Kopplung beschreibt die Anzahl der Klassen außerhalb eines Paketes, die von Klassen innerhalb des Paktes abhängen (incomming), efferente Kopplung hingegen ist die Anzalh von Klassen außerhalb eines Paketes von denen Klassen innerhalb des Paketes abhängen (outgoing). Beschreibung für stabilität -> I = Ce / Ca + Ce -> Range [0,1] 0 ist stabil. \cite[S. 23-24]{martin_design_principles}
+	!						-> Warnungen und Code-Style sind nicht beseitigte Schwachstellen -> Java Code Conventions, welche Sun folgt und empfiehlt -> filenmaes, file-organisation, Einrückung, Kommentatare, Declarationen, Namensvergabe \cite{java_code_conv}
+						- CI-System speichert Artefakte in einem Repository oder es können Systeme wie Nexus oder Artifactory genutzt werden -> Links zu Nexus und Artifactory
+						- Binärdateien einer Version nur einmal kompilieren -> wird in allen Stages (Test etc.) benötigt -> mehrfaches Erstellen nicht empfohlen weil: \cite[S. 113]{CD}
+							- kosten Zeit und ist deshalb nich effektiv
+							- Binärdaten die in Produktion geliefert werden, sollten exakt identisch mit denen des Akzeptanztests sein.
+							-> Gefahr, dass Änderungen während der Pipeline an der Quellcodebasis vorgenommen werden -> Dann unterschied zwischen getesteter und in Produktion released (Revisionssicherheit)
+							-> Konfigurationsmanagement notwendig, da Binärdateien nicht für eine bestimmte Umgebung erstellt werden können -> felxibilität und wartbarkeit werden reduziert
+					-> Automated Acceptance test stages:
+						-> Prüft ob eine Anwendung in Produktion gehen kann -> RC?
+						- Akzeptanztests: werden Kundenanforderungen erfüllt, ist die Spezifikation erfüllt, kann die Anwendung in Produktion deployt werden? \cite[S. 124]{CD}
+						- System erfüllt funktionale und nicht-funktionale Anforderungen, Verhalten erfüllt die Bedürfnisse des Nutzers und die Spezifikation des Auftraggebers 
+							-> Nichtfunktionale Tests: Kapazität / Sicherheit / Service-Level-Agreement \cite[S. 128]{CD}			
+						- Regressionstest das keine Fehler sich in bestehendes Verhalten geschlichen haben \cite[S. 124]{CD}
+						- Produktionsumgebung wenn komplex und teuer -> kleiner skallierte Version nutzen (kleine Anzahl von Middleware-Server)
+						- Verhalten: schlägt eine Pipeline fehl, sollte dies unverzüglich behoben werden -> Verantwortung beim ganzen Team \cite[S. 125]{CD}
+						- Fail bedeutet -> nicht fähig ausgeliefert zu werden \cite[S. 126]{CD}
+						- längerlaufende Akzeptanztests -> Aufteilung in Suits (User Akzeptanz / Kapazität) für parallele Ausführung
+					-> Manuell test stages: 
+						- Das System ist bedienbar und erfüllt die Anforderungen. Hier werden Fehler aufgedeckt, die nicht durch automatisierte Tests abgedeckt werden können - Verifiziert, das Wert für den Anwender produziert wurde
+						- Tester prüfen ob Akzeptanztests das Verhalten des Systems testen durch Validierung der Akzeptanzkriterien \cite[S. 128]{CD}
+					-> Release stage / Deployment: 
+						- Liefert das System aus (Paket oder Deployment in Staging / Produktivumgebung
+						- Deployment muss auch Test-Systeme berücksichtigen \cite[S. 126]{CD}
+						- Ansicht was aktuelle deployt ist! \cite[S. 126]{CD}
+						- Visualisierung / Berichte / Autorisierung \cite[S. 126]{CD}
+						- -> eigenes System: liste mit release-Kandidaten / Button zum deployen für Version und Umgebung der Wahl \cite[S. 126]{CD}
+						- SSP für Tester, die eine bestimmte Version zum testen wählen können. \cite[S. 126]{CD}
+					-> Zusätzliche Stages je nach Art des Lieferprozesses, müssen hinzugefügt werden			
+			3.4 Ablaufsteuerung:
+				- Gleiches Skript für Deployment, unterschiedliche Umgebungseinstellungen können Properties Files / Datenbanken / LDAP gehalten werden \cite[S. 115-116]{CD} 		
+				- Pipeline-Trigger: \cite[S. 118-119]{CD}
+					- SVN-Check-In -> erfolgreiche Stage triggert die nächste
+					- Bsp: Build-Stage triggert Akzeptanz-Stage -> SVN-Ckeck-in einer neuen Version -> Build der jeweils neusten Version, Check-Ins dazwischen sollten ignoriert werden, wenn Akzeptanz-Stage fertig, neustes Build testen ....
+				- Building on success / Bedingungen für den RC \cite[S. 132]{CD}
+					- Code kompiliert
+					- Code macht das was der Entwickler denkt, was er machen sollte (Unit-Test)
+					- System macht, was die Analysten / Nutzer denken, was es sollte (Akzeptanztests)
+					- Konfiguration und Infrastruktur wird gemanaged / analog zur Produktivumgebung
+					- Alle Komponenten am Platz, da deployt werden konnte
+					- Deployment System selbst arbeitet -> da es bei Entwicklungsumgebung / Akzeptanzumgebung / Testumgebung für Deployment schon angewandt wurde
+					- Versionskontrolle hällt alles für das Deployment bereit, ohne manuelle eingriffe -> System wurde bereits mehrfach deployt
+				- Nach Deployment Smoke-Test, der prüft ob die Anwendung läuft, sowie jeder abhängige Dienst (z.B. Datenbank) \cite[S. 117]{CD}
+			3.5 Vorraussetzungen für DP:
+				- Planung:
+				- Vorgehensweise bei der Erstellung der Pipeline \cite[S. 133]{CD}
+					- Wertstromanalyse des Prozesses + lauffähiges Skelett
+						- Schritte niederschreiben mit Stift und Papier die im Prozess derzeit ablaufen
+						- Stage für Stage konstruieren (Commit-Stage mit Test / Akzeptance-Stage / ...)
+						- Neues Projekt -> lauffähiges Skelett mit Hello World (am besten vor der eigentlichen Arbeit)
+					- Build + Deployment-Prozess automatisieren
+						- Quellcode als Input -> Binärdatein als Output
+						- jedes Mal nach Check-In -> CI-System
+						- Deployen nach UAT env + Push-Button Deployment in Umgebung -> für jedes Build der Applikation (von CI) + Deplyoment-Test (Smoke)
+					- Autom. Unit-Tests + Code-Analyse \cite[S. 135]{CD}
+						- Teil der Commit-Stage
+						- benötigen kein komplexes Set-Up / benötigen keine laufende Instanz der Anwendung
+						- Laufzeit > 5 Minuten -> Aufsplitten in paralell laufende Suites
+					- Autom. Akzeptanz-Tests
+						- Akzeptance-Test-Framework Start-up -> Reports einsammeln am Ende des Durchlaufs
+						- funktionale / nicht funktionale Anfordeurngen
+					- Autom. Release auf Produktion
+					- Komplexe Anwendungen / Komponenten
+						- komplexe Anwendungen in kleinen eigenen Pipelines bauen und testen
+						- alles zusammenfügen und Komplettsystem testen
+					-> inkrementell implementieren
+					-> Daten sammeln, wann gestarten, wann welche stage ... -> auswertung
+					-> Pipeline ist eine "lebendes System" und muss stetig weiterentwickelt und angepasst werden \cite[S. 137]{CD}
+				- Infrastruktur:
+					- Test ~= Produktion: netzwerk-Topologie / firewall, OS + patchen, App-Stack, Applikationsdaten
+				- Organisation:
+					- Automatisiertes Deployment: Problem häufig da nicht ausreichende Kontrolle über Produktionssystem \cite[S. 129]{CD}
+						-> Alle Änderungen am System sollten automatisiert erfolgen (Konfiguration / SW-Stack / Netzwerk-Topologie / State)
+						-> Probleme lassen sich schnell verfolgen / Konfigurationen zurücksetzen ... (bei Skripte + SVN) -> bessere Wartbarkeit
+			3.6 Exk.: Build und Deployment Skripting:
+				- Ermöglicht die Pipeline und ist Grundtechnik um Binaries zu erstellen 
+					-> auch unterstützung zur Auslieferung auf die Zielplattform vorhanden.
+				- "Skript" als weiter Bereich der Automatisierung von Aufgaben gemeint
+				- Build-Tool - Aufgabe: Netzwerk von Abhängigkeiten modelieren
+				- Verschiedene Tools am Markt, im Java-Umfeld Ant und Maven \cite[S. 147-149]{CD}
+					- ant \cite[S. 147-148]{CD}
+						- Task-orientiert
+						- XML als DSL zur def von Tasks
+						- Kompilierung / Filesystem-Tasks
+						- cross-plattform Kompatibel
+					- maven \cite[S. 149-]{CD}
+						- onvention over configuration -> Projektstruktur durch Maven vorgegeben
+						- automatisches Management von Java libs
+						-> Maven Autoupdate kann Build-fehler verursachen -> unvorhersehbar  -> mglw. nicht reproduzierbare Build!
+				- Prinzipien:
+					- Je Stage eine Build-Skript
+						-> dem Domain-Driven-Design entlehnt \cite[S. 152]{CD}
+						-> Deployment-Pipeline hat organisationsprinzip um Verantwortlichkeiten zwischen Build-Skripts aufzuteilen
+					- Erfordert Zusammenarbeit von Entwicklern und IT-Betrieb -> DevOps
+					- OS-Spezifisches Packetierungs-Werkzeug nutzen, da dann Tools wie Puppet genutzt werden können, um Pakete zu verteilen:
+					- ....
+					- Zurückverfolgung von deployten Binärdaten zur Versionsnummer der Versionsverwaltung \cite[S. 165]{CD}
+					- Binärdatein sollten nicht in das Versionsverwaltungssystem eingecheckt werden \cite[S. 166]{CD}
+						-> steht in Konflikt mit Nummernsystem der Versionsverwaltung
+						-> geteiltes Dateisystem (e.g. Netzlaufwerk / FTP ...) um Binärdatein und Berichte zu verwalten
+				- Schritte:
+					- Umgebung einrichten: Script muss häufig auf verschiedenen Systemen laufen
+						-> Datenbank upgraden, neue Binärdatei deployen, Dienst von dem die Anwendung abhängt aktualisieren \cite[S. 161]{CD}
+						-> Software-Layer muss beachtet werden (Hardware - OS - Middleware - App / Service / Komponenten + jeweilige Konfiguration) \cite[S. 162]{CD}
+						-> nach HF drei Möglichkeiten: \cite[S. 161]{CD}
+							- Skript, welches sich auf die Systeme einloggt und Änderungen durchführt 
+							- Lokales Skript, wird durch Agents auf allen Systemen ausgeführt
+							- Package der genutzten Platform bauen + Infrastruktur-Management-Tool das die Änderungen übernimmt (besste Option)
 
-	Implikationen für das Liefersystem:
-		- Liefersystem besteht aus Infrastruktur und Umgebungen
-		- besonderer Fokus auf Datenbanken, Abhängigkeiten und Versionsverwaltung
-			- Anwendung in der Deployment-Pipeline benötigt Daten-Management -> Datenbanken müssen für neue Funktionalitäten vorbereitet werden
-			- Anwendung hängt von weiteren Komponenten / Bibliotheken ab -> Abhängigkeiten müssen vor Auslieferung organisiert werden
-			- Im Versionsverwaltungssystem können Probleme durch Branching und Merging entstehen
-		Schnittpunkte von CD bei IT-Infrastruktur und Systemumgebungen:
-			- Auswirkungen auf den IT-Betrieb:
-				- in mittleren und größeren Unternehmen ist IT-Betrieb eigene Organisationeinheit
-				- Dokumentation und Betriebspürfung / Revision 
-					- nach ITIL ist deployen von Änderungen in Umgebung ein Prozess nach Change-Management \cite[S. 89 ff]{itil_boetcher}
-					- Erfordert Dokumentation von RFCs, diese müssen beurteilt, auf Risiken geprüft und authorisiert werden
-					- Dev-Team muss sich auf Situation einstellen und den Prozess rechtzeitig mit Ops durchgehen  \cite[S. 182]{CD}
-					- sollte deshalb zum release-plan gehören
-				- Alarme
-					- Monitoring-Systeme werden duch Ops verwendet um die Infrastruktur zu überwachen
-					- Dev muss Systeme vor Entwicklung kennen und die integration in diese berücksichtigen und planen  \cite[S. 182]{CD}
-					- Wo sind Log-Files und wie wird auf Fehlverhalten aufwerksam gemacht
-					- Ziel ist die fähigkeit Ops die Anwendung neu deployen / neu starten zu lassen
-				- es sollten nur Technologien verwendet werden, die vom IT-Betrieb beherrscht werden
-					- Planung aus Dev zu beginn der Entwicklung heraus, wie deployt werden soll  \cite[S. 282]{CD}
-					- Vereinbarung (Dev-Ops) über verwendete Skript- / Paket-Technologie  notwendig [Ruby, Perl, Python, Debian-Package, ...]  \cite[S. 283]{CD}
-			- Auswirkungen auf das Management der Infrastruktur:
-				- Infrastruktur berührt die Domaine des IT-Betriebs, muss modeliert und verwaltet werden
-				- Verbundene Fragestellungen:  \cite[S. 284]{CD}
-					- Wie wird provisioniert?
-						- Innerhalb der Deployment-Pipeline notwendigkeit Server flexibel provisionieren zu  können, z.B. um automatisierte Test parallel durchführen zu können	
-					- Wie wird deployt und konfiguriert?
-						- Middelware (z.B. für verteielte Systeme [Application-Server, RMI, ...]) muss dann konfiguriert werden
-					- Wie wird die Infrastruktur verwaltet?
-						- Zugriffskontrolle zur Infrastruktur um Änderungen durchführen zu können
-				Lösungsvorschlag von HF:
-					- Provisionierung von Infrastruktur:
-						- Abhilfe: Nutzung von Virtualisierung und Cloud-Computing für Provisionierung von Servern, bzw. zum starten von vorkonfigurierter Systeme
-						- Keine Änderung am System ohne vorherige Zustimmung (von wem?)
-						- automatisierte Prozesse um Änderungen an der Infrastruktur vorzunehmen (SVN-Check-In)
-						- Deployment-Pipeline sollte vor Deployment testen, ob die Anforderungen an die Infrastruktur getroffen worden sind
-						- Testumgebung für Änderungen an der Infrastruktur \cite[S. 287]{CD}
-						- Problem, wenn Infrastruktur mit anderen Systemen geteilt wird. -> keine Veränderung der Konfiguration möglich ohne Seiteneffekte auf anderes System
-						- Server-Provisionierung und Konfiguration Managen
-							- Infrstrukturdienste nutzen? Virtualisierung?
-							- Wie werden Server provisioniert -> Technik
-							- Betrieb und Verwaltung der Server
-					- Konfiguration von Middelware:
-						- Nach Möglichkeit sollte Konfiguration per Skript für OS und Middleware in Versions-Verwaltung hinerlegt sein  \cite[S. 285]{CD}
-						- Middelware Konfigurieren
-							- Konfigurationen verwalten
-							- Produkte müssen dafür untersucht werden
-							- Wie werden Zustände in der Middleware gesteuert -> können diese beeinflusst werden?
-							- Konfigurations-API, die die Configuration programmatisch übernimmt?,
-					- Monitoring:
-						- Infrastruktur überwachen -> Änderungen überprüfen -> Änderungsverlauf überprüfen
-							- Daten sammeln
-							- Logging
-							- Instrumentenpult erstellen, die den Zustand und das Verhalten der Applikation anzeigt
-		Kritische Komponenten in der DP:
-			Datenbankupdate in der DP:
-				- Datenbank als kritische Komponente während des SW-releases
-					- z.B. Neue Funktionalität in Web-Anwendung soll Deployt werden, die eine Änderungen an einer Tabelle erfordern
-					- Problem z.B. bei inkrementelles Update einer Web-Anwendung, die unterschiedliche DB-Versionen nutzen
-						-> Was passiert mit Nutzertransaktionen auf alter DB-Version
-						-> Anwendung kann nicht live gehen, wenn dies nicht geklärt.
-					- Datenverlust duch Release vermeiden
-						- Fehlschlag beim Release -> Rollback der DB schnell, einfach und automatisiert?
-					- Vorbereitung und Organisation von Persistenz auf der die Anwendung arbeitet
-				- Lösungsmöglichkeiten:
-					- Inkrementelle Ändeurngen an Datenbanken
-						- Zu beginn aufsetzen der Datenbank
-						- Wenn neue Tabellen benötigt werden, können z.B. "ALTER TABLE" Anweisungen ausgeführt werden
-						- Im Skript müssen auch UNDO-Operationen vorgesehen werden, um die Änderungen rückgängig zu machen
-						- Versionierung: Notwendig im Skripte zu ermitteln ob Skripte ausgeführt werden können.
-						-> Tool, welches den aktuellen Stand der Datenbank überprüft und das x+1-Skript ausführen kann. (Tool:DbDeploy) \cite[S. 328]{CD}
-					- Datenbank-Rollback
-						- Datenbanken + Anwendung zurücksetzen können, wenn beim Deployment etwas schief geht: \cite[S. 332]{CD} (Blue-Green-Deployment)
-							1. Datenbank-Backup erstellen und auf zweiten DB-Server einspielen (z.B. durch Provisionierung)
-							2. Änderungen an der Datenbank vornehmen und Funktion testen (Änderungsskript, Test mit SQL-Befehl)
-							3. Server für Anwendung provisionieren, einrichten und Anwendung deployen -> neue Instanzen greifen auf neue Anwendung zu.
-							4. laufende User auf neue Version übertragen und Server mit alter Version stoppen.
-							5. Delta der alten DB von Backup-Time bis Stop der alten Version auf neue DB übertragen
-							-> geht bei der Änderung der kopierten DB etwas schief, kann deployment gestoppt werden
-							-> Hat die alte Anwendung fehler, kann DB-Backup eingespielt werden. Delta an neuer DB muss aber in alte übernommen werden
-					- Entkopplung Anwendungs- und Datenbankänderung \cite[S. 333]{CD}
-						- wird zwischen zwei Deployments ausgeführt
-						- wenn neue Version sich als stabil erwiesen hat
-						- Versions-Bedingung der DB für Applikations-Version -> app v248 ist kompatibel mit db v15 -> z.B. über Konfig-Info vor Deployment DB-Version abfragen (Grafik \cite[S. 333]{CD})									
-			Strategien für die Versionsverwaltung:
-				- Branching und Merging 
-					-> Branch erzeugt einen paralellen Entwicklungszweig \cite[S.154-159]{popp_konfig}
-					-> SVN bietet hierfür den separaten Ast Branch an, während der Hauptstamm im Trunk verbleibt
-					-> Warum Branches? 
-						- parallele Entwicklung am Branch für Feature, während auf dem trunk das release vorbereitet wird \cite[S. 157]{popp_konfig}
-						- Integrations-Branches \cite[S. 389]{CD}
-						- Wartungs-Branches
-					-> Merging führt Branches zusammen \cite[S. 390-393]{CD}
-						- aufwändig wenn differenzen groß und eine Menge Anpassungen notwendig sind den Branch in den Hauptstamm einzufügen 
-						- Kontinuierlich mergen: Branches nur für kurze Zeit zuzulassen, 1-2 Tage, verringert die Nachteile des Branchings 
-						- Empfehlung:
-							- Branch nur für Releases
-							- Änderungen immer am Trunk
-							- Mergen nur für BugFixes am Release (Trunk -> R-Branch)
-	Zusammenfassung:
-		-> Anforderung aus dem ITIL-Release-Management schon früh umsetzen -> wenn Problem erst kurz vor dem Release auftauchen kann es hektisch werden (DevOps)
+		3.7 Implikationen für das Liefersystem:
+			- Liefersystem besteht aus Infrastruktur und Umgebungen
+			- besonderer Fokus auf Datenbanken, Abhängigkeiten und Versionsverwaltung
+				- Anwendung in der Deployment-Pipeline benötigt Daten-Management -> Datenbanken müssen für neue Funktionalitäten vorbereitet werden
+				- Anwendung hängt von weiteren Komponenten / Bibliotheken ab -> Abhängigkeiten müssen vor Auslieferung organisiert werden
+				- Im Versionsverwaltungssystem können Probleme durch Branching und Merging entstehen
+			Schnittpunkte von CD bei IT-Infrastruktur und Systemumgebungen:
+				- Auswirkungen auf den IT-Betrieb (DevOps):
+					- in mittleren und größeren Unternehmen ist IT-Betrieb eigene Organisationeinheit
+					- Dokumentation und Betriebspürfung / Revision 
+						- nach ITIL ist deployen von Änderungen in Umgebung ein Prozess nach Change-Management \cite[S. 89 ff]{itil_boetcher}
+						- Erfordert Dokumentation von RFCs, diese müssen beurteilt, auf Risiken geprüft und authorisiert werden
+						- Dev-Team muss sich auf Situation einstellen und den Prozess rechtzeitig mit Ops durchgehen  \cite[S. 182]{CD}
+						- sollte deshalb zum release-plan gehören
+					- Alarme
+						- Monitoring-Systeme werden duch Ops verwendet um die Infrastruktur zu überwachen
+						- Dev muss Systeme vor Entwicklung kennen und die integration in diese berücksichtigen und planen  \cite[S. 182]{CD}
+						- Wo sind Log-Files und wie wird auf Fehlverhalten aufwerksam gemacht
+						- Ziel ist die fähigkeit Ops die Anwendung neu deployen / neu starten zu lassen
+					- es sollten nur Technologien verwendet werden, die vom IT-Betrieb beherrscht werden
+						- Planung aus Dev zu beginn der Entwicklung heraus, wie deployt werden soll  \cite[S. 282]{CD}
+						- Vereinbarung (Dev-Ops) über verwendete Skript- / Paket-Technologie  notwendig [Ruby, Perl, Python, Debian-Package, ...]  \cite[S. 283]{CD}
+				- Auswirkungen auf das Management der Infrastruktur:
+					- Infrastruktur berührt die Domaine des IT-Betriebs, muss modeliert und verwaltet werden
+					- Verbundene Fragestellungen:  \cite[S. 284]{CD}
+						- Wie wird provisioniert?
+							- Innerhalb der Deployment-Pipeline notwendigkeit Server flexibel provisionieren zu  können, z.B. um automatisierte Test parallel durchführen zu können	
+						- Wie wird deployt und konfiguriert?
+							- Middelware (z.B. für verteielte Systeme [Application-Server, RMI, ...]) muss dann konfiguriert werden
+						- Wie wird die Infrastruktur verwaltet?
+							- Zugriffskontrolle zur Infrastruktur um Änderungen durchführen zu können
+					Lösungsvorschlag von HF:
+						- Provisionierung von Infrastruktur:
+							- Abhilfe: Nutzung von Virtualisierung und Cloud-Computing für Provisionierung von Servern, bzw. zum starten von vorkonfigurierter Systeme
+							- Keine Änderung am System ohne vorherige Zustimmung (von wem?)
+							- automatisierte Prozesse um Änderungen an der Infrastruktur vorzunehmen (SVN-Check-In)
+							- Deployment-Pipeline sollte vor Deployment testen, ob die Anforderungen an die Infrastruktur getroffen worden sind
+							- Testumgebung für Änderungen an der Infrastruktur \cite[S. 287]{CD}
+							- Problem, wenn Infrastruktur mit anderen Systemen geteilt wird. -> keine Veränderung der Konfiguration möglich ohne Seiteneffekte auf anderes System
+							- Server-Provisionierung und Konfiguration Managen
+								- Infrstrukturdienste nutzen? Virtualisierung?
+								- Wie werden Server provisioniert -> Technik
+								- Betrieb und Verwaltung der Server
+						- Konfiguration von Middelware:
+							- Nach Möglichkeit sollte Konfiguration per Skript für OS und Middleware in Versions-Verwaltung hinerlegt sein  \cite[S. 285]{CD}
+							- Middelware Konfigurieren
+								- Konfigurationen verwalten
+								- Produkte müssen dafür untersucht werden
+								- Wie werden Zustände in der Middleware gesteuert -> können diese beeinflusst werden?
+								- Konfigurations-API, die die Configuration programmatisch übernimmt?,
+						- Monitoring:
+							- Infrastruktur überwachen -> Änderungen überprüfen -> Änderungsverlauf überprüfen
+								- Daten sammeln
+								- Logging
+								- Instrumentenpult erstellen, die den Zustand und das Verhalten der Applikation anzeigt
+			3.8 Kritische Komponenten in der DP:
+				3.8.1 Datenbankupdate in der DP:
+					- Datenbank als kritische Komponente während des SW-releases
+						- z.B. Neue Funktionalität in Web-Anwendung soll Deployt werden, die eine Änderungen an einer Tabelle erfordern
+						- Problem z.B. bei inkrementelles Update einer Web-Anwendung, die unterschiedliche DB-Versionen nutzen
+							-> Was passiert mit Nutzertransaktionen auf alter DB-Version
+							-> Anwendung kann nicht live gehen, wenn dies nicht geklärt.
+						- Datenverlust duch Release vermeiden
+							- Fehlschlag beim Release -> Rollback der DB schnell, einfach und automatisiert?
+						- Vorbereitung und Organisation von Persistenz auf der die Anwendung arbeitet
+					- Lösungsmöglichkeiten:
+						- Inkrementelle Ändeurngen an Datenbanken
+							- Zu beginn aufsetzen der Datenbank
+							- Wenn neue Tabellen benötigt werden, können z.B. "ALTER TABLE" Anweisungen ausgeführt werden
+							- Im Skript müssen auch UNDO-Operationen vorgesehen werden, um die Änderungen rückgängig zu machen
+							- Versionierung: Notwendig im Skripte zu ermitteln ob Skripte ausgeführt werden können.
+							-> Tool, welches den aktuellen Stand der Datenbank überprüft und das x+1-Skript ausführen kann. (Tool:DbDeploy) \cite[S. 328]{CD}
+						- Datenbank-Rollback
+							- Datenbanken + Anwendung zurücksetzen können, wenn beim Deployment etwas schief geht: \cite[S. 332]{CD} (Blue-Green-Deployment)
+								1. Datenbank-Backup erstellen und auf zweiten DB-Server einspielen (z.B. durch Provisionierung)
+								2. Änderungen an der Datenbank vornehmen und Funktion testen (Änderungsskript, Test mit SQL-Befehl)
+								3. Server für Anwendung provisionieren, einrichten und Anwendung deployen -> neue Instanzen greifen auf neue Anwendung zu.
+								4. laufende User auf neue Version übertragen und Server mit alter Version stoppen.
+								5. Delta der alten DB von Backup-Time bis Stop der alten Version auf neue DB übertragen
+								-> geht bei der Änderung der kopierten DB etwas schief, kann deployment gestoppt werden
+								-> Hat die alte Anwendung fehler, kann DB-Backup eingespielt werden. Delta an neuer DB muss aber in alte übernommen werden
+						- Entkopplung Anwendungs- und Datenbankänderung \cite[S. 333]{CD}
+							- wird zwischen zwei Deployments ausgeführt
+							- wenn neue Version sich als stabil erwiesen hat
+							- Versions-Bedingung der DB für Applikations-Version -> app v248 ist kompatibel mit db v15 -> z.B. über Konfig-Info vor Deployment DB-Version abfragen (Grafik \cite[S. 333]{CD})									
+				3.8.2 Strategien für die Versionsverwaltung:
+					- Branching und Merging 
+						-> Branch erzeugt einen paralellen Entwicklungszweig \cite[S.154-159]{popp_konfig}
+						-> SVN bietet hierfür den separaten Ast Branch an, während der Hauptstamm im Trunk verbleibt
+						-> Warum Branches? 
+							- parallele Entwicklung am Branch für Feature, während auf dem trunk das release vorbereitet wird \cite[S. 157]{popp_konfig}
+							- Integrations-Branches \cite[S. 389]{CD}
+							- Wartungs-Branches
+						-> Merging führt Branches zusammen \cite[S. 390-393]{CD}
+							- aufwändig wenn differenzen groß und eine Menge Anpassungen notwendig sind den Branch in den Hauptstamm einzufügen 
+							- Kontinuierlich mergen: Branches nur für kurze Zeit zuzulassen, 1-2 Tage, verringert die Nachteile des Branchings 
+							- Empfehlung:
+								- Branch nur für Releases
+								- Änderungen immer am Trunk
+								- Mergen nur für BugFixes am Release (Trunk -> R-Branch)
+		3.9 Zusammenfassung:
+		
+			-> speziell Werkzeuge: welche Konzepte von CD und der DP werden verwirklicht -> Welche Anforderungen aus CD können damit umgesetzt werden.
+				- Implikationen für Werkzeuge bzw. Tool-Chain:
+					- Unabhängig ob ein einzelnes Werkzeug oder eine Prozessabbildung mit Tool-Chain
+					-> Unterstützung einer weitgehenden automatisierung des Prozesses: Skripting [SVN,Build,...], Trigger
+					-> CI-Funktionalitäten: kompilieren, testen, metriken, paketieren, auf Testsystem deployen, Report, Artefakte Repository
+					-> CD-Funktionalitäten: SSP für Tester, Akzeptanz-Stage und Produktion, Provisionierung von Infrastruktur
+				
+			-> speziell adesso-Lieferprozess: Welche Konzepte werden derzeit umgesetzt, was wird für das Liefersystem vorgeschlagen
+				- Implikationen für Lieferprozess:
+					- Wertstromanalyse des Release-Prozesses
+					- Allgm. Release-Prozess definieren
+					- Release zu beginn fokussieren, Beteiligte zusammen bringen, Prozesse gestalten, Skript-Templating und Unterstützung
+					- PM: -> Zeit für DP einplanen
+					- Prozesse für DB-Update und Rollback
+					- TDD / BDD-Ansatz verfolgen -> automatische Tests in CI
+					- Team in Relaese-Prozess einbinden -> Verantwortlichkeiten an das Team übergeben, IT-Betrieb oder Fähigkeiten in das Team holen
 
 4. Entwicklungsstand CD:
 	- Entwicklung von Lösungsstrategien für adesso setzt Betrachtung des derzeitigen Auslieferugsprozesses vorraus.
