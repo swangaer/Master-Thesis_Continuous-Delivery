@@ -1,0 +1,6 @@
+TODO Master-Thesis
+
+Wortliste:
+	commit -> Commit
+	Web-Anwendung -> Webanwendung
+	- -> "=

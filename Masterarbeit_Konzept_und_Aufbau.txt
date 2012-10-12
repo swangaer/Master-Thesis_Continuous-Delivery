@@ -8,48 +8,40 @@
 !	- CD setzt nicht auf spezielle Basistechnologien auf sondern ist ein Konzept um Prozesse beim Softwarerelease zu automatisieren 
 !	- CD im engen Zusammenhang mit DevOps-Bewegung -> Entwicklung und IT-Betrieb müssen enger zusammenarbeiten
 !	- CD und DevOps fokusieren nicht speziell Web-Anwendungen, Ideen kommen aber aus dem Web 2.0 / Cloud Umfeld
+		-> Viel beachteter Blog-Eintrag von Timothy Fitz zum Thema CD \cite{fitz_cd}
+		-> Beschreibung von CD an Hand von refactoring an Code der zwei Wochen später erste released wird
+		-> Kleiner Tipp-Fehler kann so mglw. Produktiv-System empfindlich störren
+		-> Entwickler ist nicht mehr bekannt, an welcher Stelle er eine Änderung gemacht -> Bug-Fix dauert mehrere Stunden, bis beseitigt und Anwendung wieder Online gehen kann.
+		-> Argument mehr automatisiert zu testen  hält Fitz entgegen, dass keine automatisierter Test so "brutal, wahlfrei, fehlerhaft, ignorant oder agressiv" ein Anwendung nutzt wie der Nutzer der Anwendung
+		-> Fitz empfiehlt kontinuierliches Deployment -> aufgetretener Fehler führt schnell zur letzten Ändeurng von Entwickler -> je schneller Fehler auftritt desto weniger Zeit nimmt die beseitigung in Anspruch
+		-> In den Kommentaren finden sich viele Einträge mit Aussagen wie "unrealistisch", "funktioniert nur mit kleinen Anwendungen", "geht nur mit Webanwendungen", "nette Theorie, aber kann nicht klappen"
+		-> Ein Kommentar weißt auf mögliche Schwierigkeit in einem Finanz-Transaktions-System hin
+			 - bei einem fehlerhaften Deployment müssen alle durch einen Fehler fälschlicherweise durchgeführten Transaktionen wieder rückgängig gemacht werden
+			 - Der Verfasser ist der Ansicht direktes Deployment in Prod kann nur für einfache und wenig Funktionen umfassende SW funktionieren
+			 - er empfiehlt dieses Konzept aber für Testsysteme mit Testdaten zu nutzen und dort regelmäßig zu deployen.
+		-> CD ist abhängig vom Anwendungsfall -> Konzept von CD steht in enger Verbindung mit Web-Anwendungen obwohl es genauso auch für Desktop-Anwendungen Szenarien gibt \cite{fitz_cd_client_sw}
 	- Umsetzung von CD mit Scripten möglich, aber keine klarer und wiederholbarer Prozess
 	- Problematik hatten auch verschiedene Webprojekte -> Einzellösungen und proprietäre Lösungen
 	- Vorstellung von adesso als Dienstleister und Softwareentwicklung unter Java / JEE
 	- Eigenes Vorgehensmodell advantage stellt fühstmöglich Installation in den Vordergrund
 	- Interesse an CD, mit Kernfokus Java / JEE und Web-Anwendungen und Vorschlag von Go, Deployinator und Dreadnot
 	- Ziel: Tools untersuchen, Möglichkeit such Auslieferungsprozess zu ergänzen, Kernfrage CD beleuchten
+!		- Funktionsweise der Werkzeuge soweit nicht bekannt, nur das sie in Verbindung mit CD stehen
+!		- adesso möchte diese Tools gerne näher beleuchten und prüfen, ob es den eigenen Auslieferungsprozess dadurch verbessern könnte
 	- Eingrenzung der Betrachtungsweise zu gunsten von Web-Anwendungen im Java-Technologie-Stack
 	- Vor untersuchung der Werkzeugen Betrachtung von CD
 		- Ideen von CD ist weiterentwicklung von CI
 		- basiert auf Buch von HF und DevOps-Artikel von 
 
-2. Entstehung von CD:
+2. Entstehung und Konzepte von CD:
 	- Verstehen von CD notwendig um Tools bewerten zu können -> Auf Problemstellung von CD wird eingegangen
 	- CD in enger Verbindung mit DevOps, was ist die DevOps-Bewegung und was sind ihre Motive. Wie ist CD durch diese beeinflusst
 	- Aus DevOps leiten sich Konzepte für CD ab -> Ziele fürs Team, Definition of Done und RC, Prozessautomatisierung, Feedback
 	- Ein Blick auf ITIL -> CD berührt die Domaine von ITIL Service-Transition im Bereich von Service- und Release-Management
-
-	2.1 Problemstellung von CD:
-		Problem 1: Wertzuwachs einer Iteration oft nicht direkt nutzbar -> Lange Releasezyklen
-			- Iteratives Vorgehen in agilen VM priorisiert Funktionalitäten und produziert die Funktionalität mit dem höchsten Kundennutzen zu erst (Erster Durchstich / Grundsystem -> dann Funktionalitäten / Rapid Prototyping)
-			- Web-2.0-Geschäft z.B. davon Abhängig, dass neue Funktionalitäten schnell dem User-Kreis zur Verfügung gestellt werden können -> Konkurrenz zuvor kommen (WebShop / soziales Netzwerk ... ) 
-			- Schnelle Ausnutzung von neuen Programmfunktionalitäten in Produktion -> kann wirtschaftlichen Vorteil bringen -> Markt im Web-2.0 mit viel Bewegung
-				-> Bsp: Flickr / Etsy -> neue Funktionalitäten unverzüglich am Markt verfügbar
-			- Ziel nach Humble/Farley ist: nützliche und funktionierende Software so schnell wie möglich den Nutzern verfügbar machen.\cite[S. 11]{CD}
-		Problem 2: BugFix nicht schnell einzuspielen
-			- Gegensatz einmaliger Einführungsprozess für SW -> Abnahme... \cite[S. 169 ff]{steinweg04}
-				-> Bsp: Banking-Software mit Einzeiler-Bug der erst Wochen nach Inbetriebnahme auffällt -> hoher Personalaufwand für Release, nächstes erst in Wochen geplant -> vermeidbare Kosten mit automatisierter Lösung
-				-> BugFix muss schnell in Produktion gehen können -> Build-Pipeline
-		Problem 3: Aufwand und Fehler von SW-Lieferung hoch
-			- Einspielen einer Produktivversion mit viel Aufwand verbunden
-				-> Beipsiel manuelles Deployment bei Versicherungsanwendung -> Night-Session -> Vorbereitung -> Personal
-			- Manuelles vorgehen kann fehlerhaft verursachen -> Gründe \cite[S. 5-7 und 9-10]{CD}
-			- fehlerhaft manuelles Deployment vermeiden -> CD basiert auf Prozesse und Automatisierung	
-		Problem 4: Anwender-Feedback zu spät
-			- Anwender erhalten erst zum Schluss die Möglichkeit der Einflussnahme  \cite[S. 179 ff]{steinweg04}
-				-> Anitpattern: \cite[S. 7 ff]{CD}
-			- Agiles Manifest schlägt ein direkte Kundeneinbindung in den Entwicklungsprozess mit ein \cite{manifesto}
-				-> der Kunde muss frühzeitig eine Ausführbare Version in der Had halten können -> Verstäändigung von Kunde und Entwickle		
 	
 	2.2 Die DevOps-Bewegung:
 		- Ausgehend von der belgischen Stadt Ghent, vertraute Gruppen nach agilen VM dort konentriert -> DevOps-Days (2009) \cite{cd_devops_1}
-		- DevOps.com -> Slogan "Helping finish what Agile development started"
+		- DevOps.com -> Slogan "Helping finish what Agile development started" \cite{devopsdays.org2012}
 		- Chris Read: "At its heart it is the integration of Agile principles into Operations practices." -> "enabled the rise of the Cloud and Web 2.0 giants" \cite{cd_devops_stateofnation}
 		- Agile VM wie XP haben Kommunikation zwischen Business und Entwicklung verbessert -> schnelles Feedback, engere Zusammenarbeit -> bessere SW entstand \cite{cd_devops_stateofnation}
 		- jetzt: SW basierend auf dem feeback von Buisness -> neuer "Flaschenhals" entdeckt -> SW in Produktion \cite{cd_devops_stateofnation}
@@ -89,13 +81,36 @@
 		- CD löst die Probleme von DevOps ist deshalb als ein fester Bestandteil von DevOps zu sehen. CD wird ohne die Berücksichtigung von DevOps nicht vollständig möglich sein. (Implikation für adesso in Lieferstrategie!)
 		- Chad Dickerson CEO bie Etsy: Designer und Produktmanager sind im Team und Entwicklen mit, Dev und Ops arbeiten eng zusammen -> Etsy erreichte dadurch in einem Monat 517 Deployments in Produktion angestoßen von 63 unterschiedlichen MA.
 		
+	2.1 Problemstellung von CD:
+		Problem 1: Wertzuwachs einer Iteration oft nicht direkt nutzbar -> Lange Releasezyklen
+			- Iteratives Vorgehen in agilen VM priorisiert Funktionalitäten und produziert die Funktionalität mit dem höchsten Kundennutzen zu erst (Erster Durchstich / Grundsystem -> dann Funktionalitäten / Rapid Prototyping)
+			- Web-2.0-Geschäft z.B. davon Abhängig, dass neue Funktionalitäten schnell dem User-Kreis zur Verfügung gestellt werden können -> Konkurrenz zuvor kommen (WebShop / soziales Netzwerk ... ) 
+			- Schnelle Ausnutzung von neuen Programmfunktionalitäten in Produktion -> kann wirtschaftlichen Vorteil bringen -> Markt im Web-2.0 mit viel Bewegung
+				-> Bsp: Flickr / Etsy -> neue Funktionalitäten unverzüglich am Markt verfügbar
+			- Ziel nach Humble/Farley ist: nützliche und funktionierende Software so schnell wie möglich den Nutzern verfügbar machen.\cite[S. 11]{CD}
+			- Gegensatz einmaliger Einführungsprozess für SW -> Abnahme... \cite[S. 169 ff]{steinweg04}
+		Problem 2: BugFix nicht schnell einzuspielen
+				-> Bsp: Banking-Software mit Einzeiler-Bug der erst Wochen nach Inbetriebnahme auffällt -> hoher Personalaufwand für Release, nächstes erst in Wochen geplant -> vermeidbare Kosten mit automatisierter Lösung
+				-> BugFix muss schnell in Produktion gehen können -> Build-Pipeline
+		Problem 3: Aufwand und Fehler von SW-Lieferung hoch
+			- Einspielen einer Produktivversion mit viel Aufwand verbunden
+				-> Beipsiel manuelles Deployment bei Versicherungsanwendung -> Night-Session -> Vorbereitung -> Personal
+			- Manuelles vorgehen kann fehlerhaft verursachen -> Gründe \cite[S. 5-7 und 9-10]{CD}
+			- fehlerhaft manuelles Deployment vermeiden -> CD basiert auf Prozesse und Automatisierung	
+		Problem 4: Anwender-Feedback zu spät
+			- Anwender erhalten erst zum Schluss die Möglichkeit der Einflussnahme  \cite[S. 179 ff]{steinweg04}
+				-> Anitpattern: \cite[S. 7 ff]{CD}
+			- Agiles Manifest schlägt ein direkte Kundeneinbindung in den Entwicklungsprozess mit ein \cite{manifesto}
+				-> der Kunde muss frühzeitig eine Ausführbare Version in der Had halten können -> Verstäändigung von Kunde und Entwickle		
+				
 	2.2 Konzepte von CD
+		
 		- Feedback Prozess (Auslösen, Erhalten, Reaktion) \cite[S. 13 ff]{CD}
-			- SW Decomposition führt zu vier Komponenten -> ausführbarer Code, Konfiguration, Ausführungsumgebung, Date
+			- SW Decomposition führt zu vier Komponenten -> ausführbarer Code, Konfiguration, Ausführungsumgebung, Daten
 			- Verhalten der Anwendung wird von allen vier Komponenten beeinflusst -> alle müssen unter Kontrolle bleiben
 			- Jede Änderung am Code sollte zu Kompilierung und testen der Binarys führen.
 			- Kompilierter Code sollte in jeder Umgebung der gleiche sein -> Test / Produktion
-			- Alles was zwischne Umgebungen wechselt sollte als Konfiguration gehalten werden -> Änderung an der Konfiguration testen
+			- Alles was zwischen Umgebungen wechselt sollte als Konfiguration gehalten werden -> Änderung an der Konfiguration testen
 			- Änderung an den Daten -> Testen -> Feedback
 			- Kompilierprozess zeigt das Syntax valide ist
 			- Unit-Test zeigen das der Code sich wie erwartet verhält
@@ -212,8 +227,6 @@
 		-> CD ist effektiver Weg für leichtgewichtiges Mechanismen des ITIL Change-Prozesses durch etabliertes und häufig genutzten Change Prozess.
 		- Kontinuierliches Monitoring und Feedback
 		- nach Minick Release Manager natürliche DevOps-Vermittler
-			
-	2.5 Rechtlich und vertragliche Implekationen von CD:
 	
 	2.6 Zusammenfassung
 		- DevOps und CD fokusieren stark Web-Technologien
@@ -225,7 +238,7 @@
 		- CD stellt klaren Prozess mit Vorgaben zu Automatisierung / Konfigurationsmanagement / Qualität / Def of Done / Verantwortlichkeiten bereit.
 		- CD unterstützt ITIL Change und Release Management, wenn ITIL in leichtgewichtiger Art und Weise betrieben wird.
 
-	3. Deployment Pipeline und Liefersystem
+3. Deployment Pipeline und Liefersystem
 	
 		Einleitung:
 		- Bezug zu DevOps: DevOps kann die Deployment-Pipeline als Realisierung eines Liefersystems betrachtet werden
@@ -242,30 +255,30 @@
 				
 		- Deployment Pipeline nach HF:
 			DP-Einleitung:
-				- Deployment-Pipeline ist Grundkonzept des Liefersystems, welches auf CI aufbaut.
-				- Abgrenzung zu CI notwendig
-					- Exkurs CI:
-						Features von CI nach Duvall:
-							- Ziel ist deploybare SW zu erstellen. 
-							- "Build Software at Every Change" \cite[S. 4]{Duvall07}							
-							- Kleine Änderungen am Quellcode führen zu einer Integration in die Code-Basis in Form einer regulären Aufgabe\cite[S. 6]{Duvall07}
-							- frühe und kontinuierliche Integration der Software gibt schnelles und frühes Feedback, ob alle Komponenten in späterer Produktionsumgebung zusammenspielen 
-							- Frühe Problemidentifizierung durch CI \cite[S. 6]{Duvall07}
-								- arbeiten alle Softwarekomponenten zusammen
-								- Wie komplex ist der Quellcode
-								- Werdem im Tema Coding standards umgesetzt
-								- Wie hoch ist die Testabdeckung
-								- Alle Tests auch nach letzten Änderung erfolgreich
-								- Werden die Kapazitätsanforderungen erfüllt
-								- Funktionierte das letzte Deployment
-							- CI-Szenario \cite[S. 5]{Duvall07}
-								-> Abbildung in \cite[S. 5]{Duvall07}
-					- Abrenzung zu CI: -> CD = CI + automatisierte Akeptanztests + Deployment in Produktion  \cite[S. 105]{CD}
-					-> Grafik von Schlegel: Javamagazin: CD-CI
-				- CI nicht genug:
-					- HF sehen, CI ist nicht genug da nur auf Dev-Teams fokussiert -> Output von CI ist Input für manuelles Testen und den Rest des Release-Systems  \cite[S. 105]{CD}				
-					- CI nimmt die frühe Integration der SW in den Fokus
-					- DP schließt CI-Konzept mit ein und erweitert dieses, der Fokus wird weiter in Richtung Release gerückt.
+			- Deployment-Pipeline ist Grundkonzept des Liefersystems, welches auf CI aufbaut.
+			- Abgrenzung zu CI notwendig
+				- Exkurs CI:
+					Features von CI nach Duvall:
+						- Ziel ist deploybare SW zu erstellen. 
+						- "Build Software at Every Change" \cite[S. 4]{Duvall07}							
+						- Kleine Änderungen am Quellcode führen zu einer Integration in die Code-Basis in Form einer regulären Aufgabe\cite[S. 6]{Duvall07}
+						- frühe und kontinuierliche Integration der Software gibt schnelles und frühes Feedback, ob alle Komponenten in späterer Produktionsumgebung zusammenspielen 
+						- Frühe Problemidentifizierung durch CI \cite[S. 6]{Duvall07}
+							- arbeiten alle Softwarekomponenten zusammen
+							- Wie komplex ist der Quellcode
+							- Werdem im Tema Coding standards umgesetzt
+							- Wie hoch ist die Testabdeckung
+							- Alle Tests auch nach letzten Änderung erfolgreich
+							- Werden die Kapazitätsanforderungen erfüllt
+							- Funktionierte das letzte Deployment
+						- CI-Szenario \cite[S. 5]{Duvall07}
+							-> Abbildung in \cite[S. 5]{Duvall07} (lieber nicht!)
+				- Abrenzung zu CI: -> CD = CI + automatisierte Akeptanztests + Deployment in Produktion  \cite[S. 105]{CD}
+				-> Grafik von Schlegel: Javamagazin: CD-CI
+			- CI nicht genug:
+				- HF sehen, CI ist nicht genug da nur auf Dev-Teams fokussiert -> Output von CI ist Input für manuelles Testen und den Rest des Release-Systems  \cite[S. 105]{CD}				
+				- CI nimmt die frühe Integration der SW in den Fokus
+				- DP schließt CI-Konzept mit ein und erweitert dieses, der Fokus wird weiter in Richtung Release gerückt.
 					
 			3.1 Ziele der DP:
 				Problembeschreibung:
@@ -317,7 +330,7 @@
 						- CI-System reagiert mit neuer Instanz des Softwarelieferprozesses -> Laufzeit sollte 5-10 Minuten (ideal) -> Paralellisierung \cite[S. 105-120]{CD}
 						- Schritte: Kompilieren / Commit-Test (Komponententests) / Binärdaten erzeugen / statische Codeanalyse (White-Box) / Artefakte wie Testdantebank erstellen \cite[S. 120]{CD}
 						- Metriken: Testabdeckung / Kodedubletten / Zyklomatische Komplexität / Afferente und efferente Kopplung / Anzahl von Warnungen / Code Style \cite[S. 121]{CD}
-							-> Testabdeckung: Tools wie Sonar berechnen die Abdeckung von Code-zeilen, die von einem Test abgedeckt werden. \cite{sonar_testcoverage}
+							-> Testabdeckung: Tools wie Sonar berechnen die Abdeckung von Code-zeilen und Kontrollflusspfaden in einem Programm, die von einem Test abgedeckt werden. \cite{sonar_testcoverage}
 							-> Zyklomatische Zahl misst die strukturelle Komplexität des Quellcodes an hand des Kontrollflussgraphen und gibt die menge unabhängiger Pfade im Programmfluss an. Wird jeder Pfade des Kontrollflussgraphen einmal durchlaufen, ergibt sich eine Abdeckung von 100 % \cite[S. 100 f]{sl_basiswissen_sw_test}
 							-> afferrente Kopplung beschreibt die Anzahl der Klassen außerhalb eines Paketes, die von Klassen innerhalb des Paktes abhängen (incomming), efferente Kopplung hingegen ist die Anzalh von Klassen außerhalb eines Paketes von denen Klassen innerhalb des Paketes abhängen (outgoing). Beschreibung für stabilität -> I = Ce / Ca + Ce -> Range [0,1] 0 ist stabil. \cite[S. 23-24]{martin_design_principles}
 	!						-> Warnungen und Code-Style sind nicht beseitigte Schwachstellen -> Java Code Conventions, welche Sun folgt und empfiehlt -> filenmaes, file-organisation, Einrückung, Kommentatare, Declarationen, Namensvergabe \cite{java_code_conv}
@@ -427,6 +440,52 @@
 							- Skript, welches sich auf die Systeme einloggt und Änderungen durchführt 
 							- Lokales Skript, wird durch Agents auf allen Systemen ausgeführt
 							- Package der genutzten Platform bauen + Infrastruktur-Management-Tool das die Änderungen übernimmt (besste Option)
+							
+		3.8 Kritische Komponenten in der DP:
+				3.8.1 Datenbankupdate in der DP:
+					- Datenbank als kritische Komponente während des SW-releases
+						- z.B. Neue Funktionalität in Web-Anwendung soll Deployt werden, die eine Änderungen an einer Tabelle erfordern
+						- Problem z.B. bei inkrementelles Update einer Web-Anwendung, die unterschiedliche DB-Versionen nutzen
+							-> Was passiert mit Nutzertransaktionen auf alter DB-Version
+							-> Anwendung kann nicht live gehen, wenn dies nicht geklärt.
+						- Datenverlust duch Release vermeiden
+							- Fehlschlag beim Release -> Rollback der DB schnell, einfach und automatisiert?
+						- Vorbereitung und Organisation von Persistenz auf der die Anwendung arbeitet
+					- Lösungsmöglichkeiten:
+						- Inkrementelle Ändeurngen an Datenbanken
+							- Zu beginn aufsetzen der Datenbank
+							- Wenn neue Tabellen benötigt werden, können z.B. "ALTER TABLE" Anweisungen ausgeführt werden
+							- Im Skript müssen auch UNDO-Operationen vorgesehen werden, um die Änderungen rückgängig zu machen
+							- Versionierung: Notwendig im Skripte zu ermitteln ob Skripte ausgeführt werden können.
+							-> Tool, welches den aktuellen Stand der Datenbank überprüft und das x+1-Skript ausführen kann. (Tool:DbDeploy) \cite[S. 328]{CD}
+						- Datenbank-Rollback
+							- Datenbanken + Anwendung zurücksetzen können, wenn beim Deployment etwas schief geht: \cite[S. 332]{CD} (Blue-Green-Deployment)
+								1. Datenbank-Backup erstellen und auf zweiten DB-Server einspielen (z.B. durch Provisionierung)
+								2. Änderungen an der Datenbank vornehmen und Funktion testen (Änderungsskript, Test mit SQL-Befehl)
+								3. Server für Anwendung provisionieren, einrichten und Anwendung deployen -> neue Instanzen greifen auf neue Anwendung zu.
+								4. laufende User auf neue Version übertragen und Server mit alter Version stoppen.
+								5. Delta der alten DB von Backup-Time bis Stop der alten Version auf neue DB übertragen
+								-> geht bei der Änderung der kopierten DB etwas schief, kann deployment gestoppt werden
+								-> Hat die alte Anwendung fehler, kann DB-Backup eingespielt werden. Delta an neuer DB muss aber in alte übernommen werden
+						- Entkopplung Anwendungs- und Datenbankänderung \cite[S. 333]{CD}
+							- wird zwischen zwei Deployments ausgeführt
+							- wenn neue Version sich als stabil erwiesen hat
+							- Versions-Bedingung der DB für Applikations-Version -> app v248 ist kompatibel mit db v15 -> z.B. über Konfig-Info vor Deployment DB-Version abfragen (Grafik \cite[S. 333]{CD})									
+				3.8.2 Strategien für die Versionsverwaltung:
+					- Branching und Merging 
+						-> Branch erzeugt einen paralellen Entwicklungszweig \cite[S.154-159]{popp_konfig}
+						-> SVN bietet hierfür den separaten Ast Branch an, während der Hauptstamm im Trunk verbleibt
+						-> Warum Branches? 
+							- parallele Entwicklung am Branch für Feature, während auf dem trunk das release vorbereitet wird \cite[S. 157]{popp_konfig}
+							- Integrations-Branches \cite[S. 389]{CD}
+							- Wartungs-Branches
+						-> Merging führt Branches zusammen \cite[S. 390-393]{CD}
+							- aufwändig wenn differenzen groß und eine Menge Anpassungen notwendig sind den Branch in den Hauptstamm einzufügen 
+							- Kontinuierlich mergen: Branches nur für kurze Zeit zuzulassen, 1-2 Tage, verringert die Nachteile des Branchings 
+							- Empfehlung:
+								- Branch nur für Releases
+								- Änderungen immer am Trunk
+								- Mergen nur für BugFixes am Release (Trunk -> R-Branch)							
 
 		3.7 Implikationen für das Liefersystem:
 			- Liefersystem besteht aus Infrastruktur und Umgebungen
@@ -483,51 +542,7 @@
 								- Daten sammeln
 								- Logging
 								- Instrumentenpult erstellen, die den Zustand und das Verhalten der Applikation anzeigt
-			3.8 Kritische Komponenten in der DP:
-				3.8.1 Datenbankupdate in der DP:
-					- Datenbank als kritische Komponente während des SW-releases
-						- z.B. Neue Funktionalität in Web-Anwendung soll Deployt werden, die eine Änderungen an einer Tabelle erfordern
-						- Problem z.B. bei inkrementelles Update einer Web-Anwendung, die unterschiedliche DB-Versionen nutzen
-							-> Was passiert mit Nutzertransaktionen auf alter DB-Version
-							-> Anwendung kann nicht live gehen, wenn dies nicht geklärt.
-						- Datenverlust duch Release vermeiden
-							- Fehlschlag beim Release -> Rollback der DB schnell, einfach und automatisiert?
-						- Vorbereitung und Organisation von Persistenz auf der die Anwendung arbeitet
-					- Lösungsmöglichkeiten:
-						- Inkrementelle Ändeurngen an Datenbanken
-							- Zu beginn aufsetzen der Datenbank
-							- Wenn neue Tabellen benötigt werden, können z.B. "ALTER TABLE" Anweisungen ausgeführt werden
-							- Im Skript müssen auch UNDO-Operationen vorgesehen werden, um die Änderungen rückgängig zu machen
-							- Versionierung: Notwendig im Skripte zu ermitteln ob Skripte ausgeführt werden können.
-							-> Tool, welches den aktuellen Stand der Datenbank überprüft und das x+1-Skript ausführen kann. (Tool:DbDeploy) \cite[S. 328]{CD}
-						- Datenbank-Rollback
-							- Datenbanken + Anwendung zurücksetzen können, wenn beim Deployment etwas schief geht: \cite[S. 332]{CD} (Blue-Green-Deployment)
-								1. Datenbank-Backup erstellen und auf zweiten DB-Server einspielen (z.B. durch Provisionierung)
-								2. Änderungen an der Datenbank vornehmen und Funktion testen (Änderungsskript, Test mit SQL-Befehl)
-								3. Server für Anwendung provisionieren, einrichten und Anwendung deployen -> neue Instanzen greifen auf neue Anwendung zu.
-								4. laufende User auf neue Version übertragen und Server mit alter Version stoppen.
-								5. Delta der alten DB von Backup-Time bis Stop der alten Version auf neue DB übertragen
-								-> geht bei der Änderung der kopierten DB etwas schief, kann deployment gestoppt werden
-								-> Hat die alte Anwendung fehler, kann DB-Backup eingespielt werden. Delta an neuer DB muss aber in alte übernommen werden
-						- Entkopplung Anwendungs- und Datenbankänderung \cite[S. 333]{CD}
-							- wird zwischen zwei Deployments ausgeführt
-							- wenn neue Version sich als stabil erwiesen hat
-							- Versions-Bedingung der DB für Applikations-Version -> app v248 ist kompatibel mit db v15 -> z.B. über Konfig-Info vor Deployment DB-Version abfragen (Grafik \cite[S. 333]{CD})									
-				3.8.2 Strategien für die Versionsverwaltung:
-					- Branching und Merging 
-						-> Branch erzeugt einen paralellen Entwicklungszweig \cite[S.154-159]{popp_konfig}
-						-> SVN bietet hierfür den separaten Ast Branch an, während der Hauptstamm im Trunk verbleibt
-						-> Warum Branches? 
-							- parallele Entwicklung am Branch für Feature, während auf dem trunk das release vorbereitet wird \cite[S. 157]{popp_konfig}
-							- Integrations-Branches \cite[S. 389]{CD}
-							- Wartungs-Branches
-						-> Merging führt Branches zusammen \cite[S. 390-393]{CD}
-							- aufwändig wenn differenzen groß und eine Menge Anpassungen notwendig sind den Branch in den Hauptstamm einzufügen 
-							- Kontinuierlich mergen: Branches nur für kurze Zeit zuzulassen, 1-2 Tage, verringert die Nachteile des Branchings 
-							- Empfehlung:
-								- Branch nur für Releases
-								- Änderungen immer am Trunk
-								- Mergen nur für BugFixes am Release (Trunk -> R-Branch)
+								
 		3.9 Zusammenfassung:
 		
 			-> speziell Werkzeuge: welche Konzepte von CD und der DP werden verwirklicht -> Welche Anforderungen aus CD können damit umgesetzt werden.
@@ -609,7 +624,13 @@
 		- Commit und Acceptance kann zu Deployment führen, aber Vorbereitung notwendig z.B. für Jenkins, Tomcat, JBoss, Ant und Maven
 		- Ausliefern in Cloud oder VM hochfahren mit Chef, schon bei adesso als Projekt verwendet
 	
-	4.4 Anknüpfungspukte für CD: 
+	4.4 adesso CI-System
+		- Konfiguration von Jobs
+		- Build, Test und Metriken
+		- Jenkins Plug-In-Konzept
+		- Deployment-Funktionalitäten
+	
+	4.5 Anknüpfungspukte für CD: 
 	- Wenn möglich sollte kompilieren und testen automatisch auf CI-Systemen ausführen
 	- Hoher Aufwand wenn zu spät integriert wird und Fehler entdeckt werden -> komplex Systeme
 	- Wenn nur WAR- und EAR-Files geliefert werden ist kein Zugriff auf Produktivsystem möglich
@@ -619,95 +640,714 @@
 	- Geeignete Tools sollen im nächsten Kaptiel untersucht werden
 
 5. Evaluierung der Werkzeuge:
-	- Evaluierung von Go, Deployinator, Dreadnot -> sind durch adesso vorgegeben
-	- Werkzeuge stehen im Zusammenhang mit CD: Ziel Komplexität von CD veringern
-	- Komplexitäten durch:
-		- unsicherer Prozess wenn automatierung nur aus Script-Sammlung besteht
-		- Ausrollen von Webanwendungen in Produktion -> Installation Server und Infrastruktur
-	- kein unverseller Problemlöser erwartet, möglicher Weise sind Tools in verschiedenen Kategorien beheimatet
-	- CD umfasst die Konzepte von CI, CI System schon vorhanden (Jenkins)
-	- Deployment-Pipeline in Web-Server bei adesso durch Jenkins-Plug-In schon möglich
-	- Zu untersuchende Werkzeuge stehen in Konkurrenz zum bestehenden System
+	- Ziel ist die Evaluierung von Go, Deployinator, Dreadnot -> sind durch adesso vorgegeben
+	- Zu Beginn ermittlung von Evaluierungskriterien und Grobbetrachtung der Werkzeuge
+	- Dann Untersuchung der jeweiligen Werkzeuge nach gesetzten Kriterien
+	- Anschließend Vergleich und Auswertung
 	
 	5.1 Kriterien für die Evaluierung:
-		- Soll klären ob die Werkzeuge die Deployment-Pipeline bei adesso verbessern könnten
-		- Genauer Funktiosumfang der Werkzeuge vorab noch nicht bekannt -> eingehende Grobbetrachtung notwendig
-		- Einordnung in Werkzeugklassen: Go -> CI-System, Deployinator und Dreadnot -> Self-Service-Portal für Deplyoment
-		- Grundlegene Eigenschaften für Einrichtung, Betrieb und Integration in Umgebung sind vergleichbar
-		- Funktionsumfang für CD setzen an unterschiedlichen Ende, möglicherweise ein gegenseitige Ergänzung von CI <-> SSP 
-		- Deshalb Untersuchung welche CD-Funktionen abgebildet werden nach Management, Commit-, Acceptance-, Deployment
-	
-		5.1.1 Kriterien für Einrichtung, Betrieb und Integration
-		- Installationsanweisungen
-		- Installatiosverhalten und 
-		- Systemvoraussetzungen
-		- Möglichkeiten das System zu integrieren
-		- Lizenzen / Kosten
+		- Der Evaluierung von SW steht normaler Weise ein konkretes Anwendungsszenario gegenüber
+		- Konkretes Anwendungsszenario ist von Seitens adesso aber nicht gegeben
+		- satattdessen: adesso möchte zu einem das Konzept von CD näher beleuchten und prüfen Werkzeuge den Lieferprozess verbessern können
+		- Werkzeuge werden im Zusammenhang mit CD genannt und haben das Ziel den Lieferprozess zu verbessern.
+		- Genauer Funktiosumfang der Werkzeuge vorab noch nicht bekannt 
+		- Implikationen für Werkzeuge bzw. Tool-Chain aus CD -> Anforderungen an die Werkzeuge leiten sich aus den Konzepten von CD ab:
+			- Ableitung aus Konzepte von CD:
+				- Es nicht zu erwarten das ein einzelnes Werkzeug in der Lage ist, alle Konzepte umzusetzen. 
+				- Automatisierung von:
+					- automatisierter deployment / sw release Prozess
+					- akzeptanz test
+					- Datenbank installation und konfiguration
+				- Verbesserung des Feedback-Prozesses:
+					- Verhalten der Anwendung kontrollieren (Kap 2.2) : ausführbarer Code, Konfiguration, Ausführungsumgebung und Daten
+					- zeigt das Code compiliert und valide ist, Test Okay sind, Metriken okay sind.
+					- Darstellung ob funktionale und nicht funktionale Anforderungen erfüllt werden
+					- Möglichkeit schaffen für eine einfachen Kommunikation zwischen Leuten
+				- SSP für Tester, und Release-Verantwortliche -> Bereitstellung des RC's in die jeweilige Umgebung -> jede Zeit, jede Version in die Umgebung bereitstellen können -> One-Button
+					- System für Status der Software -> Zustand, kompilierte Pakete, welche Tests, zustand der Umgebungen
+				- Konfiguration:
+					- Stand der 3rd-Party Bibliothken, Laufzeitumgebung, Server-Version, Properties für Konfiguration mit unterschiedlichen Werten
+					- Konfiguratiosdatein, Datenbank-Skripte und Schemas, Build-Skripte, Tests, Entwicklungsumgebungen, Konfiguration von OS		
+				- Implementierung eines wiederholbaren verläslichen Prozesses
+		-> Grobbetrachtung:
+			- Einordnung in Werkzeugklassen: Go -> CI-System, Deployinator und Dreadnot -> Self-Service-Portal für Deplyoment
+				-> Möglichkeiten des Vergleichs zwischen CI-System und SSP eingeschränkt
+			- Funktionsumfang für CD setzen an unterschiedlichen Ende, möglicherweise ein gegenseitige Ergänzung von CI <-> SSP 
+			- Kundenanforderungen sind konkret nicht gegeben, keine Konkreten Anschaffungs- Implementierungsabsichten -> Wunsch neue Verfahren und Werkzeuge zu betrachten
+			- Objektiver Vergleichsmaßstab für analytischen Vorgehen nicht möglich, da:
+				-> Bewertungskonzept nicht auf einheitliche SW aufbauen kann
+				-> für Evaluierung kein Konkreten Kunden / Nutzer-Bedürfnisse orientiert
+			- Betrachtung der Werkzeuge muss deshalb  unabhängig sein, ob nun einzelnes Werkzeug alle Funktionen von CD übernimmt oder das Werkzeug nur im Zusammenhang einer Tool-Chain betrachtet werden kann
+			- Deshalb Kriterien für Evaluierung: 
+				- Allgemeine Qualitätsmerkmale von SW vergleichen
+				- prinzipiell Untersuchung welche CD-Funktionen abgebildet werden nach Management, Commit-, Acceptance-, Deployment
+				- Frage im Kern: kann der Lieferprozess bei adesso mit diesen Werkzeuge verbessert werden
+				-> Verbesserung wäre:
+					- direkte Auslieferung in die Produktivumgebung des Kunden häufig nicht möglich
+					-> möglicherweise aber Auslieferung eines SSP als Teil des SW-Projektes
+						-> Kunde könnte sich jederzeit gewünschte SW-Version von "Trustd-Store" ziehen. Auslieferung in Produktivumgebung selbst organisieren
+					-> wenn Auslieferung möglich, dann vereinfachung und Unterstützung beim Auslieferungsprozesss gewünscht
 		
-		5.1.2 Anforderungen für eine Deployment-Pipeline aus CD
-		- nach CD, unterscheidung der Anforderungen nach Stages
+		5.1.1 Allgemeine Kriterien (für Einrichtung, Betrieb und Integration)
+			- Starke und Balzert weisen auf die Qualitätscharakteristika von SW der DIN/ISO-9126 hin \cite[S. 57f]{starke_swa} und \cite[S. 110]{balzert_swt}
+			- Abbildung dieser Kriterien auf CD
+			-> Verlgeich der Qualität nach:
+				- Funktionalität: 
+					- Vorhandensein von Funktionen mit festgelegten Eigenschaften
+					- Angemessen den Anforderungen (integrierbarkeit in den Lieferprozess von adesso)
+						-> in Bezug auf die Konzepte von CD
+						-> Abbildung einer Deployment-Pipeline und Unterstützung einer weitgehenden automatisierung des Prozesses: Skripting [SVN,Build,...], Trigger
+						-> CI-Funktionalitäten: kompilieren, testen, metriken, paketieren, auf Testsystem deployen, Report, Artefakte Repository
+						-> CD-Funktionalitäten: SSP für Tester, Akzeptanz-Stage und Produktion, Provisionierung von Infrastruktur
+						-> genauere Beschreibung in nachfolgenden Abschnitten untergliedert
+					- Genauigkeit -> Eignung der Funktionalität für spezifizierte Aufgabe
+					- Interoperabilität 
+						-> Anwendung arbeit mit vorgegebenen Systemen zusammen, lässt sich in adesso Sys-Landschaft integrieren
+						-> Intregration in Jenkins: Job der von getriggert wird, Ausnutzung von Repository für SSP
+					- Sicherheit -> Zugriff auf Funktionen und Daten von unbefugten verhindern
+				- Zuverlässigkeit:
+					- Reife: 
+						- Geringe versagenshäufigkeit
+						- ?Ausgereiftheit der Anwendung, Entwicklungsstadium, Versionsnummer -> Rückschluss auf Entwicklungsschritt -> V 1.0 zeigt erstes akzeptables Release an, pre 1.0 Beta-Versionen
+					- Fehlertoleranz: Wie reagiert das System auf Fehlerzustände z.B. im Skript oder Konsolen-Kommandos, falsche Konfiguration
+					- Wiederherstellbarkeit: Anwendungszustand nach Absturz wiederherstellbar?
+				- Benutzbarkeit
+					- Verständlichkeit: Klar, welche Funktionen welche Zustände verändern oder Prozesse anstoßen, Aufwand das Konzept zu verstehenE
+					- Erlernbarkeit: Leichter Einstieg in die Funktionalitäten, Aufwand die Funktionen zu erlernen
+					- Bedienbarkeit: Wie wird Konfigurieren und die Anwendung gesteuert, Aufwand die Anwendung zu bedienen, leichte verständliche und logische Schritte, keine unnnötien irrationalen Zweischenschritte vorhanden
+				- Effizienz
+					- Zeitverhalten: schnelle Reaktion, antwortzeit bei funktionsausführung
+					- Verbrauchsverhalten: benötigte Betriebsmittel, Systemvoraussetzungen für Betrieb [CPU, Speicher, HDD, OS, Infrastruktur]
+				- Wartbarkeit / Änderbarkeit
+					- Analysierbarkeit: Aufwand um Mängel oder Ursachen von Versagen zu finden
+					- Änderbarketit: Aufwand Änderungen vorzunehmen
+						- bei OpenSource die Möglichkeit, Version für eigene Zwecke weiterzuentwickeln
+					- Stabilität: Wahrscheinlichkeit des Auftretens unerwarteter Wirkungen von Änderungen
+					- Testbarkeit: Prüfaufwand für geänderte Software
+				- Portabilität / Übertragbarkeit
+					- Anpassbarkeit: verschiedene festgelegte Umgebungen
+					- Installiebarkeit Aufwand für Installation [Installation, Dokumentation, Sprache, Unterstützung des Herstellers], [verständlichkeit, vollständigkeit]
+					- Koexistenz: 
+				- weiter sieht Balzert die Merbenutzerfähigkeit und Verteilbarkeit auf vernetzte Systeme als markante Einflussfaktoren \cite[S. 111]{balzert_swt}
+				- Für Prozesssteuerungssystem sieht Balzert Wartbarkeit, Sicherheit, Zuverlässigkeit, Leistug (Effizienz), Betriebssicherheit, Benutzbarkeit und Verfügbarkeit als Wesentlich an.\cite[S. 112]{balzert_swt}
+				- Zudem sind bei der Auswahl auch wirtschftliche Rahmenbedingungen [Kosten + Lizenzen, Hardwarevorraussetzungen, Varianten] zu beachten
 		
-		5.1.2.1 Management von CD
-		- Prozess abbilden
-		- Quality Gates
-		- Prozess-Trigger
-		- Reporting Build, Test, Metriken
+		5.1.2 Funktionalitäten für das Management der Delivery Pipeline
+		- Möglichkeit einen Prozess abzubilden
+			- Value-Stream-Map mit genutzen Versionen in der Stage
+		- Prozess-Trigger allgm.
+			- SVN, Stages, Quality Gates
+		- Reporting Integration für Build, Test, Metriken
+			- Allgemein: Stage-Time[Compile Time, Test-Time]
+			- Commit-Stage: Build-Success + Darstellung Komponenten-Tests, statische Code-Analyse
+			- Akzeptanz-Test-Stage: Auswertung Test, beurteilung des Build
+			- Deployment: welche Version ist in welcher Umgebung deployt, seit wann?
 		
-		5.1.2.2 Commit-Stage
+		5.1.3 Funktionalitäten für die Modellierung der Commit-Stage
 		- Unterstützt Versionsverwaltungssysteme (SVN,CVS,Git)
-		- Build-Tools anstoßen (Ant,Maven,?)
-		- Repository für Artefakte
+		- Möglichkeit Build-Tools anzustoßen (Ant,Maven,?)
+		- Möglichkeit Repository für Artefakte zu verwalten
 		- Unit-Tests (JUnit)
 		- Code-Analyse (Sonar, FindBugs, etc.)
 		
-		5.1.2.3 Acceptance-Stage
+		5.1.4 Funktionalitäten für die Acceptance-Stage
 		- Konfiguration Testumgebung
 		- Binärdaten deployen
 		- Smoke-Test
 		- Akzeptanztests
 		
-		5.1.2.4 Deployment
-		- Self-Service-Deployment
+		5.1.5 Funktionalitäten für das Deployment
+		- Self-Service-Deployment für Tester 
+		- Auslieferung SSP für Kunde
 	
-	5.2 Ergebnisse:
+	5.2 Evaluierung:
 	
 		5.2.1 Go
-		- Setup:
+		- Go von Thoughtworks
+		- Go wird von Thoughtworks entwickelt, Fokus liegt auf agiler Softwareentwicklung und bietet Lösung für Agile Softwareentwicklung an. Go wird unter "Agile Release Management" für Continous Delivery angeboten. \cite{go_company}
+		- Modelierung und automatisierung des Build-, Test und Realease-Prozesses, mit Konzept des "push-button deployments"
 		
-		- Implementierung einer Pipeline:
+			Konzept von Go
+			- Go ist erweitertes CI-System mit dem sich verschiedene Pipelines abbilden und paralell betreiben lassen.
+			- Jede Pipeliene kann verschieden Stages definieren, die nach ein ander abgearbeitet werden
+			- Je Stage verschiede Jobs, die Parallel abgearbeitet werden, je Job, verschiedene Tasks
+			- Läuft als Web-Anwendung, verteieltes System, Ausführung von Stages auf verteielten Agents
+			
+			Lizenz und Verisonen:
+				Community / Enterprise-Version \cite{go_version}
+					- Enterprise = Communit + [Agents, User, Templates, Environments, Deployment in Environments, Version of Environments]
+				20 User + 10 Agents = $12.500/Jahr, 50 User + 25 Agents = $24.500/Jahr \cite{go_pricing}
+			
+			Probeversion
 			- HF empfehlen wenn noch kein Projekt vorhanden: funktionierendes Skelett mit "Hello World" \cite[S. 132]{CD}
-			- Implementierung eines Testprojektes um Go zu testen
+			- Ziel ist die Evaluierung der Möglichkeiten eine Pipeline abzubilden sowie die Überprüfung des automatisierten Durchlaufs -> Trigger auf SVN-Commit
+			- 30-tägige Test-Lizenz der Enterprise Edition von ThoughtWorks 
+			- Erprobung der Funktionalitäten von Go wird ein Test-Projekt erstellt:
+			- Ablauf:
+				- SVN-Commit
+				- Compile, Unit-Test, WAR-File in Commit-Stage
+				- Deployment auf Test-Server, Akzeptanz-Test auf Test-Anwendung
+				- Releasefähige Version als Ergebnis in Artefakt-Repository
+				-> Abbildung von Evaluierung S.7?
+			- Testprojekt:
+				- WAR-File, , Deployment-Descriptor (web.xml) und einfache JSP-Seite, die ein "Hello World" zurück gibt.
+				- JUnit-Komponententest für Commit-Stage und JWebUnit und JMeter für Akzeptanztest Funktionaler und nicht funktionaler Anforderungen
+				- ANT-Build-Script
+				- Tomcat-Server für Deployment-Ziel
+			-> Test-Installation:
+				- nutzung VM, Simulation Produktionsumgebung im Unternehmen -> 3 Linux Instanzen in Virtual Box die den Mindesanforderungen entsprechen (GO-Server, GO-Client, SVN + Tomcat)
+				- Konfiguration GO-Server:
+					- Parameter '-XX:PermSize' und '-XX:MaxPermSize' wurden glich gesetzt -> Problem mit GC vermieden, keine Größenanpassung des Speicherbereichs dann mehr notwendig
+						-> '$ java -XX:PermSize=128m -XX:MaxPermSize=128m -jar go.jar'
+					- 8 GB für Artefakt-Repository konfiguriert
+				- Go-Client:
+					- '$ java -jar agent-bootstraper.jar 192.168.56.101'
+			
+			Funktionsbeschreibung:
+				Management einer Delivery-Pipeline:
+					(Value-Stream-Map, Prozess-Trigger, Reporting [Time, Success, Test, Version-Running])
+					- Abbildung einer Pipeline mit verschiedenen Stages möglich, je Stage paralelle Jobs, je Job sequentielle Tasks
+					- Hinter-Einander-Reihung von Pipelines möglich
+					- Prozess-Trigger: neue Instanz der Pipeline durch Materialien: Änderung an der Code-Basis im Versionsverwaltungssystem oder durch Pipeline
+					- Reporting:
+						- Pipeline-Activity mit Pipeline-Instanz und erfolg der Stages
+						- Je Stage:
+							- Übersicht über Jobs (Fails, In Progress und Passed)
+							- Pipeline Dependencies (Materialien: Versionsverwaltung oder Pipeline mit Rev.-Nummer) sowie nachfolgende Pipelines die auf dieser Rev.-Nummer aufbauen
+							- Übersicht der Tasks (Result, Status [fretig, laufend, wartend], Dauer, welcher Agent
+								-> Fehleranalyse in der Pipeline
+							- Übersicht über verwendete Pipeline-Konfiguration
+							- Grafik zeigt Build-Verlauf seit Rev.-Nummer 1 der Pipeline (Zeit der Stage und Erfolg)
+						- Je Task:
+							- Log-File das während der Ausführung erstellt wird 
+								-> Vorgänge können Nachvollzogen werden
+							- Test-Übersicht
+								- Test-Reports im JUnit-Format werden direkt verarbeitet
+								- Einbinden der Protokolle in die Oberfläche als Reiter konfigurierbar
+							- Artefakt-Übersicht
+								- Unterscheidung in Test- und Build-Artefakte
+								- Können beliebig vom Go-Server runtergeladen werden
+							- Einbundung von Test-Reports in HTML-Format möglich -> alternativ über Artefakt-Übersicht wird erstelltes Material eingebunden
+							- TestProjekt:
+								- JUnit, JWebUnit, JMeter-Testprotokolle
+						- Mail-Versand, wenn Pipeline scheitert
 				
+				Commit-Stage:
+					(Versionsverwaltung, Build-Tool, Artefakt Repository, Junit-Test, Code-Analyse)
+					Versionsverwaltung: Subverison, Git, Mercurial, Perforce und Team Foundation Server oder Artefakt von anderer Pipeline möglich
+					Build-Tool: Unterstützt werden Ant, NAnt und Rake durch Konfiguration von Targets und angabe des Build-Files, weitere Tools über defintion von Kommando-Tasks möglich
+						- im Test-Projekt wird zum kompilieren des Quellcodes und erzeugen des WAR-Files der Ant-Task von Go genutzt:	
+							- Build-File muss nur angegeben werden, sofern die Datei nicht 'Build.xml' heißt und nicht direkt unter dem Projektverzeichnis erwartet werden kann.
+							- Angabe des Ant-Targets für Ausführung des Build-Prozesses
+					Unit-Tests: können etweder über Task des Build-Tools angestoßen werden oder über Kommandozeilen-Tasks
+						- Beispielprojekt:
+							- Ant-Taks mit Target
+								- Reports mit junitreport in Ant aus XML-Format in HTML umwandeln
+								- Job muss am Ende alle Tests-Reports vom GO-Client in das Artefakt-Repository des Go-Server kopieren
+								- Konfiguration über Artefkat möglich, GO unterscheidet Build und Test-Artefakt, Konfiguration von Src-Folder(Go-Client) unde Dest-Folder (Go-Server)
+					Code-Analye: Integration möglich z.B Sonar zur statischen Code-Analye mit Ant-Task-Plug-In -> Installation des Sonar-Server notwendig (Plug-In stellt Verbindung zum Sonar-Server her)
+						- Im Test-Projekt nicht integriert, aber über Ant-PlugIn für Ant 1.7.1 oder höher, möglich \cite{sonar_install_ant}
+						- An den Sonar-Server (sonar.host.url) werden über das Ant-PlugIn complierte Binärdatein und Testklassen sowie verwendet Bibliotheken übertragen \cite{sonar_ant_config}
+							-> Sonar bietet analyse der Abdeckung Code-zeilen und Kontrollflusspfaden in einem Programm durch Tests. \cite{sonar_testcoverage}
+				
+				Acceptance-Stage:
+					(Konfiguration-Testumgebung, Deployen von Binaries, Smoke-Test, Akzeptanz-Test)
+					- Smoke-/Akzeptanztests über Build-Skript oder Konsole Anstoßen
+						- Testprojekt: JWeb-Unit für Smoke-Test nach Installation "Hello World" wird im HTML vom Server als Response gesendet -> Installation okay
+						- Weitere Akzeptanz-Tests können dann anschließen (JWeb-Unit, Selenium oder andere Werkzeuge) -> Integration in Build-Tool wie Ant oder aufruf über Konsole möglich
+					- Deployment in Test und Konfiguration von Umgebungen z.b. Chef(opscode.com) 
+						- Um Testumgebungen für jede Version beliebig zu konfigurieren sollte Konfiguration in Versionsverwaltung sein -> Script durch Konsole ausführbar
+						- Szenario 1: Agent=Testumgebung -> Konfiguration der Umgebung über Shell-Skript, über Material Versionsverwaltung auf System geliefert
+							-> Über Agents
+								- Installation von benötigter SW und anschließender Konfiguration über Custom Command oder Shell-Skript
+								- Fetch-Task holt erstellte Binärdatein oder gebaute OS-Distributions-Datein auf Zielsystem, auf dem Agent läuft
+								- Starten der Anwendung über Custom-Command
+						- Szenario 2:
+						- automatisierung von Infrastruktur über und automatisch Verteilung von Software \cite{opscode_chef_cd}
+						-> mit Chef oder z.B. bei laufenden App-Server wie JBoss oder Tomcat deployment des WAR- und EAR-Files über Ant-Plugin oder Maven-Plug-In
+							-> z.B. wird bestimmte Version eines Servers in Umgebung benötigt, wird dies in einem "Cookbook" festgehalten
+							- Chef prüft ob Umgebung Bedingung im "Cookbook" erfüllt und installiert ggf. SW hinzu tauscht Version aus.
+						- Alternativ lassen sich auch Änderungsskripte verfassen und der fesgelegten Zielumgebung ausführen, bei Linux z.B. über SSH
+
+				Deployment:
+					(SSP für Tester, Produktion, SSP für Kunde?)
+					- Agent-Konzept nur für Test möglich -> In Enterprise nur eingeschränkte Anzahl von Agents, in Community keine Agents auf anderen Systemen als "localhost"
+					- Aber: Pipelines für spezielle Zwecke möglich
+						-> für Tester möglich, die eine bestimmte Version zu deployen
+					- Manuelles Triggern der Pipeline mit Optionen, Auswahl der Revisionsnummer einer Anderen Pipeline um bestimmtes Atrfakt auf Testserver zu deployen						
+					- Ausliefern in Produktivumgebung des Kunden möglicherweise aber problematisch wenn Compliance-Richtlinien bzw. rechtliche Bedingungen dies unterbinden
+					- Keine Lösung für diesen Fall!
+			
+			Qualitative Beurteilung:
+
+				Funktionalitäten:
+					(Anforderungen, Genauigkeit, Interoperabilität, Sicherheit)
+					- breite OS-Unterstützung durch die Java Runtime, läuft auf Windows, Mac OSX, Linux und Solaris
+					- Umfassende Abbildung einer Deployment Pipeline mit Stages und parallele laufenden Jobs möglich
+						- parallele Jobs für Fail-Fast von Test, empfohlen
+					- Aufgaben innerhalb einer Pipeline können mit Build-Tools, Shell-Skripten oder weitern Werkzeugen (z.B. Konfiguration Infrastruktur mit Chef) angestoßen werden
+					- Triggern der nächsten Stufe durch erfolg der vorherigen
+						- erfordert korrektes auswerten von Tests und vollständiges Testen auf Akzeptanzkriterien -> praktiken von BDD empfohlen
+					- Komplexitäten von CD liegt in Auslieferung von SW in eine spez. Umgebung 
+						-> keine Unterstützung für Deployment oder Datenbank management
+						-> Lösung über Anstoßen von Shell-Skripte und Werkzeuge möglich
+						-> Auswertung von Erfolg / Misserfolg über Rückgabewerte oder Shell-Skripte die komplexere Ergebnisseauswerten z.B. Prüfen von Installationen oder Werten
+					- Prozessabbildung der Delivery Pipeline und Prozesssteuerung
+					- Komplexere Prozesse durch Verschachtelung
+					- Deployment auf Test mit Agent ohne weitere Infrastruktur-Management-Tools möglich
+					- Deployment in Produktion nur mit weiteren Tools wie Chef möglich.
+					- Bei externen Kunden möglw. aus Gründen der Compliance nicht möglich in Produktion zu liefern.
+					
+				Zuverlässigkeit:
+					(Reife, Fehlertoleranz, Wiederherstellbarkeit)
+						- September 2012 Version 12.2
+						- Programmfehler werden geloggt
+						- Speicher Probleme bei Testversion mit Mindestanforderung von 1024GB RAM aufgetaucht
+						- Konfiguration der Anwendung über Admin/Backup
+							- gesichert werden Konfiguration-Datein zum wiederherstellen der Einstellungen und Durchläufe: Pipelines, User, Rollen, Umgebungen, Agents....
+							- Sicherung der erstellten Artefakte nicht notwendig 
+								-> können jederzeit durch Anstoßen der Pozesse aus Versionsverwaltung hergestellt werden 
+								-> Automatisierung bring verlässlichen Prozess mit Reproduzierbaren Ergebnissen
+
+				Benutzbarkeit:
+					(Vertändlichkeit, Erlernbarkeit, Bedienbarkeit)
+						- Orientierung an CD-Konzept: Pipelines, Stages, Jobs, Tasks
+						- Bedienung über Web-Oberfläche 
+						- Übersichtliche Oberfläche zeigt Zustand der Pipelines, letzte Durchläufe
+						- Symboliken Play, Pause, Grün, Rot, Gelb-Animiert (läuft)
+						- Klare Struktur der Oberfläche, Design und Layout unterstützen intuitive Bedienung
+						- Sinnhafte Verbindungen zwischen Übersicht und Detailansicht
+						- Intuitive Bedienung -> Funktionen und verwendete Ideogramme verhalten sich entsprechend der Erwartungshaltung
+						- Ausführliche Dokumentation vorhanden, Unterteilt in verschiedene Sichten (Installation, Entwickler, Tester, Release Manager, Administrator)
+						- Administration über Web-Oberfläche oder Bearbeitung der Konfigurationsdatei im XML-Format möglich
+
+				Effiziez:
+					(Zeitverhalten, Verbrauchsverhalten)
+					- GO-Server 1-2 GB RAM, 2 GHz Prozessor, JRE Version 6 + GO-Client -> 128-256 MB RAM, 2GHz, JRE 6
+						-> Testbetrieb auf virtuellen Server mit 1280 GB RAM für GO-Server, häuffig Probleme mit Java Heap Space
+						-> GO-Client keine Problem bei 256 MB
+					- Speicherplatz für Artefakte -> hängt von Pipelinedurchläufen, Umfang der kompilierten Anwendung(en) ab
+						-> Rechnung: Testprojekt Tauschplattform mit anfangs 5 MB, jetzt 10 MB größe + 1 MB für Testprotokolle und Logfiles, 100 x Submit in 4 Wochen, 3 Monate Projektlaufzeit, 30% der Builds verlaufen erfolgreich : Artefaktspeicher 675 MB für JAR-Files + 300 MB Testprotokolle je Build-Versuch
+						-> Go bietet Möglichkeit Artefakte zu limitieren, z.B. alte Artefakte bei z.B. 10-GB Restspeicher löschen, so lange Restspeicher von z.B. 25-GB erreicht ist.
+						- frei Konfigurierbar
+					- Reaktion auf Nutzereingaben schnell und ohne Wartezeiten
+
+				Wartbarkeit:
+					(Analysierbarkeit, Änderbarkeit, Stabilität, Testbarkeit)
+					- Fehler in der Ausführung einer Pipeline können durch Log-Dateien mit Systemausgaben während des Durchlaufs ermittelt werden
+					- Fehler im Programm in extra Log-Datei -> Java Exceptions
+					- Konfiguration des Systems über API / HTTP-Schnittstelle -> eigene Konfigurationsskripte z.B. Anmeldung / Abmelden von Agents möglich
+					
+				Portabilität:
+					(Anpassbarkeit, Intallierbarkeit, Koexistenz)
+					- Implementierung von zusätzlichen Funktionen und Plug-Ins nicht möglich -> Änderbarkeit eingeschränkt
+					Installation:
+						- Notwendige Infrastruktur vorbereiten:
+							- gegeb. Versionsverwaltung wie SVN-Server einrichten unterstützt werden Subversion, Git, Mercurial, Perforce und der Team Foundation Server von MS
+							- Client der Verisonsverwaltung muss installiert werden um die aktuelle Code-Basis auf das System zu laden und den Prozess zu triggern
+							- JRE 6 auf Client und Server installieren
+								-> Probleme mit OpenJDK!, nur lauffähig mit JRE von Oracle
+							- Build-Tool installieren: Ant, NAnt und Rake-Task werden direkt unterstützt Konfiguration dieser in Formularne zur Asuführung müssen aber auf System installiert werden
+								- andere Tools, wie z.B. Maven, können über ablegen von Konsolen-Kommandos genutzt werden
+						- Go (Server | Client) selber kann dann als JAR ausgeführt werden (java -jar go.jar oder java -jar agent-bootstrapper.jar <go-server-hostname> [port])
+						- Installation ist gut Dokumentiert, einfach nachvollziehbar, 
+						- Notwendiger Infrastruktur zum Betrieb genau angegeben -> Problemlos
+					Koexistenz:
+						- Go-Server benötigt viel Speicher und Leistung zur Verwaltung der Clients und Steuerung der Pipeline
+						- Parallelbetrieb nicht empfohlen 
+						- Bei 1-2 Projekten von anderen Systemen nur im kleinen Rahmen empfohlen
+						
 		5.2.2 Deployinator
-		- Setup:
+		- Deployinator von Etsy entwickelt für eigenes ausliefern der Anwendung in Produktivumgebung \cite{codeascraft}
+		- Blog von Kastner 
+		- "one button web-based deployment app"
+		- vorher web push mit 3 Entwickler und 1 OPS-Eng. mit Deployinator: jeder || einer der verfügbar ist > 2 min.
+		- Wunsch: Code schnell ohne Aufwand deployen, egal ob normales oder emergency-deployment
+		Entwicklungsziele:
+			- Web-basierend
+			- Logging
+			- ins Netzwerk von Etsy integrierbar
+			- IRC und Email Integration
+			- Transparent im Hinblick auf die ausführenden Aktionen
+			- Integration mit Monitoring-Systemen von Etsy
+		- Open-Source auf Github seit 29-07-2011
 		
-		- Implementierung einer Pipeline
-			- Nutzung des Testprojektes von Go
+			Konzept von Deployinator:
+				- Web-Anwendung basierend auf Ruby und Sinatra-Framework für Ruby
+				- Ermöglicht ausführung von Linux Shell-Skripten auf Release-System
+				- Einteilung in Stacks (z.B für verschiedene Projekte oder Teilsysteme)
+					- Jeder Stack kann verschieden Umgebungen beseitzen z.b. für Deployment auf Test und auf Produktion
+				- Stacks werden als Ruby Modul erstellt
+				- Konfiguration von Stacks im Ruby Modul -> Aktionen der Button auf Oberfläche sind Funktionen -> Anstoßen von Shell-Skripen in Funktionen möglich
+
+				- Zu Go unterschiedliches Konzept, Fokussierung von Deployment -> Depl. geht von deploy-fähiger Binärdatei aus CI-System aus.
+				- Aufgaben sind dann z.B. UAC in Test und Deployment in Produktion -> Aber keine Vorgabe, Schritte und Tasks frei definierbar
+			
+			Lizenz:
+				- MIT-Lizenz -> Rechte verwenden, kopieren, ändern, fusionieren, verlegen, verbreiten, unterlizenzieren und/oder zu verkaufen \cite{mit_license}
+				
+			Probeversion:
+				- Verfügbar auf Github
+				- Erschwerte Installation da nur schwache Installationsanweisung -> 
+				- + Stack erzeugen: STACK=my_test_stack rake new_stack
+			
+			Funktionsbeschreibung:
+				
+				Management einer Delivery-Pipeline:
+					(Value-Stream-Map, Prozess-Trigger, Reporting [Time, Success, Test, Version-Running])
+					- Keine Pipeline im Sinne von CD möglich, dennoch kann Build der Anwendug und Test über Depl. angestoßen werden
+					- manuelle Trigger über Button auf der Oberfläche -> vereinbar mit Ziel nur UAT und PROD zu deployen
+					- Log-Files mit Konsolen-Output nach jedem Triggern des Prozesses einsehbar, keine Integration von Test-Auswertungen
+					-> Kopieren von Test-Protokollen wie JUnit in Apache2-VZ möglich, Ap2 liefert dann Testauswertung an Web-User
+				
+				Commit-Stage:
+					(Versionsverwaltung, Build-Tool, Artefakt Repository, Junit-Test, Code-Analyse)
+					- Integration von Git, andere Versionsverwaltungen über Shell-Skript oder Konsolenbefehl
+						-> Im Test svn-Client für Linux und svn checkout und update im Shell-Skript integriert
+					- Build nicht vorgesehen, aber über Shell-Skript und Konsole möglich
+						-> Im Test Ant installiert und im Shell-Skript angestoßen, gleiches Ant-Skript wie bei Go, keine Anpassung notwendig
+					- Artefakt-Repos. kann z.B Artefaktory über $ ~/svn/repos/warFile/HelloWorld.jar > curl http://server:port/artifactory/api/ \cite{atrifactory_jfrog_doc_rest}
+						-> Im Test wurde lokales Verzeichnis mit alles Versionen erstellt. /artefaktRepos/$svn_rev/Hello_World_$svn_rev.war
+					- Test und Codeanalye 
+						-> nicht vorgesehen aber über shell möglich 
+						-> Integration von Testprotokollen z.B. über Apache-2 möglich oder in Ruby Protokolle über XML-Parser einlesen und Ergebnisse in Web-Konsole loggen
+				
+				Acceptance-Stage:
+					(Konfiguration-Testumgebung, Deployen von Binaries, Smoke-Test, Akzeptanz-Test)
+					- Anwendung für Deployment auf Testumgebung bzw. Produktion, kein Quality-Gate / keine Signalisierung ob Tests okay bevor in Produktion -> XML-Parser Test-Protokolle
+					- Bei Release nicht möglich eine bestimmte Version für Release auszuwählen
+					
+				Deployment:
+					(SSP für Tester, Produktion, SSP für Kunde?)
+					- Deployment-Skript über Oberfläche anstoßen
+					- SSP mit verschiedenen Buttons für Test und Prod
+					- SSP für Kunde Konfigurierbar, 
+						Sze.: 
+							- Depl. holt Binaries aus Artefaktory / Trusted Store
+							- Deployt auf Test-Umgebung
+							- nach Abnaheme der neuen Features erfolgt Deployment auf Prod.
+							- geht etwas schief, Button um letzte Version wiederherzustellen
+							- letzt. erfordert für jede Version wiederherstellungs-Skripte
+			
+			Qualitative Beurteilung:
+
+				Funktionalitäten:
+					(Anforderungen, Genauigkeit, Interoperabilität, Sicherheit)
+					- Keine vollständige Deployment Pipeline mit ineinander greifenden Stages umsetzbar
+					- dennoch: Build, Test und andere Aufgaben können durch Shell-Skripte umgesetzt werden. 
+					- wenn Anforderungen ausschließlich auf Deployment-Portal liegen:
+						- Anstoßen von Depoyment als Shell-Skript, möglicher Weise Tools wie Chef nutzen um Konfiguratgionsänderungen auf Infrastruktur zu ändern
+						- z.B. für Web-Anwendung mit Apache-2 Load Balancer und Tomcat-Cluster: \cite{tomcat_cluster_session}
+							- Cluster in server.xml konfigurieren
+							- Session-Attribute müssen java.io.Serializable implementieren
+							- ReplicationValve unter <Cluster> in server.xml
+							- web.xml hat <distributable/> element
+							- Load-Balancer nutzt sticky sessions
+							- Session Replikation über Multicast
+							- Einzelne Instanzen können nun nach einander runtergefahren werden 
+							- Anwendungspakete (WAR-File) + Konfiguration kann nun geändert werden
+							- Hochfahren der Instanzen -> Anmeldung am Cluster
+						- Mit Deployinator kann so auf verschiedenen Clustern unterschiedliche Versionen verteilt werden 
+							-> Test der Anwendung mit eingeschränkten Nutzerkreis, wenn alles okay folgen die anderen Cluster
+					- Interoperabilität über SSH / wget / curl möglich um Daten auszutauschen oder Prozesse anzustoßen
+						- Ermitteln von akutellen Programmversionen svn / Artefakt-Repository von CI-System
+						- Laden von Programmpaketen und Konfigurationsdatein
+						- Infrastrukturanpassungen von verteilten Systemen über Chef / Shell-Skripte / ssh
+						- Kommunikation mit Tomcat-Cluster z.B. über curl möglich
+					- Deployinator ist für die Umgebung von Etsy konzepiert
+					- Etsy nutzt SSO-Verfahren als Proxy -> Anfragen werden redirekted und die Parameter HTTP_X_USERNAME und HTTP_X_GROUPS im Request gesetzt
+						- Deployinator erwartet diese Parameter für den Betrieb
+						- Für Test-Version wurde das umgegangen -> config.ru werden diese vorkonfiguriert ENV["HTTP_X_USERNAME"]="test_user"; ENV["HTTP_X_GROUPS"]="test_group"; Deployinator läuft so auch ohne SSO
+						- Für Produktivsystem allerdings notwendig SSO-Verfahren bzw. Proxy zu benutzen oder durch Firewall abschirmen und nur bestimmte IP's aus dem internen Netz zuzulassen.
+					- Keine Möglihckeit eine bestimmte Version für das Deployment auszuwählen -> reguläre Konfiguration immer aktuelle Version nehmen
+						- Testprojekt wurde so umgesetzt, dass vor dem Deployment einer neuen Version die Versionsnummer der letzten Version in Datei geschrieben wird
+						- Button auf Oberfläche, um die letzte Version zurückzusetzen
+						- Prinzipiell Möglichkeit die Anwendung um Auswahlfeld zu erweitern:
+							- einmal deployte Version werden in Datei geschrieben, Auswahlfeld zeigt Versionsnummern an, im Request wird Versionsnummer gesendet
+							- Auswahlfeld im Template templates/generic_single_push.mustache name="selected_version" hinzufügen
+							- In helpers.rb befindet sich die init(env) dort können Request-Parameter mit ausgelesen werden. Mit @-Symbol können in Ruby Parameter Instanzweit deklariert werden
+								- "$ @version = form_hash(env, "selected_version")" in init hinzufügen
+								- Methode mit def version_to_deploy @version end
+								- in "$ my_test_stack.rb" in "$ deploy_sepc_version" als Übergabeparameter für das Deploy-Script: "$ run_cmd %Q{~/deploy_last_stable.sh #{version_to_deploy}}"
+								- Liste mit deploybaren Versionen kommen dann als Methode deployable_versions in Stack-Modul in my_test_stack.rb
+								- Inhalt der Liste selbst könnte aus Datei kommen, in der jede in Prod / Test deployte Version geschrieben wird, oder verfügbare Versionen aus Repository abgefragt werden
+									$ def version_as_html_option 
+									$ json_response = x%{curl http://server:port/artifactory/api/storage/libs-release-local/org/acme/}
+									$ result_hash = JSON.parse(json_response)
+									$ children = result_hash["children"]
+									$ result = ""
+									$ children.each do |ch|
+									$   a = ch.["uri"].[/[^\\]/]
+									$   result << "<option>#{a}</option>"
+									$ end
+									$ return result
+									$ end
+								- Im Template muss dann in der Button-Form eine Select-Element hinzugefügt werden:
+									$ <select name="selected_version">{{version_as_html_option}}
+
+				Zuverlässigkeit:
+					(Reife, Fehlertoleranz, Wiederherstellbarkeit)
+					- Deployinator wird auf Github nur sporadisch gepflegt, seit dem initialen Bereitstellung im Juli 2011 wurden nur an 6 Stellen Änderungen vorgenommen und Bugs entfernt  \cite{depOnGithub}
+					- Treten fehler in Scripten auf, werden diese im Log-File und auf der Seite angezeigt
+					- Anwendungsfehler je Ebene: In Oberfläche, wenn diese durch Sinatra-Framework behandelt werden oder bei Compiler-Fehler in Ruby-Modul wird beim start der Anwendung der Aufrufstapel in Console ausgegeben und Prompt zurückgegeben
+					- Es empfiehlt sich ein Git-Fork von Deployinator anzulegen und alle Konfigurationsskripte dort zu pflegen und ein Startskript mit "$ cd ~/deployinator $ git fetch upstream $ rackup" zu pflegen welches in Deployinator-Home-VZ die Anwendungsdatein zu aktuallisieren.
+					- Anwendung und Konfiguration dann jederzeit widerherstellbar
+
+				Benutzbarkeit:
+					(Vertändlichkeit, Erlernbarkeit, Bedienbarkeit)
+					- Konfigurartion: Sprachkennisse von Ruby erforderlich, Linux-Kommandos, Konzept von Ruby und Rails bekannt
+					- Bedienung klar da es nur Buttons gibt, die Deploy-Anweisungen ausführen und die Möglichkeit Log-Files einzusehen, Fehler werden als HTML-Datein gespeichert die in Konsolen-Stil in der Oberfläche angezeigt werden können.
+
+				Effiziez:
+					(Zeitverhalten, Verbrauchsverhalten)
+					- Kann von Subsystemen, wie der Abfrage der aktuellen Revisionsnummer auf dem SVN oder deploybarer Programmpakete in Artefakt-Repository
+					- Anwendung selbst besteht nur aus wenigen Seiten, Ruby und Rack beanspruchten im Testsystem nach Start ca. 38 MB RAM
+
+				Wartbarkeit:
+					(Analysierbarkeit, Änderbarkeit, Stabilität, Testbarkeit)
+					- Mit Kenntnissen in Ruby, Ruby on Rails, Linux-Shell können Fehler identifiert werden
+					- Ohne diese Kenntnisse schwer den Programmablauf nachzuvollziehen und Fehlerquellen zu identifizieren
+					- Systemanpassung nach belieben möglich -> z.B. neue Features wie eine spzifische Version aus einem Repository zu deployen
+					- Anwendung
+					- "$ rake test" führt alle Tests nach dem Muster "*_test.rb" unter "$ ~/deployinator/test" aus
+
+				Portabilität:
+					(Anpassbarkeit, Intallierbarkeit, Koexistenz)
+					- Ruby-Anwendung -> prinzipiell möglich auch auf Windows, Mac-OS und Solaris zu betreiben
+					- Installationsanweisung mangelhaft -> erhöhter Installationsaufwand, da erforderliche Pakete für den Betrieb nicht dokumentiert sind
+					- tiefere Kenntnisse in Ruby, Ruby on Rails notwendig
+					- Für die Installation werden folgende Hinweise gegeben:
+						- Getestet mit ruby 1.8.6, 1.8.7 und 1.9.2 
+						- Depl. eine standard Rack Applikation und nutzt meistens Sinatra
+						- Rack-fähiger Web-Server muss config.ru lesen
+						- Dependency Management mit bundle install
+					- Ohne weitere Hintergrundkentnisse von Ruby und Ruby On Rails schwer möglich Depl. zu installieren
+					- Hat recherche Aufwand erhöht
+					- folgende Lösung Isntalliert Depl. lauffähig: Installations-skript
+					- Koexistenz mit anderen nicht hochverfügbarkeits-Systemen prinzipiell möglich, da geringe Speicherverbrauch und sporadischer Zugriff
+					- Paralellbetrieb z.B. mit SVN-System, Artefakt-Server
+					- Starten mehrerer Instanzen möglich, mit anderen Ports um parallele Projekte zu ermöglichen, Url-Pfad-Konfigurierbar, Apache2 als Proxy
 		
 		5.2.3 Dreadnot
+			Konzept:
+			- Dreadnot wurde vom Cloud Monitoring Team von Rackspace entwickelt. \cite{racker_os_dreadnot}
+				-> am 5. Jan 2012 unter Open-Source Lizenz gestellt und auf Git veröffentlicht
+				-> Apache License Version 2.0
+				
+			- Dreadnot ist eine nodejs-Anwendung auf
+			-> Dreadnot ist stark von Deployinator inspiriert, Cloud Monitoring Team begann zu erst mit Deployinator, aber entsprach nicht ganz den Anforderungen 
+				-> Single Region Product 
+				-> Deployinator sollte für verschieden Produkte in Rackspace laufen -> jedes Team musste eine menge eigene Anpassungen vornhemen
+			
+			-> Konzept von Stacks: wie Deployment abläuft und welcher Code deployt wird, Rackspace z.B. Stack für Monitoring-Dienst und ein für API-Service
+			-> Jeder Stack nutzt Regionen -> aktuell deployte Version sichtbar und aktuelle Version auf Git-Hub
+			-> History je Region -> Log-Files einsehen -> Diff auf Github, welche Änderungen es gegeben hat.
+				-> Starke Integration von Git, Buildbot, Apache HTTPD, Chef
+				-> Buildbot (http://trac.buildbot.net/) : CI-System -> baut die Anwendung und führt Tests aus.
+				-> Dreadnot reconfigures the load balancers in the target region balancer-manger feature of mod_proxy -> Requests werden in andere Regionen umgeleitet (http://httpd.apache.org/docs/2.2/mod/mod_proxy_balancer.html#balancer_manager)
+				-> Modifizierung des Databag im Chef-Server, chef-clients in bestimmter Region wird getriggerrt -> Ausrollen von Chef-Rezepten aber erst wenn Verkehr in andere Regionen umgeleitet wurde
+				-> Test gegen die aktualisierte Server / Infrastruktur
+				-> Bei fehlern wartet Dreadnot auf menschliche Interaktion -> Mail, IRC
+				-> Wenn alles Funktioniert, Konfiguriert Dreadnot die Load-Balancer neu
+				-> Rackspace nutzt für jede Stage (Test, Prod, etc) eigene Dreadnot-Instanz
+			-> nodejs setzt auf Chrome's JavaScript Runtime -> Ziel ist schnelle, scalierbare Netzwerk-Anwendungen zu ermöglichen
+			-> niedriger Server-Footprint
+			-> typische Struktur:
+				" ./data/logs/..								"	-> Hier werden Log-Datien geschrieben
+				" ./data/local_git_repos/..						"	-> locale git-repositories
+				" ./data/local_git_repos/.git/					"	-> git system verzeichnis
+				" ./data/local_git_repos/<my_git_repos_name>/	"	-> git repository, das deployt wird
+				" ./data/warnings.txt							"	-> warn-meldung auf der Deploy-Seite
+				" ./stacks/..									"	-> hier sind alle Stacks 
+				" ./stacks/<my_stack_name>_stack.js				"	-> Eine Stack-Konfiguration
+				" ./htpasswd									"	-> Passwort-Datei für Git-Repository
+				" ./local_settings.js							"	-> lokale Einstellungen: 
+					-> local_settings.js: Projekt / Produkt-name, Umgebung in die Deployt wird (Test, Stageing, Produktion, etc.), Ort der Passwortdatei für Git, Stacks mit Git-Url, welcher Branch genutzt werden soll, in welche Regionen deployt werden soll
+					-> <my_stack_name>_stack.js
+				$ npm install dreadnot -g
+				$ dreadnot -c ./local_settings.js -s ./stacks -p 8000
+			- Enge Integration in Git -> eingenes Git im Unternehmen notwendig, Installation eines Git-Systems (http://git-scm.com)
+				- eigener Git-Server mit Gitorious (http://gitorious.org/gitorious & http://coding-journal.com/installing-gitorious-on-ubuntu-11-04/)
+			
+			Funktionsbeschreibung:
+				
+				Management einer Delivery-Pipeline:
+					(Value-Stream-Map, Prozess-Trigger, Reporting [Time, Success, Test, Version-Running])
+					- Paul Querna empfiehlt für jede Stage / Umgebung einen eigene Instanze (Test, Prod) \cite{racker_os_dreadnot}
+						-> Unterschiedliche Ansätze für kompilierte und interpretierte Sprachen
+							-> Eine Eigenschaft der Depl.-Pipeline war Quellcode innerhalb der Pipeline nur einmal zu kompilieren
+							-> für interpretierte Sprachen kein Problem, Quellcode-Basis lässt sich dann direkt von Git ziehen und auf System verteilen
+							-> Bruch von Konzept der Deployment-Pipeline für kompilierten Code, Dreadnot schaut immer auf aktulle Version der Code-Basis in Git aber dies ist nicht zwingend releaseable
+								-> Lösung möglich mit unterschiedlichen Repositories: Quellcode in code-base, kompilierte in test-able, getestete rc's in release-able
+								-> Jede Dreadnot-Instanz scchaut auf eigenes Repository.
+								- Prozesse wie Build müssen aber manuell getriggert, durch Push-Button
+							-> Dreadnot druch Git-Integration besser für intepretierte Sprachen geeignet
+							-> interpretierte Sprachen Top-10 auf Github:  Ruby, JS, Python [Top 3], shell, PHP, Perl -> zusammen (interpretierte unter top10 = 64%) \cite{github_lang}
+							-> kompilierte Sprachen Top-10 auf Github: Java, C, C++, Objective-C (21%) -> Rest 15% andere Sprachen auf ein Großteil interpretiert
+				
+				Commit-Stage:
+					(Versionsverwaltung, Build-Tool, Artefakt Repository, Junit-Test, Code-Analyse)
+					- Versionsverwaltung: Git, ohne Git ist Betrieb von Dreadnot nicht möglioch
+						- andere prinzipiell möglich, jedoch Umbau der Anwendung notwendig -> Deployinator
+						- nodejs bietet Möglichkeiten Konsolen-Kommandos auszuführen
+						- In Tasks der Stacks dann z.B. Ant mit Build-Script anstoßen
+						- Komponenten-Test / Code-Analyse laufen lassen -> bei Erfolg Datei in Git-Repository 'test-able' hochladen
+				
+				Acceptance-Stage:
+					(Konfiguration-Testumgebung, Deployen von Binaries, Smoke-Test, Akzeptanz-Test)
+					- Konfiguration -> Dreadnot integriert Knife -> Interaktion mit Chef-Server-API (manipulieren von Chef-Knoten, Kochbüchern, Rollen und Umgebungen)
+					- Ablaufen von Test, kann - muss aber nicht - durch automatisiert Tests (bei Java: JWebUnit, JMeter, Soap-UI, etc.) erfolgen -> Bei positiven Ausgang der Tests werden die Binaries nach Gibt "release-able" deployt.
+
+				Deployment:
+					(SSP für Tester, Produktion, SSP für Kunde?)
+					- Möglich, Dreadnot so zu konfigurieren, dass es aus der Umgebung des Kunden heraus sich die gewünschte Version aus dem Git-Repository "release-able" oder "test-able" zieht und in Test / Prod deployt
+					- Bedingung ist aber Git als Repository für Binaries bzw. bei interpretierten Sprachen die Code-Basis zu nutzen
+					
+			Qualitative Beurteilung:
+
+				Funktionalitäten:
+					(Anforderungen, Genauigkeit, Interoperabilität, Sicherheit)
+					- Deployment-Pipeline für Java-Anwendungen nur bedingt umsetzbar, Einschränken mit GitHub -> andere Strategien, für interpretierte Sprachen (Ruby, PHP, JS, Pearl) einfacher möglich
+					- Genauigkeit von Dreadnot hängt von Qualität der JS-Konfiguration-Datei ab und Umsetzung der Aufgaben, Dreadnot ermöglicht lediglich die Ausführung der Anweisungen über einen Button zu starten und Versionen anzuzeigen.
+					- Arbeit vorwiegend mit Git und Knife, Andere Systeme sind ebenfalls möglich zu integrieren, wenn auf diese über nodejs zugegriffen werden kann (sollte der Fall sein!)
+
+				Zuverlässigkeit:
+					(Reife, Fehlertoleranz, Wiederherstellbarkeit)
+					- Aktivität auf GitHub (16.09.2012): besonders hohe Aktivität im Dezember 11 und Januar 12, danach nur noch sporadische weiterentwicklung und besietigung kleinerer Bug-Fixes, 10 Authoren in den letzten 23 Wochen
+					- Fehler werden in die Konsole geloggt bzw. bei schwerreren Fehlern bricht die Anwendung ab und beendet -> durchaus gewollt, keine Deployment sofern nicht alles korrekt Konfiguriert ist.					
+					- Empfehlung ist die Erstellung eines Git-Forks, Konfiguration der Anwendung kann dort gepflegt werden, wiederherstellbarkeit ist so gegeben.
+					- Ausführung der Deployment-Tasks hängt von der Zuverlässigkeit der genutzten Werkzeuge und Skripte, die das Deployment ausführen.
+					
+				Benutzbarkeit:
+					(Vertändlichkeit, Erlernbarkeit, Bedienbarkeit)
+					- Einarbeitung in das Konzept von CD notwenidig und den Ansatz von Dreadnot
+					- So fern korrekt Konfiguriert, problemlose Bedienung, Übersichtliche Oberfläche, Verständlicher Ablauf der Push-Button
+
+				Effiziez:
+					(Zeitverhalten, Verbrauchsverhalten)
+					- Schnelle Antwortzeiten der Oberfläche
+					-> Während des Testbetriebes belegte Dreadnot ca. 25 MB RAM in Hauptspeicher, nodejs schläft so lange keine Verbindung existiert, jeder Verbindung besteht nur aus einer wenig Platz im dynamischen Speicherbereicht \cite{nodejs_about}
+
+				Wartbarkeit:
+					(Analysierbarkeit, Änderbarkeit, Stabilität, Testbarkeit)
+					Änderbarkeit -> fork git-hub -> Anpassung an quellcode basis
+					-> Test-Frameworks für nodejs mit dem assert-Modul aus CommonJS \cite{nodejs_testing}
+					-> Da Quelloffen, Analyse des Quellcode möglich
+
+				Portabilität:
+					(Anpassbarkeit, Intallierbarkeit, Koexistenz)
+					Installierbarkeit: Einzeiler > $ npm install dreadnot -g
+					- Dreadnot wird über npm (node package manager von nodejs) auf dem Zielhost installiert, nodejs läuft auf Windows, MacOSX, Linux und SunOS
+						" $ sudo apt-get install git
+						" $ sudo apt-get install nodejs
+						" $ wget https://github.com/racker/dreadnot/zipball/master
+						" $ unzip master
+						" $ cd racker_dreadnot_<version>
+						" $ npm install dreadnot -g " -> package.json wird verarbeitet und "dreadnot" als Kommando verfügbar gemacht
+						" $ dreadnot -c <path-to-config>/local_setting.js -s <path-to-config>/stacks -p 8000 " -> startet Dreadnot auf Port 8000, Dateistruktur der Konfigurationsdateien sollten obigen Beipsiel folgen
 		
-	5.3 Vergleich zum derzeitigen Auslieferungssystem
+		5.2.4 Gegenüberstellung:
+			- Funktionsübersicht:
+				- Delivery-Pipeline:
+					- Go: Abbildung einer Pipeline von Build, Test, Deploy möglich, Verschachtelung von Pipelines möglich, verschiedene parallele | sequentielle Task, Build auf verteielten Systemen, Test-Reporting einbindung, Log-Overview, inkludiertes Artefakt-Repos, automatische Triggern
+					- Deployinator: keine Abbildung einer Pipeline im Konzept vorgesehen -> Ende der CI-Pipeline, Deploy der Anwendung, Triggern über Push-Button, Log-Files in der Oberfläche abrufbar
+					- Dreadnot: - 
+				- Commit-Stage:
+					- Go: verschiedene Versionsverwaltungen unterstützt [Subversion, Git, Mercurial, Perforce, Team-Foundation], Ant als Build-Tool andere über Shell, Test und Code-Analyse über Ant | Shell ausführung und integration der Test-Protokolle
+					- Deployinator: Git-Integration, Nutzung von anderen über Shell-Kommandos leicht möglich, Build-Tools über Shell, keine Integration von Testprotokollen -> Auswertung über Skript möglich und loggen des Ergebnis in Oberfläche
+					- Dreadnot: 
+				- Acceptance-Stage
+					- Go: Wenn Agent auf Test-Umgebung läuft kann Konfiguration des Testsystems direkt durchgeführt werden (nicht in Community-Version möglich), Alternativ z.B. Chef oder Remote-SSH-Zugriff, 
+						-> allerdings nur für automatisierte Tests -> manuelle Tests würde abkoppeln des Agents beim Go-Server für die Dauer des Tests bedeuten (Programmatisch möglich, aber nicht effektiv)
+						-> Quality-Gates in Go möglich
+					- Deployinator: keine Quality-Gates wie in Go möglich -> aber z.B. XML-Parser für JUnit
+					- Dreadnot: 
+				- Deployment
+					- Go: Deployment der Anwendung auf einfache Weise auf Testsystem wenn Agent läuft möglich, alternativ über Remote-SSH oder Chef mit Anpassung der Rezepte, Repository für Verteilung
+					- Deployinator: SSP f\ür Tester und Produktion, Deployment über Scripte -> Roll-Back-Skript mit Button -> Regionen einführen Prod_1, Prod_2 und nacheinander deployen wenn z.B. Prod_1 okay, Auswahlliste mit RC's für z.B. Test kann ergänzt werden
+					- Dreadnot:
+			- Qualität
+				- Funktionalitäten:
+					- Go: Läuft auf Win, Mac OSX, Linux, Solaris -> Deployment-Pipeline, Komplexe Prozesse durch Reihenschlatund, Gebelung von Pipelines, Commit-Stage, Test, Prod mit Tools und Strategie, Build + Test-Cluster, Abdeckung von CD-Konzept
+					- Deployinator: keine Vollständige Depl.Pipe wie in Go (anderes Konzept) -> Deployinator setzt auf CI-Infra auf -> dennoch ist Build etc. umsetzbar, jedoch ohne auto-Trigger. ? Cron-Job
+					- Dreadnot:				
+				- Zuverlässigkeit:
+					- Go: Sep'12 -> Verison 12.2, Logging -> Wiederherstellungsfunktion
+					- Deployinator: Test der Ruby-Module möglich, Log-Files, Bearbeitung des Code möglich, Git-Fork und Änderungen am Code-Basis und Konfiguration vornehmen -> Wiederherstellbar
+					- Dreadnot:				
+				- Benutzbarkeit:
+					- Go: Übersichtliche Oberfläche, Detailsansicht, Konfiguration über XML und Oberfläche möglich, klare Symboliken, Zustand der Pipeline, Intuitive Bedienung
+					- Deployinator: Sprachkenntnisse von Ruby sowie Ruby on Rails erforderlich um Konfiguration = Code anzupassen, klares Bedienungskonzept, intuitiv
+					- Dreadnot:				
+				- Effizienz:
+					- Go: Server mit 2GB Ram empfohlen + 2 Ghz für Build-Cluster, Agent 256MB RAM, 1GHz, Speicehrplatz für Artefakte, keine Wartezeiten beim Interaktion
+					- Deployinator: Von Subsystemen abhängig -> Repository, SVN, etc. -> 38 MB RAM
+					- Dreadnot:				
+				- Wartbarkeit:
+					- Go: Kein Plug-In Konzept, kein Änderung an der Code-Basis möglich, Fehler werden in Log-File geschrieben (Java-Stack)
+					- Deployinator: Problemlos erweiterbar -> Ruby-Scripte, Shell-Skripte -> "$ rake test "
+					- Dreadnot:				
+				- Portabilität:
+					- Go: unabhängig das es auf der JVM läuft - startet als jar, gut dokumentierte Installationsanweisung, Installation JVM, Build-Tools (Ant), Versionsverwaltung, Chef, etc. notwendig,
+					- Deployinator: fehlende Installationshinweise über benötigte Ruby-Pakete, schwache Hinweise auf beötigte Infrastruktur-Komponenten wie Sinatra-Framework und Rack, dadurch erhöter Aufwand, zusätzliche Installation der benötigten Werkzeuge wie SVN, Ant, JUnit, Chef, etc
+					- Dreadnot: 
+			- Integrationsfähigkeit adesso:
+					-> Linux-Server Infrastruktur
+					- Go: Passt zur Infrastruktur bei adesso, SVN, Build mit Ant und Maven, Test mit JUnit, JWebUnit, SoapUI, JMeter möglich, Mulit-Projekte und Build-Cluster besonders positiv -> steht mit aktuellem CI-Systen in konflikt
+					- Deployinator: Ruby-Infrastruktur nicht im Stack, erweitert CI-System um gute Deployment-Oberfläche, SVN / Nexus-Server / FS-Repos für Binaries über Shell abrufbar
+					- Dreadnot: starke Git-Integration erforder Änderungen in der Code-Basis oder Git-System anstelle vom verwendeten SVN, Fokus auf Deployment von interpretierte Sprachen nicht geeignet für adesso
 	
-	5.3 Zusammenfassung:
+	5.5 Fazit Evaluierung:
 	- Zwei unterschiedliche Kategorien von Werkzeugen -> CI-System vs. Self-Service-Portal für Deployment
-	- Keines ohne Anpassung geeignet
-	- Dreadnot bieten gute Deployment Unterstützung, Mölichkeit als SSP in Lieferprozess zu integrieren
+	- GO ist vollständiges CI- / CD-System
+	- Go bietet vollständige Abbildung von Depl.Pipe an für mehrere Projekte und unterstützt ein Build-Cluster von bis zu 25 Agents (Enterprise) steht aber in Konkurrenz mit dem genutzten Jenkins CI-System
+	- Ablösung von bestehenden CI-System ist nicht Ziel der Arbeit. Ob ein wechsel lohne würde müsste weitergehend nach Aufwand-Nutzen untersucht werden -> stellt keine Alternative da.
+		- Deployment-Portal für verschiedene Projekte und Umgebungen mit einem lokalen Agent / Server möglich und ohne zusätzliche Kosten
+	- Dreadnot ist von alle Tools am leichtgewichtigsten, zu sehr auf Git und interpretierte Sprachen fokussiert, Nutzung von Dreadnot würde Anpssungen erfordern -> aber möglich SVN zu integrieren und den Umgang mit Binaries zu verbessern.
+	- Deployinator ergänzt das bestehende CI-System um Deployment-Portal, die Stack-Module können so gestalltet werden, das die aktuelle Version im Artefakt-Repository zurückgegeben wird und für das Deployment genutzt wird.
+	- Schritte die von administrativer Seite für ein Deployment einer Anwendung notwendig sind können in Shell-Script gefasst und von Deployinator zur Asuführung gebracht werden.
+	- Wenn Kunde den IT-Betrieb von adesso übernehmen lässt, ist es Release-SSP in eigener Umgebung leicht realisierbar.
+	- Wenn Kunde eigen Umgebung auf die von adesso nicht direkt zugegriffen werden kann, kann entsprechend Vor-Konfigurierter Deployinator mit Install-Skript ausgeliefert der IT-Betrieb / Kunde in die Lage versetzt werden, aktuelle Versionen aus Artefakt-Repository für Test in eigene Umgebung zu deployen. -> Implikation der Abnhame des Werkes.
+	- Schnelles Bug-Release ist dann einfach + Rollback
+	- Für eigene Test-Abteilung kann Deployinator genutzt werden um neue Version in Test-Umgebung zu deployen
+	- Deployinator als Ergänzung des adesso CI-Systems stellt bessere Optionen bereit
+	-> Kern der Deployment-Lösung sind jedoch gute Deployment-Skripte, hohe Testabdeckung, schrittweises Update der Infrastruktur mit Rollback-Funktion -> betrachtet Tools bieten lediglich die Möglichkeit diese Prozesse anzustoßen
 
-6. Lösungskonzept für CD bei adesso:
-
+6. Lösungskonzept SSP für Test- und Produktivumgebung bei adesso:
+	
+	- Deployinator als ergänzung der CI-Infrastruktur
+	
 	6.1 Szenario
-		- Einsatz von embedded Server verringert Komplexität -> Jetty, aber nur JSP Seiten, für Tauschplattform aber geeignet
-		- Abnahme auf Testsystem
-		- Einrichten eines Selfservice Portal um Version von Test auf Produktion zu bringen -> Teilabnahme damit erfolgt
-		- Muss als Aufgabe im Projekt betitelt werden
+		- Beispielprojekt:
+			- adesso intern
+			- Java-Anwendung für Dateitausch -> Hotfolder + Web-Portal zur verwaltung und Konfiguration
+			- Nutzung der bisherigen adesso Infrastruktur: SVN, Jenkins-CI, Maven-Build-Tool
+			- SSP für Deployment auf Testsystem und Produktivsystem
+		- Infrastruktur:
+			- Test-Server in adesso.local / Prod-Server in DMZ
+			- Manuelle und automatische Test auf Testsystem
+			- Einsatz von embedded Server (Jetty) verringert Komplexität der Anweudng und mach Deployment einfacher
 	
 	6.2 Prozessegestalltung
-		- Tools: SVN -> Jenkis CI -> Dreadnot / Deployinator
-		- Infrastruktur: SVN (externes System) -> CI-Server + Dreadnot + Puppet / Chef -> Deployment zu Node-System
+		- Tools: SVN -> Jenkis CI -> Deployinator
 	
-	6.3 Konzep einer Deployment Pipeline
+	6.3 Konzept einer Deployment Pipeline
 	
 	6.4 Werkzeugkonfiguration
 
 7: Fazit:
 	- "CD zu implementieren erfordert mehr als nur Werkzeuge zu kaufen und automatisierung zu implementieren, es hängt viel mehr von einer effektiven Zusammenarbeit ab aller im Auslierfungsprozess beteiligter. \cite[S. 417]{CD}
+	- Es gibt kein Werkzeug für cd, es gibt nur Werkzeuge für bestimmte Ausfgaben wie Infrastrukturmanagement, Deployment, Buil, etc....
+	- Je nach Anwendung müssen geeignete Werkzeuge ausgewählt werden, die eine Automatisierung des Auslieferungsprozesses ermöglichen können
+	- Jede Anwendung wird hier mglw. ein eigene Zusammenstellung von Werkzeugen nutzen, die an Struktur und Umgebung angepasst ist -> Aufgaben automatisieren ...
+	
+	
+- Vertragsrechtliche Implikationen:
+	- Werkvertrag:
+		- Wenn Gewerk vereinbart dann Klause in Vertrag, dass das Werk mit der letzten Lieferung abgenommen ist
+		- Werk ist abgenommen, wenn Werk in Produktion nimmt
+	- Dienstleistung:
+		- Bei Dienstleistung kein Problem da adesso dann Personal stellt
+	-> Delivery Pipeline: 
+		- Auslieferung in Kundenumgebung aus Gründen der Compliance evtl. nicht möglich
+		- Compliance erfordert transparanz der Prozesse -> Delivery-Prozess deshalb mit IT-Betrieb des Kunden 

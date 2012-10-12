@@ -1,0 +1,171 @@
+\chapter{\dpipe\ und Liefersystem}\label{liefersystem}
+
+Nach \devops\ kann die \dpipe\ als Realisierung eines Liefersystems betrachtet werden. Die \dpipe\ bildet den Auslieferungsprozess auf ein Liefersystem ab. Die Anforderungen aus diesem Abschnitt haben eine Implikation auf die zu untersuchenden Werkzeuge und dienen als Vergleichsbasis für das derzeitige Liefersystem bei adesso. Dieser Abschnitt befasst sich deshalb mit den Verfahren der Automatisierung und den Komponenten sowie dem Aufbau des Liefersystems.
+
+\hf\ schreiben über eine häufig anzutreffende Verschwendung von Ressourcen im Auslieferungssystem, die durch Prozessverzögerungen hervortreten. Als Beispiel geben sie an, dass der IT-Betrieb auf Unterlagen des Entwicklungsteams wartet, wie die ausstehende Dokumentation für ein einzuführendes Softwaresystem. Das System kann vorher vom IT-Betrieb nicht in Produktion gebracht werden. Analog hierzu kommt es vor, dass das Testteam auf eine neue Version der Anwendung wartet, um diese zu testen oder umgekehrt das Entwicklungsteam den letzten Bug-Report der Testabteilung benötigt, um Fehler beseitigen zu können. Zudem existieren nach Ansicht von \hf\ bei zu später Integration der Softwarekomponenten, die Risiken, dass die Architektur nicht den Anforderungen entspricht. Lange Zyklen im Feedback-Prozess erhöhen die Gefahr, fehlerhafte Software auszuliefern. Dies kann auch die Projektkosten am Ende noch einmal deutlich steigen lassen. Wenn ein Release scheitert oder sich verspätet, kann der betriebswirtschaftliche Nutzen hinter einem IT-Dienst nicht in der anvisierten Höhe ausgeschöpft werden. Ferner drohen hierdurch möglicherweise gar empfindliche Verluste, wenn \zb\ in einem umkämpften Markt Kunden einer Plattform wegen Ausfällen und instabilem Verhalten zu einem anderen Anbieter wechseln.\footnote{Vgl. \cite[S. 105 ff]{CD}}
+
+\section{\ci}
+
+\cd\ und das Konzept der \dpipe\ bauen auf \ci\ auf. Im Prozess von \ci\ wird die Software auf die technische Funktionsfähigkeit, die Einhaltung von Standards, auf Schwachstellen sowie das Zusammenspiel der Komponenten geprüft. Die Erfüllung von Akzeptanzkriterien ist hierin aber nicht mit eingeschlossen. Das Kriterium lieferfähig ist damit noch nicht erfüllt.\footnote{Vgl. \cite{Duvall07}}
+
+Das Ziel von \ci\ beschreibt Paul~M. Duval mit \mycite{build software at every change}. Dies führt dazu, dass auch kleine Änderungen an der Code-Basis in einem Build- und Test-Prozess münden. Diese Prozesse sollen dem Entwicklungsteam ein schnelles Feedback über mögliche Integrationsfehler geben, die bei komplexen und modularen Softwaresystemen auftreten können. \ci\ stellt sicher, dass alle entwickelten Komponenten in der geplanten Weise zusammenarbeiten.\footnote{Vgl. \cite[S. 4-6]{Duvall07}}
+
+Nach Duval ist die zu späte Integration der Softwarekomponenten ein häufig anzutreffendes Problem. Die zu späte Integration betrifft häufig Projekte, in denen verschiedene Entwicklungsteams parallel an verschiedenen Softwarekomponenten arbeiten. Der Frage, ob die Komponenten auch tatsächlich in der geplanten Art und Weise zusammenarbeiten können, wird erst kurz vor dem Ende der Projektlaufzeit nachgegangen. Da dann fast alle Komponenten fertiggestellt sind, entsteht in der Phase vor dem geplanten Release noch einmal ein großer Aufwand, um die betroffenen Komponenten anzupassen\footnote{Vgl. \cite[S. 4-6]{Duvall07}}
+
+\ci\ bietet hier eine frühe Identifizierung von Fehlern, Problemen und Schwachstellen, die bei der Zusammenarbeit von Softwarekomponenten auftreten können und betrachtet in diesem Zusammenhang auch die Komplexität des Quellcodes durch statische Codeanalyse. Hierunter fallen \zb\ die Umsetzung von Programmierstandard und die Abdeckung von Quellcodes durch Testfälle. Über jede Änderung an der Quellcode-Basis kann mit \ci\ eine Aussage über die Auswirkung auf die Qualität getroffen werden. Das Verhalten der Integrierbarkeit der Komponenten wird so kontinuierlich geprüft und es können negative Einflussfaktoren durch verschiedene Metriken gemessen werden. Sollte die fehlerfreie Funktion der Anwendung nach einer Änderung an der Quellcode-Basis nicht mehr gegeben sein, ist die Ursache durch eine Analyse der zuletzt durchgeführten Änderung leicht auszumachen. Das Entwicklungsteam erhält ein unmittelbares Feedback und kann die notwendigen Änderungen vornehmen, um die Anwendung in einen lieferfähigen Zustand zurück zu setzen.\footnote{Vgl. \cite[S. 4-6]{Duvall07}}
+
+\hf\ sehen \ci\ als sehr gut geeignet und als erste Stufe im Softwarelieferprozess an. \ci\ ist ihrer Ansicht nach aber nicht ausreichend.  Die alleinige Fokussierung auf das Entwicklungsteam im Lieferprozess geht ihnen nicht weit genug.\footnote{Vgl. \cite[S. 105]{CD}}
+
+Das Ende der Prozesskette der Integrationssysteme ist der Eintrittspunkt des IT-Betriebes in den Lieferprozess. Für die Installation und den korrekten Betrieb der Test- und Produktivumgebung ist in einer regulären Aufteilung der IT-Betrieb verantwortlich. Dies ist der Anknüpfungspunkt der \devops\ -Bewegung. Diese betrachtet eine Anwendung nicht nur als kompilierten Code, sondern vielmehr auch im Zusammenhang mit dem Management der Umgebung in der diese ausgeführt wird. Die Entwicklung und der Betrieb einer Anwendung müssen für die Umsetzung von \cd\ ineinandergreifen. Dieses wird durch die \dpipe\ verwirklicht. Das Liefersystem besteht in seiner ersten Stufe aus einem CI-System. Für die zweite Stufe werden werden eine Reihe geeigneter Werkzeuge benötigt, welche die anfallenden Aufgaben während der Auslieferung einer Anwendung automatisieren können. Mit \cd\ wird das Konzept von \ci\ um automatisierte Akzeptanztests sowie das automatisierte Ausliefern einer Anwendung in die Produktivumgebung erweitert.\footnote{Vgl. \cite[S. 105]{CD}}
+
+\section{Erste Lösungsstrategie für die \dpipe}
+
+Die \dpipe\ ist eine Kombination aus technischen und organisatorischen Lösungen und manifestiert den Lieferprozess. Ausgangspunkt ist eine Wertstromanalyse, \mycite{from conzept to cash}. Um eine \dpipe\ implementieren zu können, müssen alle Schritte in einem Auslieferungsprozess analysiert werden. Ausgangspunkt der Wertstromanalyse ist damit das \emph{commit} von Änderungen der Quellcode-Basis in die Versionsverwaltung, die ein Entwickler vorgenommen hat. Der Weg, den der Quellcode von diesem Punkt aus bis hin zur Ausführung in einem Produktivsystem nimmt, muss vorweg genau untersucht werden. Im Zentrum stehen die Fragen: wer macht was, was wird gemacht und wie wird es gemacht? Diese Fragen geben einen Anhaltspunkt bei der Modellierung eines automatisierten Prozesses. 
+
+In einem kleinen internen Projekt wurden folgende Beobachtungen gemacht: Freitag 14:00, \emph{Entwickler 1} hat eine neue Funktionalität implementiert und seine Komponenten auf dem Entwicklungssystem mit Unit-Tests getestet. Nach dem erfolgreichen Verlauf des Tests werden die Änderungen an der Quellcode-Basis in das Versionsverwaltungssystem commited. \emph{Entwickler 1} möchte gerne wissen, ob die neuen Funktionalitäten auch mit der benötigten Infrastruktur zusammenspielen. Hierfür möchte er die Version auf dem dafür bereitgestellten Testserver installieren, da nur auf diesem alle notwendigen Infrastrukturkomponenten verfügbar sind. Leider hat nur \emph{Entwickler 2} einen Remote-Zugriff auf den Testserver. \emph{Entwickler 2} führt ein Update der lokalen Dateien durch und muss dabei einige Konflikte lösen, da \emph{Entwickler 1} und \emph{Entwickler 2} Änderungen an derselben Komponente durchgeführt haben. Nachdem alle Konflikte aufgelöst werden konnten, kompiliert \emph{Entwickler 2} den Quellcode und packt die Anwendung für die Ausführung. Anschließend loggt sich \emph{Entwickler 2} in die Konsole des Test-Servers ein und stoppt die Ausführung der älteren Softwareversion. Dabei muss er noch alle Log-Dateien und Anwendungszustände der älteren Version sowie auch das ältere Softwarepaket selbst löschen, da es sonst zu unerwarteten Fehlern kommen kann. Das Löschen übernimmt ein selbstgeschriebenes Shell-Skript, das im Ausführungsverzeichnis der Anwendung bereit steht. \emph{Entwickler 2} kopiert das erstellte Paket der neuen Softwareversion in das Ausführungsverzeichnis des Test-Servers und startet die Anwendung über ein Startskript. Es kommt zu einem Fehler. Die neue Softwareversion benötigt noch eine weitere Bibliothek, die auf dem System installiert werden muss. Da \emph{Entwickler 2} sich zwar in den Server einloggen kann, aber leider keine Administrationsrechte besitzt, um die benötigte Bibliothek selbst zu installieren, wendet er sich an den \emph{Helpdesk} des IT-Betriebes. Da der \emph{Helpdesk} ein Ticketsystem benutzt, sind die Mitarbeiter angehalten, dieses Ticketsystem zu nutzen und ihre Anfragen als E-Mail zu formulieren. \emph{Entwickler 2} schreibt die E-Mail mit der Bitte, die benötigte Bibliothek zu installieren. Leider ist es Freitag 15:00 und alle Mitarbeiter sind ausgelastet. Das Ticket kann erst am Montag-Vormittag bearbeitet werden. Um 16:00 kommt der Abteilungsleiter auf das Entwicklungsteam zu, er hätte jetzt 15 Minuten Zeit, um sich den aktuellen Stand anzusehen und bittet um eine kurze Vorführung. Zu diesem Zeitpunkt gibt es aber bedauerlicherweise keine ausführbare Version der Anwendung, das Backup der alten Version wurde leider vergessen.
+
+Für dieses Szenario können folgende wiederkehrende Schritte ausgemacht werden:
+
+\begin{itemize}
+\item Kompilieren des Quellcodes.
+\item Durchlaufen der Komponententests.
+\item Erstellen des Softwarepaktes.
+\item Stoppen der alten Anwendung.
+\item Archivieren der alten Ausführungsdateien, Anwendungszustände und Log-Dateien.
+\item Überprüfen und Aktualisieren der Systemkonfiguration.
+\item Kopieren und Starten der neuen Version.
+\item Informieren des Entwicklungsteams.
+\end{itemize}
+
+Das Kompilieren des Quellcodes für die Ausführung im Testsystem wird ausschließlich auf der Basis der aktuellen Version im Versionsverwaltungssystem durchgeführt. Dadurch wird vermieden, dass noch Änderungen in den Quellcode einfließen, die eine Fehleranalyse und ein Zurückführen auf bestimmte Änderungen erschweren. Alle Komponententests werden durchlaufen. Die Qualität auf Ebene der Komponenten ist gesichert. Scheitert der Testdurchlauf, scheitert der Prozess. Die kompilierten Dateien werden zu einem lieferbaren Paket zusammengefasst. Das Paket selbst wird mit der Versionsnummer der aktuellen Quellcode-Basis versehen. So lassen sich später verschiedene Versionen einer Anwendung verwalten. Über einen Remote-Zugriff wird ein Stopp-Skript aufgerufen, das die aktuelle Version der Anwendung stoppt. Anschließend wird ein Clean-Up-Skript aufgerufen, das alle Log- und die gespeicherten Anwendungszustände zusammen mit der alten Version für eine spätere Inspektion packt und archiviert. Das Paket wird mit der Versionsnummer des alten Softwarearchivs versehen. Die \dpipe\ prüft die aktuelle Konfiguration des Systems und hat die Rechte, um benötigte Bibliotheken auf dem System installieren zu können. Die Datei, die eine Liste aller Abhängigkeiten enthält, wird aus dem Versionsverwaltungssystem geladen. Die neue Softwareversion wird auf das Testsystem kopiert und gestartet. Das Team wird über das E-Mail-System sowie das interne Nachrichtensystem informiert, dass eine neue Version der Anwendung auf dem Testsystem bereitgestellt wurde.
+
+Die Automatisierung dieser Teilschritte kann durch eine Tool-Chain, eine ineinandergreifende Verkettung von Werkzeugen, erreicht werden. Dabei schließt der Softwarelieferprozess menschliche Interaktion nicht gänzlich aus. So kann das Deployments auf das Test- oder Produktivsystem von einem Mitglied des Entwicklungs-, Test- oder Support-Teams angestoßen werden. Build- und Komponententests werden durch die neue Version in der Versionsverwaltung aber automatisch angestoßen. Das Testteam bzw. das Entwicklungsteam sollte entscheiden können, ob eine bestimmte Version in eine Umgebung deployt wird. Die Schritte hinter diesem Prozess werden automatisch durchgeführt und das Team über den Erfolg oder über aufgetretene Fehler informiert.\footnote{Vgl. \cite[S. 109]{CD}}
+
+Für \hf\ stellt dieses Vorgehen einen schnellen, jederzeit wiederholbaren und verlässlichen Prozess dar. Auch dringende Hotfixes, die schnellstmöglich in die Produktivumgebung gebracht werden müssen, können diesen Prozess sicher durchlaufen.\footnote{Vgl. \cite[S. 109]{CD}}
+
+Für ein kleines Projekt, welches noch am Anfang der Entwicklung steht, genügt die geringe Komplexität der hier vorgestellte \dpipe\ zunächst. Wächst die Größe der Anwendung und die Zahl der beteiligten Komponenten, muss die \dpipe\ den gestiegenen Ansprüchen angepasst werden. Dies könnte \zb\ bedeuten, dass das verwendete Schema einer Datenbank durch das Deployment-Skript aktualisiert wird oder in einem Server-Cluster einzelne Server gestoppt und wieder gestartet werden müssen. 
+
+\section{Struktur der \dpipe}
+
+\begin{figure}
+\centering
+\fbox{\includegraphics[width=.95\linewidth]{Grafiken/Delivery_Pipeline.pdf}}
+\quelle{nach \cite[S. 111]{CD}}
+\caption[Delivery Pipeline]{\dpipe\ nach \hf .}\label{pic:delivery_pipeline}
+\end{figure}
+
+\hf\ schlagen bei der Realisierung der \dpipe\ ein phasenweises Vorgehen vor und nutzen hierfür den Begriff des \emph{Staging}.  Eine \emph{Stage} bildet eine deutlich abgrenzbare Phase ab. Für die Umsetzung der \dpipe\ sollen diese nur der Orientierung einer möglichen Einteilung dienen. Je nach gestellten Anforderungen an den Lieferprozess, ergeben sich andere Abläufen und Strukturen und die \emph{Stages} müssen anders modelliert werden. Abildung~\ref{pic:delivery_pipeline} zeigt die \dpipe , wie \hf\ sie vorschlagen. Grundlegende Elemente sind demnach:\footnote{Vgl. \cite[S. 109-110]{CD}}
+
+\begin{itemize}
+\item \comstage ,
+\item \acstage ,
+\item \uastage ,
+\item \capstage\ und 
+\item \prodenv .
+\end{itemize}
+
+\subsection{Die \comstage}
+
+Die \comstage\ ist ein Prozess aus \ci . Sie stellt sicher, dass das entwickelte System sich auf dem erforderlichen technischen Niveau befindet. Das bedeutet, dass der Quellcode kompiliert und es keine Compiler-Fehler gibt, die die Komponententests fehlerfrei durchlaufen und die statische Analyse des Quellcodes eine hohe Testabdeckung und die Einhaltung von Programmierstandards bescheinigen.\footnote{Vgl. \cite[S. 109-110]{CD}}
+
+Eine Änderung an der Quellcode-Basis im Versionsverwaltungssystem startet die \comstage . Das CI-System reagiert mit einer neuen Instanz des Integrationsprozesses und kompiliert sowie testet dabei den neuen Softwarestand. Dem Entwicklungsteam sollte ein Feedback über den aktuellen Zustand des Quellcodes nach ca. fünf Minuten geben werden können. Nimmt dieser Prozess mehr Zeit in Anspruch, empfehlen \hf\ die Aufteilung der Unteraufgaben. Komponententests können \zb\ auch in parallel laufende Tasks aufgeteilt werden und auf verteilten Systemen ausgeführt werden. Die Ergebnisse können anschließend zusammengefasst und vom Entwicklungsteam ausgewertet werden.\footnote{Vgl.  \cite[S. 105-120]{CD}}
+
+Metriken der statischen Codeanalyse, die in dieser Phase getestet werden, sind:\footnote{Vgl. \cite[S. 121]{CD}} 
+
+\begin{itemize}
+\item Testabdeckung, 
+\item die Prüfung auf Codedubletten, 
+\item die zyklomatische Komplexität,
+\item die Untersuchung nach der afferenten und efferenten Kopplung,
+\item Warnungen und Programmierrichtlinien (\emph{Code Style}).
+\end{itemize} 
+
+Werkzeuge wie Sonar\footnote{Weitere Informationen zu Sonar unter \url{http://www.sonarsource.org/}.} verdichten die Testabdeckung auf einen prozentualen Wert. Dieser wird durch die Menge der im Test durchlaufenden Kontrollflusspfade bzw. der abgedeckten Codezeilen ermittelt. Wenn \zb\ bei der Menge der Eingaben, mit denen getestet wird, in einer Fallunterscheidung nie der alternative Zweig der Fallunterscheidung erreicht wird, beträgt die Testabdeckung für dieses Konstrukt $50 \%$.\footnote{Vgl. \cite{sonar_testcoverage}}
+
+Die zyklomatische Komplexität wird durch die zyklomatische Zahl ausgedrückt. Diese misst die strukturelle Komplexität des Quellcodes durch einen Kontrollflussgraph. Dabei wird die Menge unabhängiger Pfade im Programmablauf betrachtet.\footnote{Vgl. \cite[S. 100 f]{sl_basiswissen_sw_test}}
+
+Mit der afferenten Kopplung wird die Anzahl der Pakete beschrieben, die von Klassen innerhalb des untersuchten Paketes abhängen. Efferente Kopplung hingegen beschreibt das Gegenteil, die Anzahl von Klassen eines Paketes die von Klassen außerhalb des untersuchten Paktes abhängig sind. Diese Werte ermöglichen eine Beschreibung der Stabilität der Software. Demnach ist Stabilität $I = \frac{Ce}{Ca + Ce}$. Wobei $I$ im Intervall $[0,1]$ liegt, $Ce$ für efferente und $Ca$ für afferente Kopplung steht. Ein Wert von $0$ deutet auf Stabilität und darauf hin, dass dieses Pakte hauptsächlich von anderen benutzt wird. Dies könnte \zb\ für eine Schnittstellenbeschreibung der Fall sein oder auf einen Service hindeuten, der von anderen Paketen verwendet wird. Ein Wert von $0,5$ weist auf eine wechselseitige Beziehung zwischen den Paketen hin. Ein Wert von $1$ zeigt eine deutliche Abhängigkeit von anderen Paketen. Ändern sich die verwendeten Pakete, wird dieses auch Auswirkungen auf die Funktionsweise des untersuchten Paketes haben.\footnote{Vgl. \cite[S. 23-24]{martin_design_principles}}
+
+Eine von Sun für die Programmiersprache Java empfohlene \emph{Code-Style}, also die Einhaltung von Programmierstandards, macht Vorgaben für die Organisation von Dateien, die Einrückungen im Quellcode, das Setzen von Kommentaren, die Deklaration von Variablen und die Vergabe von Namen. Ein Entwicklungsteam kann dabei weitere Richtlinien definieren. Ein verabredeter Standard unterstützt die Zusammenarbeit und erhöht die Wartungsfreundlichkeit. Deren Einhaltung lässt sich auf der Ebene der Entwicklungsumgebung sowie durch das CI-System in Form der statischen Code-Analyse prüfen.\footnote{Vgl. \cite{java_code_conv}}
+
+Ein CI-System sollte Artefakte wie Test-Protokolle und Binaries in einem zentralen Verzeichnis, einem Repository, verwalten können. Das ist notwendig, da nachfolgende Phasen auf diesem Ergebnis aufbauen und die Binaries in der \acstage , \uastage , \capstage\ und in \prodenv , dem Produktivsystem, wiederverwenden.
+
+Die in der \comstage\ erstellten Softwarepakete sollten in einer späteren Phase nicht noch einmal kompiliert werden. Es könnte sonst nicht zweifelsfrei und revisionssicher garantiert werden, dass die dann gelieferte Version auch der getesteten exakt entspricht. Flexibilität und Wartbarkeit werden reduziert, wenn für bestimmte Umgebungen spezielle und angepasste Binaries erstellt werden müssen.\footnote{Vgl.  \cite[S. 113]{CD}}
+
+\subsection{\acstage , \uastage , \capstage\ und \prodenv}
+
+Ob ein \rc\ auch in die Produktivumgebung ausgeliefert werden kann, ist in der \comstage\ noch nicht endgültig entscheidbar, da hier nur die technische Funktion überprüft wird. Eine Softwareversion in die Produktivumgebung zu bringen, setzt die Abnahme des Werkes und damit die Erfüllung der spezifizierten Akzeptanzkriterien aus den funktionalen und nicht-funktionalen Anforderungen voraus. 
+
+Die \acstage\ prüft auf der Seite des Lieferanten, ob diese Anforderungen erfüllt werden und das Verhalten der Anwendung die Bedürfnisse des Nutzers erfüllt und der Spezifikation gerecht wird. Bei den nicht-funktionalen Anforderungen wie \zb\ den Kapazitätstests sollte eine Auslagerung der Tests als eigene Stage, der \capstage , vorgenommen werden. Die Prüfung der Anwendung auf mögliche Auslastungsengpässe läuft gewöhnlich länger und sollte deshalb parallelisiert werden.\footnote{Vgl. \cite[S. 124-128]{CD}}
+
+\cd\ setzt voraus, dass alle Testfälle für jede neue Version der Quellcode-Basis durchlaufen werden. Damit kann der Quellcode auch auf Regression getestet werden und eine Verschlechterung der Qualität so schnell erkannt werden. Eine zuvor funktionierende Software, die nach einer Änderung bestimmte Qualitätskriterien nicht mehr erfüllt, kann schnell identifiziert und durch das Entwicklungsteam unverzüglich angepasst werden, damit diese Anforderungen wieder erfüllt werden.
+
+Für die Verifizierung von Akzeptanz- und Kapazitätskriterien muss die Software in einer Umgebung ausgeführt werden, welche der Produktivumgebung entsprechen soll. Wenn Struktur und Konfiguration dieser Umgebungen zu sehr von denen der Produktivumgebung abweichen, kann nicht ausgeschlossen werden, dass es im Produktivsystem zu einem nicht vorhersehbaren Verhalten kommt. Handelt es sich beim Produktivsystem \zb\ um ein komplexen und teuren Server-Cluster, wird es wirtschaftlich nicht möglich sein, die Produktivumgebung exakt nach zu bilden. Im Fall des Server-Cluster kann aber ein herunter skaliertes System für den Test bereitgestellt werden. Die Lasttests können entsprechend dem Verhältnis von Test- und Produktivumgebung skaliert werden.
+
+Mit der \uastage\ wird für jede Softwareversion ein Pilotbetrieb der Anwendung umgesetzt. Wird die Software durch einen externen Dienstleister als Werk erbracht, führt, sofern nicht anders vereinbart, das Ausliefern der Anwendung in die Produktivumgebung zur Abnahme des Werkes durch den Auftraggeber. Eine direkte Auslieferung nach jedem möglichen Commit eines Entwicklers ist in dieser Konstellation nicht möglich. Werden aber vertragliche Teillieferungen vereinbart, ist auch die Abnahme nur einen Teil, der im Gesamtpakt vereinbarten Funktionalitäten möglich, sodass die Abnahme des Werkes erst am Ende der Vertragslaufzeit endgültig vollzogen wird.
+
+Die letzte Stufe im Liefersystem bildet die Auslieferung einer gut getesteten und den Anforderungen entsprechenden Version der Software in die Produktivumgebung. Ein Versagen in einer Teilphase verneint die Lieferfähigkeit der inspizierten Version. \hf\ schlagen für das Deployment eines \rc\ ein \ssp\ vor. Von diesem aus können die Beteiligten im Lieferprozess die Fähigkeit erhalten, den Liefervorgang selbst anstoßen zu können. So kann ein Release-Manager dem Kunden die vereinbarte Version in seine Testumgebung liefern, damit dieser die Werkabnahme vollziehen kann. Die Entscheidung, das abgenommene Werk in das Produktionssystem auszurollen, trägt der Kunde dann selbst. Dieser Vorgang kann ihm durch die Bereitstellung eines speziell vorbereiteten \ssp\ vereinfacht bzw., wenn entsprechend vereinbart, durch den Dienstleister nach vorhergehendem Auftrag durchgeführt werden.
+
+\subsection{Skripte für Build und Deployment}
+
+Eine Grundtechnik der \dpipe\ stellen Skripten und Konfigurationsdateien dar. Je nach verwendetem Betriebssystem, auf dem die \dpipe\ ausgeführt wird, können kleinere Programme in einer vom Betriebssystem unterstützten Skriptsprache verfasst werden, um die anfallenden Aufgaben bei der Systemkonfiguration und dem Deployment auszuführen. Mit Skripten können Programme und Informationen zur Steuerung und Organisation von Kompilier- und Verteilungsvorgängen verfasst werden. Beim Kompilieren von Quellcode stehen \zb\ im Bereich der Programmiersprache Java die Build-Tools Ant und Maven zur Verfügung, deren Anweisungen, bei Ant, in der \texttt{build.xml} bzw. deren Konfiguration, bei Maven, in der \texttt{pom.xml} festgehalten werden. Zu den weiteren Aufgaben von Konfigurations- und Verteilungskripten gehören das Anpassen der Datenbank an neue Erfordernisse, das Deployen der neuen Softwareversion sowie das Installieren und Konfigurieren benötigter Middleware, Diensten und Komponenten. Das Verfassen von Skripten sollte dabei aber eine Aufgabe sein, die von Entwicklern und IT-Betrieb in gemeinsamer Verantwortung durchgeführt wird.\footnote{Vgl. \cite[S. 147-150, 161]{CD}}
+
+\hf\ sehen hier drei Möglichkeiten, um die Konfigurations- und Verteilungsscripte auf dem Zielsystem automatisiert auszuführen:
+
+\begin{itemize}
+\item Ein Script, welches auf dem System der \dpipe\ aufgerufen wird, sich mit der gewünschten Plattform verbindet und die entsprechenden Kommandos zur Änderung absetzt. Bei Unix-Betriebssystemen kann hier \zb\ das SSH-Protokoll genutzt werden, um Befehle über eine gesicherte Verbindung auf einem Remote-System ausführen zu können.
+\item Ein Konfigurationsskript wird auf einem Verwaltungsserver bereit gestellt. Auf der Zielplattform läuft ein Agent, der sich mit dem Server verbindet und das Konfigurationsskript lädt und ausführt. Ein derartiges Konzept setzt das Werkzeug Chef\footnote{Mehr Informationen zu Chef unter: \url{http://www.opscode.com/chef/}} von Opscode um. Chef kann auf diese Weise einen ganzen Infrastruktur-Cluster verwalten und eine Änderung an der Systemkonfiguration durchführen und benötigte Software installieren.
+\item Durch das Ausnutzen des Paketsystems der jeweiligen Zielplattform kann \zb für Debian Paketsystem \emph{dpkg} ein Paket erstellt werden, welches die auszuliefernden Binaries enthält sowie ein \emph{control file} der Informationen über die Pakete enthält, von denen die zu installierende Software abhängt sowie in Konflikte steht. Die Auslösung von Abhängigkeiten übernimmt dann das Debian Package-Tool.\footnote{Vgl. \cite{Brockmeider2003}}
+\end{itemize}
+
+\section{Kritische Komponenten im Liefersystem}
+
+\subsection{Datenbanken in der \dpipe}
+
+Datenbanken im Liefersystem benötigen eine besondere Aufmerksamkeit während des Softwarerelease. Dies gilt, sofern die Struktur der verwendeten Datenbank durch veränderte Anforderungen an das Gesamtsystem angepasst werden muss. Kann zu Beginn einer Entwicklung davon ausgegangen werden, dass es keine Änderungen am Datenbankschema geben wird, weil ein System entwickelt wird, welches sich an der Struktur einer bestehenden Datenbank ausrichten soll, bedarf dieses Thema keiner weiteren Beachtung. 
+
+Anders verhält es sich, wenn die Datenbank ausschließlich von einer Anwendung genutzt wird und das Schema der Datenbank den neuen Anforderungen und Funktionalitäten angepasst werden muss. So könnte eine neue Funktionalität in einer Webanwendung \zb\ das Anlegen einer neuen Tabelle in der Datenbank erfordern oder die Anpassung von bestehenden Datenbankeinträgen. Der Verlust von Daten kann dabei aber nicht hingenommen werden.  Der Aktualisierungsvorgang erfordert deshalb die gleiche Aufmerksamkeit, wie die Aktualisierung der Anwendung selbst.
+
+Wird eine Anwendung inkrementell aktualisiert, \zb\ Server eines Clusters nacheinander, kann es dabei zu Problemen kommen, wenn in den Clustern unterschiedliche Datenbankversionen von den laufenden Anwendungen genutzt werden. Transaktionen mit der alten Datenbank, die während des Aktualisierungsvorgangs von der alten Softwareversion durchgeführt werden, müssen nach Abschluss des Aktualisierungsvorgangs auch in die neue Datenbank übertragen werden. Ein Datenverlust muss vom Release vermieden werden.
+
+Schwierig kann es aber auch sein, ein Rollback auf die alte Version durchzuführen. Transaktionen, die mit der neuen Softwareversion auf die aktualisierte Datenbank durchgeführt wurden, müssen bei einem Rollback in die alte Datenbankversion übertragen werden. Hier stellt sich die Frage, was mit Daten geschehen soll, die nicht mit dem alten Datenbankschema kompatibel sind.
+
+\hf\ schlagen hier folgendes Vorgehen vor:\footnote{Vgl. \cite[S. 328-333]{CD}}
+
+\begin{description}
+\item[Inkrementelle Änderungen: ] Zu Beginn der Entwicklung wird eine neue leere Datenbank aufgesetzt. Werden Tabellen benötigt oder müssen angepasst werden, können die benötigten Anweisungen durch ein Skript ausgeführt werden. Das Skript enthält auch Anweisungen für das Rollback der Änderungen. Im Skript selbst sind Informationen enthalten, von welcher Datenbankversion auf welche aktualisiert wird. Die aktuelle Version der Datenbank kann in der Datenbank selbst gespeichert werden. Die \dpipe\ kann so programmatisch prüfen, ob die vorgesehenen Änderungen auch ausgeführt werden dürfen. Im Zweifelsfall bricht der Vorgang ab. Bevor die \dpipe\ Änderungen durchführt, müssen alle Bedingungen geprüft und erfüllt sein.
+\item[Datenbank-Rollback: ] Geht ein Deployment schief, muss die alte Datenbank wieder hergestellt werden können, ohne in der Zwischenzeit durchgeführter Transaktionen verlustig zu werden. Dafür muss vor einem Deployment ein Back-up der Datenbankdateien erstellt und auf einem zweiten Datenbankserver bereitgestellt werden. Anschließend können die Änderungen an an dem Datenbankserver vorgenommen werden, auf den die Anwendung nicht zugreift. Die korrekte Funktionsweise der Datenbank ist anschließend zu testen. Die Anwendung kann nun, \zb\ in einem Cluster, stückweise herunter gefahren, aktualisiert und wieder hochgefahren werden. Die neue Version der Software greift auf die neue Datenbank zu, die alte Software auf die alte Datenbank. Um den Vorgang abzuschließen, wird am Ende des Vorgangs ein Delta der alten Datenbank zwischen Update-Beginn und Update-Ende in die neue Datenbank übertragen.
+\item[Entkopplung von Anwendungs- und Datenbankupdate: ] Die Entkopplung von Datenbank- und Anwendungsupdate erfordert ein mehrstufiges Vorgehen. Soll von einer Version auf die andere aktualisiert werden und die neuere Version benötigt \zb\ eine neue Tabelle, muss dies vor dem Anwendungsupdate durchgeführt werden. Die neue als auch die alte Anwendungsversion müssen dann mit der geänderten Datenbank kompatibel sein. Werden Tabellen nach einem Anwendungsupdate nicht mehr genutzt und sollen entfernt werden, kann dies erst nach dem erfolgreichen Anwendungsupdate erfolgen. In Abbildung~\ref{pic:db_deploy} wird dieses Vorgehen visualisiert. Sind größere Änderungen des Datenbank-Schemas notwendig, um \zb\ ein neues Feature zu realisieren, müssen die Änderungen am Quellcode die Einschränkungen durch die Datenbank berücksichtigen und in kleine Schritte zerlegt werden. Die Auswirkungen auf die aktive Datenbank können dann so gering wie möglich gehalten werden.
+\end{description}
+
+\begin{figure}
+\centering
+\fbox{\includegraphics[width=.95\linewidth]{Grafiken/db_deploy.pdf}}
+\quelle{nach \cite[S. 333]{CD}}
+\caption[Datenbank-Migration]{Datenbank-Migration in der \dpipe.}\label{pic:db_deploy}
+\end{figure}
+
+Die besonderen Erfordernisse von Datenbanken müssen bei der inkrementellen Anwendungsaktualisierung berücksichtigt werden. Ein Release sollte dabei so gestaltet werden, dass nur marginale Änderungen an einer produktiv eingesetzten Datenbank durchgeführt werden müssen. Die Integrität der Daten darf nicht gefährdet werden. Sind größere Änderungen an der Datenbank notwendig, um eine neue Funktionalität zu ermöglichen, ist es eventuell möglich, aus einem großen Release mehrere kleine Schritte zu machen Die Auswirkung auf die Datenbank kann so reduziert werden.
+
+\subsection{Strategien für die Versionsverwaltung}
+
+Die Funktionalitäten des Versionsverwaltungssystems, \emph{Branch} und \emph{Merge}, nehmen auf die Funktionsfähigkeit einer \dpipe\ Einfluss. Mit einem Branch wird ein paralleler Entwicklungszweig begonnen. Dies ist \zb\ notwendig um eine parallele Entwicklung eines Features zu ermöglichen, ohne den Hauptast oder andere Entwicklungen negativ zu beeinflussen, bis das Feature umgesetzt ist.\footnote{Vgl. \cite[S.154-159]{popp_konfig}}
+
+Eine Folge dessen ist ein erhöhter Integrationsaufwand beim \emph{Merge}, bei dem ein Zweig in den Hauptstamm integriert wird. Je größer diese Differenzen, desto größer der Aufwand des Zusammenführens. \hf\ empfehlen, einen Zweig nach ein bis maximal zwei Tagen wieder in den Hauptstamm zu integrieren. Zudem wird der Zweig nicht mehr von der \dpipe\ erfasst. Ein Feedback über den Zustand des Quellcodes ist für den Zweig nicht möglich.\footnote{Vgl.  \cite[S. 390-393]{CD}}
+
+\section{Implikationen für das Liefersystem}\label{lierfsys_implikation}
+
+Aus den Konzepten von \cd\ und Vorschlägen für die Umsetzung einer \dpipe\ ergeben sich folgende Implikationen für ein Liefersystem:
+
+\begin{itemize}
+\item Das Liefersystem besteht aus Infrastruktur und Systemumgebungen. Es hat Auswirkung auf das Entwicklungsteam und auf den IT-Betrieb. Beide Gruppen müssen eng zusammenarbeiten, um eine automatisierte, \dpipe\ realisieren zu können. \devops\ schlägt hierfür gemischte Entwicklungsteams vor, die Kompetenzen aus beiden Bereichen besetzen können.
+\item Das Liefersystem gibt allen Beteiligten ein Feedback. Hierzu gehören der aktuelle und der historische Zustand der Quellcode-Basis, welche Version in welcher Umgebung ausgeführt wird sowie aktuelle Vorgänge in der \dpipe .
+\item Das Liefersystem wird in Phasen unterteilt. Die Qualitätssicherung wird weitgehend automatisiert. Das Scheitern einer Phase stoppt die Instanz der \dpipe\ und damit alle nachfolgenden Phasen.
+\item Das Liefersystem baut auf \ci\ auf und erweitert das Konzept um ein automatisiertes Deployment.
+\item Das Liefersystem muss sich um die Konfiguration der Infrastruktur kümmern und diese überwachen. Hierfür sind Skripte zu erstellen, welche die notwendigen Änderungen an der Ausführungsumgebung vornehmen können.
+\item Das Liefersystem stellt eine Oberfläche bereit, welche das Deployment einer Version in eine Testumgebung oder in die Produktionsumgebung auf eine einfache Weise anstoßen kann. Anstoßen bedeutet, das Deployment-Skript auszuführen. Als Methode genügt eine schlichte Oberfläche mit einem einfachen Push-Button dessen Betätigung zur Ausführung des Skripts führt.
+\item Das Liefersystem muss für Komponenten wie Datenbanken ein geeignetes Konzept bereithalten, um Änderungen und Rollback ohne Verlust von Daten verwirklichen zu können. Zweige in der Versionsverwaltung umgehen das Liefersystem und sollten vermieden werden.
+\item Das Liefersystem muss stetig weiter entwickelt werden und sich den Anforderungen anpassen können.
+\end{itemize}
+
+\cd\ und die \dpipe\ benötigen spezielle Werkzeuge. Dabei ist es für die Ausführung unerheblich, ob es ein einzelnes Werkzeug gibt, mit dem alle Anforderungen erfüllt werden können oder eine Verknüpfung von verschiedenen Werkzeugen und Scripten zu einer \emph{Tool chain} das Gleiche Ergebnis liefert. 

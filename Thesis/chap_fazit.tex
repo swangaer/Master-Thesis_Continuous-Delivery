@@ -1,0 +1,48 @@
+% Fazit3w
+
+\chapter{Fazit}
+
+Im Rahmen dieser Arbeit sollte sich allgemein mit dem Themenkomplex des \cd\ auseinandergesetzt werden. Speziell standen in diesem Zusammenhang drei als interessant eingestufte Werkzeuge im Fokus, die näher untersucht werden sollten. Im Vorfeld der Untersuchung wurde auf die Beziehung zwischen \cd\ und \devops\ eingegangen. Anschließend wurden die Konzepte von \cd , wie sie \hf\ vorschlagen, beleuchtet. Dies war einführend notwendig, um für adesso der Frage nach der Funktionsweise sowie dem jeweilig verfolgten Ansatz der zu untersuchenden Werkzeuge nachgehen zu können. Zudem sollte nach möglichen Synergien für den derzeitigen Lieferprozess gesucht werden.
+
+\section{Erkenntnisse}
+
+Mit einem Fragebogen an das unternehmenseigene CI-Team wurden die etablierten Lieferstrukturen ermittelt. Eine Erkenntnis für die Umsetzungsmöglichkeiten von \cd , welche aus dem Fragebogen abgeleitet werden konnte, war die der ungleichen Projektstruktur bei adesso. Diese kommt durch die individuelle Softwareentwicklung und deren starke Ausrichtung an das Projektgeschäft zustande. Dabei wird für adesso die Umsetzung eines allgemeingültigen Lieferprozesses verhindert, welcher von allen Projekten auf gleiche Weise genutzt werden kann. Vielmehr sind projektspezifische Faktoren bei der Einrichtung des Lieferprozesses heranzuziehen, die von Projekt zu Projekt variieren können. adesso unterstützt die Projektteams durch einen zentralen Build-Prozess bei der Realisierung von \ci . Dies stellt eine zentrale Voraussetzung für die Umsetzung von \cd\ dar.
+
+Im Verlauf der Arbeit zeigte sich, das \cd\ nicht durch eine bestimmte Technologie oder ein einzelnes Werkzeug lösbar ist. Es entstand die Annahme, dass die zu untersuchenden Werkzeuge nur die Lösung eines Teilproblems von \cd\ ermöglichen können. Diese Annahme bestätigte sich bei der Evaluierung. Das Kernproblem von \cd , ein automatisiertes Deployment in verschiedene Umgebungen zu ermöglichen, lösen die Werkzeuge nicht, ermöglichen es aber, die Implementierung eins Lieferprozesses in Bezug auf \go\ zu organisieren bzw., in Bezug auf \dr\ und \dpl , anstoßen zu können.
+
+Zum Ende der Arbeit trat die Erkenntnis hervor, dass \go , \dr\ und \dpl\ 
+\cd\ durch die beschriebenen Ansätze unterstützen, diese aber nicht direkt als Werkzeuge für \cd\ angesehen werden können, da sie nur eine Kategorie von notwendigen Funktionen und Eigenschaften für die Realisierung von \cd\ abdecken. \cd\ kann nur aus einer intelligenten und auf den Bedingungen der zu liefernden Software abgestimmten Kombination verschiedener Werkzeuge und Skripte möglich werden. \emph{Das} Werkzeug für \cd\ kann nicht erwartet werden.
+
+Den Lieferprozess auf einfache Weise starten zu können ist ein wichtiger Baustein im automatisierten Lieferprozess, hilft aber nicht bei der Lösung der kritischen Fragen von \cd . Dies sind \zb\ die sichere und verlustfreie Aktualisierung der Datenbank einer Web-Anwendung bei laufendem Betrieb oder das inkrementelle automatische Update einer Web-Anwendung, ohne das dies eine Auswirkung auf die aktiven Nutzer hat.
+
+Vielmehr unterstützen die untersuchten Werkzeuge die Verwirklichung von \devops\ durch die Möglichkeit, eine aus Skripten und Werkzeugketten bestehende automatisierte \dpipe\ anstoßen zu können. IT-Betrieb und Entwicklerteam rücken näher zusammen, sodass der zu realisierende Deployment-Prozess nur in einer engen Zusammenarbeit möglich wird.
+
+\go\ bietet hier als Teillösung für \cd\ die am weitesten gehende Implementierung einer Steuerung des Lieferprozesses an. Basierend auf Tasks, Jobs und Stages sowie der einfachen Umsetzung von Quality-Gates können alle Prozesse der \dpipe\ in \go\ organisiert werden. \dr\ und \dpl\ sind als reine Push-Button-Lösungen einfacher aufgebaut, können aber an bestehende Prozesse des CI-Systems angekoppelt werden.
+
+In der Kombination der Erkenntnisse des Fragebogens und der Untersuchung der Werkzeuge, wurden zwei mögliche Szenarien vorgestellt, wie diese Lösungen in zukünftigen Projekten zum Tragen kommen könnten. Für Projekte, die nicht auf die interne CI-Infrastruktur von adesso zurückgreifen können, ist \go\ ein gutes und schnell verfügbares Werkzeug, um \ci\ und ein \dpipe\ realisieren zu können. Für Projekte, die das CI-System bereits nutzen, automatisierte Akzeptanztests implementiert haben und mit Deployment-Skripten die Umgebung konfigurieren und ausliefern, ist \dpl\ das richtige Werkzeug, diese Elemente verbinden zu können.
+
+\section{Ausblick und Anknüpfungspunkte}
+
+Auf die dringenden Fragestellungen von \cd , verschiedene Systeme bei laufendem Betrieb aktualisieren zu können, konnte in dieser Arbeit nicht eingegangen werden. Es blieb bei der Betrachtung von Werkzeugen für die Prozessteuerung bzw. für die Aktivierung schon hinterlegter automatisierter Auslieferungsprozesse.
+
+In diesem Zusammenhang ergeben sich weitere interessante Anknüpfungspunkte für die Realisierung von \cd :
+
+% Erprobung der beiden Versionen in echten Projekten
+% automatisierte Konfiguration mit Chef
+% Provisionierung von IaaS für Systeme
+
+
+\begin{itemize}
+\item Die Erprobung von \dpl\ und \go\ in einem realen Projektumfeld. Für eine Vergleichbarkeit der Ansätze sollte dies an einem zu bestehenden Projekt umgesetzt werden können. Dieses sollte dann schon feste Abläufe des Lieferprozesses definiert haben. Daraus könnten weitere Schlussfolgerungen gezogen werden, wie sich die so implementierte \dpipe\ auf Produktivität des Entwicklungs- und Testteam auswirken kann. Zudem sind in einem realen Projektumfeld auch die Bedingungen des Produktivsystems bekannt, die in den beschriebenen Szenarien nur angerissen werden konnten.
+\item Die Erarbeitung von Ansätzen, \dpl\ und \go\ mit Werkzeugen wie Chef zu verbinden, um Infrastrukturen automatisch zu konfigurieren. Dieser Punkt konnte in dieser Arbeit nur in einer groben und abstrakten Form angerissen werden. Es sollten hier aber die Stärken und Schwächen einer solchen Verbindung noch näher beleuchtet werden. \cd\ besitzt an dieser Stelle möglicherweise noch Schwachstellen, die eine \dpipe\ bzw. die mit ihr verbundenen Systeme instabil werden lässt. Dies sollte noch näher untersucht werden.
+\item Eine mögliche Verbesserung könnte auch das Ausnutzen von Infrastructure-As-A-Service in Verbindung mit einer Umsetzung von Private- bzw. Hybrid-Cloud im Unternehmen bedeuten. Hier wurden schon in Form einer Master-Thesis von Marko Salchow eine entsprechende Beschreibung geliefert, wie der Aufbau einer Hybrid-Cloud mit OpenStack\footnote{Weitere Informationen zu OpenStack unter \url{http://www.openstack.org/}} und unter Zunahme einer Cloud-API realisiert werden könnte. Salchow kam zum Schluss dass die Nutzung von Abstraktions-APIs gewinnbringend sein kann, obwohl in einem komplexen Szenario eine Umsetzung mit OpenStack nur durch einen erhöhten Aufwand verwirklicht werden kann.\footnote{Vgl. \cite{Salchow2012}} Von seiner Arbeit ausgehend, könnten aber vertiefende Szenarien in Zusammenhang mit \cd\ entwickelt werden. An deren Ende könnte die Realisierung einer \dpipe\ mit der automatischen Versorgung von Rechnerinstanzen in einer Private-Cloud stehen. Benötigte Instanzen für die Testdurchführung könnten so auf einfache Weise erzeugt und der \dpipe\ zur Verfügung gestellt werden.
+\item Ein automatisierter Auslieferungsprozess, der direkt in die Produktivumgebung eines Kunden liefert, muss alle funktionalen und nicht-funktionalen Anforderungen erfüllen können. Der Ansatz von BDD liefert hier einen geeigneten Beitrag, Akzeptanztests schon zu Beginn in die \dpipe\ fest zu implementieren. BDD hat adesso parallel zu \cd\ in Form einer Master-Thesis evaluieren lassen. Robert Weber kam in seiner Arbeit zur Ansicht, dass BDD zwar einen erhöhten Implementierungsaufwand erfordert, dies aber in Verbindung mit \cd\ relativiert wird. Der Gesamtaufwand, der durch die erhöhte Häufigkeit des kontinuierlichen Lieferprozesses entsteht, kann durch automatisierte Durchführung von Akzeptanztests deutlich reduziert werden. \footnote{Vgl. \cite{Weber2012}} Dieses sollte bei zukünftigen Projekten Berücksichtigung finden.
+\item Bei einem automatisierten Auslieferungsverfahren ergibt sich eine weitere Komplexität durch die Aktualisierung des Produktivsystems im laufenden Betrieb, wenn \zb\ das Datenbank-Schema aktualisiert werden soll. Ein Datenbank-Update wird in Verbindung mit dokumentenbasierten Datenbanken aber vereinfacht. Zum Thema \emph{Big Data und NoSQL} bietet Robert Zeschkes 2012 verfasste Master-Thesis bei adesso einen Anknüpfungspunkt, der in Verbindung mit \cd\ noch näher betrachtet werden sollte. Da bei einer dokumentenbasierten Datenbank keine Verwerfungen auftreten, wenn Objekte mit neuen Attributen gespeichert werden, sind diese Systeme durchaus für eine Verwendung im kontinuierlichen Lieferprozess geeignet.\footnote{Vgl. \cite{Zeschke2012}}
+\end{itemize}
+
+% Aktualisierung einer laufenden Anwendung
+% Aktualisierung einer DB bei laufenden Betrieb
+
+Die Themen \cd und \devops , IaaS in einer Hybried-Cloud, BDD und Big Data und NoSQL verbindet adesso unter den Namen \emph{New Shool of IT}. adesso hält hier eine neue strategische Ausrichtung der IT-Branche mit anderen Dienstleistungen und Angeboten für möglich.\footnote{Vgl. \cite{Wolff2012}}
+
+% adesso und strategische ausrichtung

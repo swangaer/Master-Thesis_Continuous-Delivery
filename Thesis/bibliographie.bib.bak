@@ -1,0 +1,932 @@
+% This file was created with JabRef 2.8.
+% Encoding: Cp1252
+
+@MISC{ad_advantage,
+  author = {{adesso AG}},
+  title = {adVANTAGE - Agiles wertorientiertes Vorgehensmodell mit Budgetkontrolle
+	in Softwareentwicklungsprojekten},
+  howpublished = {WWW},
+  month = {Aug.},
+  year = {2012},
+  owner = {gaertner},
+  timestamp = {2012.08.16},
+  url = {http://www.adesso.de/de/leistungen/softwaredevelopment/advantage/advantage.jsp}
+}
+
+@MISC{ad_branchen,
+  author = {{adesso AG}},
+  title = {Branchen - Hohe Branchenkenntnis verbunden mit technologischer Kompetenz},
+  howpublished = {WWW},
+  month = {Aug.},
+  year = {2012},
+  owner = {gaertner},
+  timestamp = {2012.08.01},
+  url = {http://www.adesso.de/de/branchen/index.html}
+}
+
+@MISC{ad_build,
+  author = {{adesso AG}},
+  title = {Build Management},
+  howpublished = {interne Quelle},
+  month = {Juli},
+  year = {2012},
+  owner = {gaertner},
+  timestamp = {2012.08.02}
+}
+
+@MISC{ad_cloud,
+  author = {{adesso AG}},
+  title = {Leistungen - Applikationen in der Cloud - Cloudbasierte Softwareentwicklung
+	für mehr Stabilität und Effizienz},
+  howpublished = {WWW},
+  month = {Aug.},
+  year = {2012},
+  owner = {gaertner},
+  timestamp = {2012.08.01},
+  url = {http://www.adesso.de/de/technologien/cloud_computing/leistungen_2/cloud_computing_1.html}
+}
+
+@MISC{ad_kompetenz_jee,
+  author = {{adesso AG}},
+  title = {Kompetenz - Langjährige Praxis- und Projekterfahrung in der Anwendung
+	von Java und Komponentenmodell JEE},
+  howpublished = {WWW},
+  month = {Aug.},
+  year = {2012},
+  owner = {gaertner},
+  timestamp = {2012.08.14},
+  url = {https://www.adesso.de/de/technologien/java/kompetenz/index.html}
+}
+
+@MISC{ad_profil,
+  author = {{adesso AG}},
+  title = {adesso AG - Unternehmen},
+  howpublished = {WWW},
+  month = {Aug.},
+  year = {2012},
+  owner = {gaertner},
+  timestamp = {2012.08.10},
+  url = {https://www.adesso.de/de/unternehmen/unternehmensprofil/index.html}
+}
+
+@MISC{ad_tech,
+  author = {{adesso AG}},
+  title = {Technologien - Technologieführerschaft bedeutet bei adesso vor allem
+	Qualifikation und Erfahrung},
+  howpublished = {WWW},
+  month = {Aug.},
+  year = {2012},
+  owner = {gaertner},
+  timestamp = {2012.08.01},
+  url = {http://www.adesso.de/de/technologien/index.html}
+}
+
+@MISC{,
+  author = {Ambler, Scott W.},
+  title = {Introduction to Test Driven Development (TDD)},
+  howpublished = {Online},
+  month = {Jan.},
+  year = {2012},
+  note = {Abgerufen am 01.10.2012},
+  owner = {gaertner},
+  timestamp = {2012.10.01},
+  url = {http://www.agiledata.org/essays/tdd.html}
+}
+
+@BOOK{balzert_swt,
+  title = {Lehrbuch der Softwaretechnik: Entwurf, Implementierung, Installation
+	und Betrieb},
+  publisher = {Spektrum Akademischer Verlag Heidelberg},
+  year = {2011},
+  author = {Balzert, Helmut},
+  volume = {3.},
+  owner = {gaertner},
+  timestamp = {2012.09.11}
+}
+
+@MISC{manifesto,
+  author = {Beck, Kent and others},
+  title = {Principle behind the Agile Manifesto.},
+  howpublished = {WWW},
+  year = {2001},
+  timestamp = {2012.02.19},
+  url = {http://agilemanifesto.org/principles.html}
+}
+
+@BOOK{itil_boetcher,
+  title = {IT-Servicemanagement mit ITIL V3},
+  publisher = {Heise Zeitschriften Verlag, Hannover},
+  year = {2008},
+  author = {Böttcher, Roland},
+  owner = {gaertner},
+  timestamp = {2012.08.23}
+}
+
+@MISC{Brockmeider2003,
+  author = {Brockmeider, Joe},
+  title = {Create Debian Linux packages},
+  howpublished = {WWW},
+  month = {Juli},
+  year = {2003},
+  note = {Abgerufen am 19.09.2012},
+  owner = {gaertner},
+  timestamp = {2012.09.19},
+  url = {http://www.ibm.com/developerworks/linux/library/l-debpkg/index.html}
+}
+
+@MISC{devopsdays.org2012,
+  author = {devopsdays.org},
+  title = {Ghent 2009 program},
+  howpublished = {WWW},
+  month = {Sep.},
+  year = {2012},
+  owner = {gaertner},
+  timestamp = {2012.09.17},
+  url = {http://www.devopsdays.org/events/2009-ghent/program/}
+}
+
+@MISC{devops_dickerson,
+  author = {Dickerson, Chad},
+  title = {How does Etsy manage development and operations?},
+  howpublished = {WWW},
+  month = {Feb.},
+  year = {2011},
+  owner = {gaertner},
+  timestamp = {2012.08.23},
+  url = {http://www.quora.com/How-does-Etsy-manage-development-and-operations/answer/Chad-Dickerson?srid=36Z}
+}
+
+@BOOK{Duvall07,
+  title = {Continuous Integration},
+  publisher = {Addison-Wesley},
+  year = {2007},
+  author = {Duvall, Paul M.},
+  owner = {gaertner},
+  timestamp = {2012.07.05}
+}
+
+@MISC{edwards10,
+  author = {Edwards, Damon},
+  title = {DevOps is not a technology problem. DevOps is a business problem.},
+  howpublished = {WWW},
+  month = {Nov.},
+  year = {2010},
+  timestamp = {2012.02.10},
+  url = {http://dev2ops.org/blog/2010/11/7/devops-is-not-a-technology-problem-devops-is-a-business-prob.html}
+}
+
+@MISC{antJmeter,
+  author = {Fifield, Jeff},
+  title = {JMeter Ant Task},
+  howpublished = {WWW},
+  month = {Mai},
+  year = {2011},
+  owner = {gaertner},
+  timestamp = {2012.06.22},
+  url = {http://www.programmerplanet.org/pages/projects/jmeter-ant-task.php}
+}
+
+@MISC{fitz_cd,
+  author = {Fitz, Timothy},
+  title = {Continuous Deployment},
+  howpublished = {WWW},
+  month = {Feb.},
+  year = {2009},
+  owner = {gaertner},
+  timestamp = {2012.09.16},
+  url = {http://timothyfitz.wordpress.com/2009/02/08/continuous-deployment/}
+}
+
+@MISC{fitz_cd_client_sw,
+  author = {Fitz, Timothy},
+  title = {Continuous Deployment for Downloadable Client Software},
+  howpublished = {WWW},
+  month = {Mrz.},
+  year = {2009},
+  owner = {gaertner},
+  timestamp = {2012.09.16},
+  url = {http://timothyfitz.wordpress.com/2009/03/09/cd-for-client-software/}
+}
+
+@MISC{fowler_ci,
+  author = {Martin Fowler},
+  title = {Continuous Integration},
+  howpublished = {WWW},
+  month = {Mai},
+  year = {2006},
+  keywords = {Continuous Integration},
+  owner = {gaertner},
+  timestamp = {2012.08.02},
+  url = {http://martinfowler.com/articles/continuousIntegration.html}
+}
+
+@MISC{nodejs_testing,
+  author = {Geisendörfer, Felix},
+  title = {Unit testing with node.js},
+  howpublished = {WWW},
+  month = {Jan.},
+  year = {2010},
+  owner = {gaertner},
+  timestamp = {2012.09.16},
+  url = {http://debuggable.com/posts/unit-testing-with-node-js:4b647d40-34e4-435a-a880-3b04cbdd56cb}
+}
+
+@MISC{Gheorghiu2010,
+  author = {Gheorghiu, Grig},
+  title = {Bootstrapping EC2 instances with Chef},
+  howpublished = {WWW},
+  month = {Juli},
+  year = {2010},
+  note = {Abgerufen am 22.09.2012},
+  owner = {gaertner},
+  timestamp = {2012.09.22},
+  url = {http://agiletesting.blogspot.de/2010/07/bootstrapping-ec2-instances-with-chef.html}
+}
+
+@MISC{github_lang,
+  author = {{GitHub Inc.}},
+  title = {Top Languages},
+  howpublished = {WWW},
+  month = {Sep.},
+  year = {2012},
+  owner = {gaertner},
+  timestamp = {2012.09.16},
+  url = {https://github.com/languages}
+}
+
+@MISC{devops_enterprise,
+  author = {Humble, Jez},
+  title = {What DevOps Means for Enterprises},
+  howpublished = {WWW},
+  month = {Jan.},
+  year = {2011},
+  owner = {gaertner},
+  timestamp = {2012.08.23},
+  url = {http://www.agileweboperations.com/what-devops-means-for-enterprises}
+}
+
+@MISC{itil_cd,
+  author = {Humble, Jezz},
+  title = {Continuous Delivery and ITIL: Change Management},
+  howpublished = {WWW},
+  month = {Nov.},
+  year = {2010},
+  owner = {gaertner},
+  timestamp = {2012.08.23},
+  url = {http://continuousdelivery.com/2010/11/continuous-delivery-and-itil-change-management/}
+}
+
+@BOOK{CD,
+  title = {Continuous Delivery},
+  publisher = {Addison-Wesley},
+  year = {2011},
+  author = {Humble, Jez and Farley, David},
+  address = {Upper Saddle River and NJ},
+  __markedentry = {[André:5]}
+}
+
+@MISC{Huth2011,
+  author = {Alexa Huth and James Cebula},
+  title = {The Basics of Cloud Computing},
+  howpublished = {Online},
+  year = {2011},
+  note = {Abgerufen am 28.09.2012},
+  owner = {gaertner},
+  timestamp = {2012.09.28},
+  url = {http://www.us-cert.gov/reading_room/USCERT-CloudComputingHuthCebula.pdf}
+}
+
+@MISC{atrifactory_jfrog_doc_rest,
+  author = {{JFrog Inc.}},
+  title = {Artifactory's REST API},
+  howpublished = {WWW},
+  month = {Aug.},
+  year = {2012},
+  owner = {gaertner},
+  timestamp = {2012.09.15},
+  url = {http://wiki.jfrog.org/confluence/display/RTF/Artifactory%27s+REST+API#ArtifactorysRESTAPI-FolderInfo}
+}
+
+@MISC{nodejs_about,
+  author = {{Joyent Inc.}},
+  title = {Node's goal is to provide an easy way to build scalable network programs},
+  howpublished = {WWW},
+  month = {Sep.},
+  year = {2012},
+  owner = {gaertner},
+  timestamp = {2012.09.16},
+  url = {http://nodejs.org/about/}
+}
+
+@MISC{depOnGithub,
+  author = {Kastner, Erik},
+  title = {Deployinator Readme},
+  howpublished = {WWW},
+  month = {Apr.},
+  year = {2012},
+  __markedentry = {[André:1]},
+  file = {Deployinator Readme-Datei:https\://github.com/etsy/deployinator#readme:URL},
+  owner = {gaertner},
+  timestamp = {2012.06.06},
+  url = {https://github.com/etsy/deployinator#readme}
+}
+
+@MISC{codeascraft,
+  author = {Kastner, Erik},
+  title = {Quantum of Deployment},
+  howpublished = {WWW},
+  month = {Mai},
+  year = {2010},
+  __markedentry = {[André:1]},
+  owner = {gaertner},
+  timestamp = {2012.06.06},
+  url = {http://codeascraft.etsy.com/2010/05/20/quantum-of-deployment/}
+}
+
+@MISC{Kew2009,
+  author = {Kew, Nick},
+  title = {Running a Reverse Proxy in Apache},
+  month = {Dez.},
+  year = {2009},
+  note = {Abgerufen am 26.09.2012},
+  owner = {André},
+  timestamp = {2012.09.26},
+  url = {http://www.apachetutor.org/admin/reverseproxies}
+}
+
+@INPROCEEDINGS{Livshits05,
+  author = {Livshits, V. Benjamin and Lam, Monica S.},
+  title = {Finding security vulnerabilities in java applications with static
+	analysis},
+  booktitle = {Proceedings of the 14th conference on USENIX Security Symposium -
+	Volume 14},
+  year = {2005},
+  series = {SSYM'05},
+  pages = {18--18},
+  address = {Berkeley, CA, USA},
+  publisher = {USENIX Association},
+  acmid = {1251416},
+  location = {Baltimore, MD},
+  numpages = {1},
+  owner = {gaertner},
+  timestamp = {2012.07.11},
+  url = {http://dl.acm.org/citation.cfm?id=1251398.1251416}
+}
+
+@MISC{sonar_ant_config,
+  author = {Mallet, Freddy and Racodon, David},
+  title = {Analyzing with Ant Task},
+  howpublished = {WWW},
+  month = {Juli},
+  year = {2012},
+  note = {Dokumentation Sonar},
+  owner = {gaertner},
+  timestamp = {2012.09.13},
+  url = {http://docs.codehaus.org/x/FAGHD}
+}
+
+@MISC{sonar_testcoverage,
+  author = {Mandrikov, Evgeny},
+  title = {Measure Code Coverage by Integration Tests with Sonar},
+  howpublished = {WWW},
+  month = {Okt.},
+  year = {2010},
+  owner = {gaertner},
+  timestamp = {2012.08.31},
+  url = {http://www.sonarsource.org/measure-code-coverage-by-integration-tests-with-sonar/#more-4229}
+}
+
+@MISC{martin_design_principles,
+  author = {Martin, Robert C.},
+  title = {Design Principles and Design Patterns},
+  howpublished = {WWW / PDF},
+  month = {Jan.},
+  year = {2000},
+  owner = {gaertner},
+  timestamp = {2012.08.31},
+  url = {http://www.objectmentor.com/resources/articles/Principles_and_Patterns.pdf}
+}
+
+@MISC{DevOpsITIL,
+  author = {Minick, Eric},
+  title = {Gartner also observes DevOps mixing with ITIL},
+  howpublished = {WWW},
+  month = {März},
+  year = {2012},
+  note = {Blog-Eintrag},
+  owner = {gaertner},
+  timestamp = {2012.07.05},
+  url = {http://blogs.urbancode.com/uncategorized/gartner-also-observes-devops-mixing-with-itil/}
+}
+
+@MISC{Minick12,
+  author = {Minick, Eric},
+  title = {The Next Generation of Continuous Delivery},
+  howpublished = {WWW},
+  month = {März},
+  year = {2012},
+  note = {veröffentlichte Präsentationsfolien},
+  owner = {gaertner},
+  timestamp = {2012.07.05},
+  url = {http://www.slideshare.net/Urbancode/the-next-generation-of-continuous-delivery}
+}
+
+@MISC{cd_maturitymodel,
+  author = {Eric Minick and Jeffrey Frederick},
+  title = {Enterprise Continuous Delivery Maturity Model},
+  howpublished = {Whitepaper},
+  year = {2011},
+  owner = {gaertner},
+  timestamp = {2012.08.03},
+  url = {http://www.urbancode.com/html/resources/white-papers/Enterprise_Continuous_Delivery_Maturity_Model/}
+}
+
+@MISC{ci_maturity_model,
+  author = {Minick, Eric and Frederick, Jeffrey},
+  title = {Enterprise Continous Integration Maturity Model},
+  howpublished = {Whitepaper},
+  year = {2009},
+  address = {2044 Euclid Avenue Suite 600, Cleaveland, Ohio 44115, USA},
+  language = {EN},
+  organization = {Urbancode},
+  owner = {gaertner},
+  timestamp = {2012.07.05},
+  url = {http://www.urbancode.com/html/resources/white-papers/}
+}
+
+@MISC{itil_urbancode,
+  author = {Minick, Eric and Haffey, Ryan},
+  title = {ITIL, Release Management and Automation},
+  howpublished = {WWW},
+  month = {Feb.},
+  year = {2012},
+  note = {veröffentlichte Präsentationsfolien},
+  owner = {gaertner},
+  timestamp = {2012.07.05},
+  url = {http://www.slideshare.net/Urbancode/itil-release-management-and-automation}
+}
+
+@MISC{Mizerany,
+  author = {Mizerany, Blake},
+  title = {Rack Middleware},
+  howpublished = {WWW},
+  note = {Abgerufen am 23.09.2012},
+  owner = {gaertner},
+  timestamp = {2012.09.23},
+  url = {http://www.sinatrarb.com/intro#Rack%20Middleware}
+}
+
+@MISC{cd_devops_1,
+  author = {Nelson-Smith, Stephen},
+  title = {Just Enough Developed Infrastructure - What Is This Devops Thing,
+	Anyway?},
+  howpublished = {WWW},
+  month = {Feb.},
+  year = {2010},
+  owner = {gaertner},
+  timestamp = {2012.08.23},
+  url = {http://www.jedi.be/blog/2010/02/12/what-is-this-devops-thing-anyway/}
+}
+
+@MISC{Neukirchen2007,
+  author = {Neukirchen, Christian},
+  title = {Introducing Rack},
+  howpublished = {WWW},
+  month = {Feb.},
+  year = {2007},
+  note = {Abgerufen am 23.09.2012},
+  owner = {gaertner},
+  timestamp = {2012.09.23},
+  url = {http://chneukirchen.org/blog/archive/2007/02/introducing-rack.html}
+}
+
+@MISC{North,
+  author = {North, Dan},
+  title = {Introducing BDD},
+  howpublished = {WWW},
+  month = {Mrz.},
+  year = {2006},
+  note = {Abgerufen am 18.09.2012},
+  owner = {gaertner},
+  timestamp = {2012.09.18},
+  url = {http://dannorth.net/introducing-bdd/}
+}
+
+@MISC{opscode_chef_cd,
+  author = {{Opscode, Inc}},
+  title = {Continuous Delivery},
+  howpublished = {WWW},
+  month = {Sep.},
+  year = {2012},
+  owner = {gaertner},
+  timestamp = {2012.09.13},
+  url = {http://www.opscode.com/solutions/continuous-delivery/}
+}
+
+@MISC{oraJavaInst,
+  author = {Oracle},
+  title = {JRE Self-Extracting Binary Installation for Linux (32-Bit)},
+  howpublished = {WWW},
+  month = {Mai},
+  year = {2012},
+  owner = {gaertner},
+  timestamp = {2012.06.21},
+  url = {http://www.oracle.com/technetwork/java/javase/install-linux-self-extracting-142296.html}
+}
+
+@MISC{pant09,
+  author = {Pant, Rajiv},
+  title = {Organizing a Digital Technology Department of Medium Size in a Media
+	Company},
+  howpublished = {WWW},
+  month = {Sep.},
+  year = {2010},
+  owner = {gaertner},
+  timestamp = {2012.08.23},
+  url = {http://www.rajiv.com/blog/2009/03/17/technology-department/}
+}
+
+@ARTICLE{pelschow,
+  author = {Peschlow, Patrick},
+  title = {Die DevOps-Bewegung.},
+  journal = {Javamagazin},
+  year = {2012},
+  volume = {1},
+  pages = {32-40}
+}
+
+@BOOK{popp_konfig,
+  title = {Konfigurationsmanagement mit Subversion, Ant und Maven},
+  publisher = {dpunkt.verlag; Heidelberg},
+  year = {2006},
+  author = {Popp, Gunther},
+  owner = {gaertner},
+  timestamp = {2012.08.30}
+}
+
+@MISC{racker_os_dreadnot,
+  author = {Quera, Pail},
+  title = {Rackspace Open Sources Dreadnot},
+  howpublished = {WWW},
+  month = {Jan.},
+  year = {2012},
+  owner = {gaertner},
+  timestamp = {2012.09.16},
+  url = {http://www.rackspace.com/blog/rackspace-open-sources-dreadnot/}
+}
+
+@MISC{sonar_install_ant,
+  author = {Racodon, David},
+  title = {Installing and Configuring Ant Task},
+  howpublished = {WWW},
+  month = {Juli},
+  year = {2012},
+  note = {Dokomentation Sonar},
+  owner = {gaertner},
+  timestamp = {2012.09.13},
+  url = {http://docs.codehaus.org/x/QYKxDQ}
+}
+
+@MISC{cd_devops_stateofnation,
+  author = {Read, Chris},
+  title = {DevOps: State of the Nation},
+  howpublished = {WWW},
+  month = {Nov.},
+  year = {2010},
+  owner = {gaertner},
+  timestamp = {2012.08.23},
+  url = {http://www.agileweboperations.com/devops-state-of-the-nation-by-chris-read}
+}
+
+@MASTERSTHESIS{Salchow2012,
+  author = {Salchow, Marko},
+  title = {Auswahl und Einsatz von APIs zur Steuerung einer hybrid Cloud-Infrastruktur},
+  school = {FH-Stralsund},
+  year = {2012},
+  type = {Master-Thesis},
+  month = {Aug.},
+  owner = {gaertner},
+  timestamp = {2012.09.28}
+}
+
+@ARTICLE{schlegel,
+  author = {Schlegel, Wolf},
+  title = {Continuous Delivery},
+  journal = {Javamagazin},
+  year = {2012},
+  volume = {3},
+  pages = {20-28}
+}
+
+@MISC{sonar_features,
+  author = {{SonarSource S.A}},
+  title = {sonar - Features},
+  howpublished = {WWW},
+  month = {Aug.},
+  year = {2012},
+  owner = {gaertner},
+  timestamp = {2012.08.09},
+  url = {http://www.sonarsource.org/features/}
+}
+
+@MISC{nexus_book,
+  author = {{Sonatype, Inc}},
+  title = {Repository Management with Nexus},
+  howpublished = {WWW},
+  month = {Juli},
+  year = {2012},
+  owner = {gaertner},
+  timestamp = {2012.08.08},
+  url = {http://www.sonatype.com/books/nexus-book/reference/}
+}
+
+@MISC{SourceForge,
+  author = {SourceForge},
+  title = {JWebUnit},
+  howpublished = {WWW},
+  note = {Abgerufen am 22.09.2012},
+  owner = {gaertner},
+  timestamp = {2012.09.22},
+  url = {http://jwebunit.sourceforge.net/}
+}
+
+@BOOK{sl_basiswissen_sw_test,
+  title = {Basiswissen Softwaretest},
+  publisher = {dpunkt.verlag; Heidelberg},
+  year = {2005},
+  author = {Spillner, Andreas and Linz, Tilo},
+  owner = {gaertner},
+  timestamp = {2012.08.31}
+}
+
+@BOOK{starke_swa,
+  title = {Effektive Software-Architekturen : ein praktischer Leitfaden},
+  publisher = {München : Hanser},
+  year = {2011},
+  author = {Starke, Gernot},
+  volume = {5},
+  owner = {gaertner},
+  timestamp = {2012.09.10}
+}
+
+@BOOK{steinweg04,
+  title = {Management der Software-Entwicklung : Projektkompass für die Erstellung
+	von leistungsfähigen IT-Systemen},
+  publisher = {Wiesbaden : Vieweg},
+  year = {2004},
+  author = {Steinweg, Carl},
+  volume = {5},
+  pages = {397},
+  owner = {gaertner},
+  timestamp = {2012.08.15}
+}
+
+@UNPUBLISHED{Stoyanov2012,
+  author = {Stoyan Stoyanov},
+  title = {Continuous Deli},
+  note = {Interner E-Mail-Verkehr vom 01.06.2012},
+  month = {Juni},
+  year = {2012},
+  owner = {gaertner},
+  timestamp = {2012.09.22}
+}
+
+@MANUAL{javaee_spec,
+  title = {Java Platform, Enterprise Edition (Java EE) Specification, v6},
+  author = {{Sun Microsystems}},
+  organization = {SUN MICROSYSTEMS},
+  address = {4150 Network Circle, Santa Clara, California 95054, USA},
+  month = {Juni},
+  year = {2009},
+  owner = {gaertner},
+  timestamp = {2012.08.02},
+  url = {http://download.oracle.com/otndocs/jcp/javaee-6.0-fr-eval-oth-JSpec/}
+}
+
+@MANUAL{java_code_conv,
+  title = {Java Code Conventions},
+  author = {{Sun Microsystems}},
+  organization = {SUN MICROSYSTEMS},
+  address = {2550 Garcia Avenue, Mountain View, California 94043-1100 U.S.A.},
+  month = {Sep.},
+  year = {1997},
+  owner = {gaertner},
+  timestamp = {2012.08.31}
+}
+
+@MISC{Teuteberg2011,
+  author = {Teuteberg, Frank},
+  title = {Compliance},
+  howpublished = {WWW},
+  month = {Sep.},
+  year = {2011},
+  note = {Abgerufen am 18.09.2012},
+  owner = {gaertner},
+  timestamp = {2012.09.18},
+  url = {http://www.enzyklopaedie-der-wirtschaftsinformatik.de/wi-enzyklopaedie/lexikon/daten-wissen/Grundlagen-der-Informationsversorgung/Compliance/index.html/?searchterm=compliance}
+}
+
+@MISC{TheApacheSoftwareFoundation,
+  author = {{The Apache Software Foundation}},
+  title = {Apache HTTP Server Version 2.4 - Configuration Sections},
+  howpublished = {WWW},
+  note = {Abgerufen am 26.09.2012},
+  owner = {André},
+  timestamp = {2012.09.26},
+  url = {http://httpd.apache.org/docs/current/sections.html}
+}
+
+@MISC{antManual,
+  author = {{The Apache Software Foundation}},
+  title = {Apache Ant 1.8.2 Manual},
+  howpublished = {WWW},
+  month = {Apr.},
+  year = {2012},
+  owner = {gaertner},
+  timestamp = {2012.06.22},
+  url = {http://ant.apache.org/manual/index.html}
+}
+
+@MISC{jmeter,
+  author = {{The Apache Software Foundation}},
+  title = {Apache JMeter Getting Started},
+  howpublished = {WWW},
+  month = {Mai},
+  year = {2012},
+  owner = {gaertner},
+  timestamp = {2012.06.22},
+  url = {http://jmeter.apache.org/usermanual/get-started.html}
+}
+
+@MISC{tomcat_cluster_session,
+  author = {{The Apache Software Foundation}},
+  title = {Apache Tomcat 6.0 - Clustering/Session Replication HOW-TO},
+  howpublished = {WWW},
+  month = {Nov.},
+  year = {2011},
+  note = {Dokumentation Apache Tomcat 6.0},
+  owner = {gaertner},
+  timestamp = {2012.09.15},
+  url = {http://tomcat.apache.org/tomcat-6.0-doc/cluster-howto.html}
+}
+
+@MISC{mit_license,
+  author = {{The Open Source Initiative}},
+  title = {Open Source Initiative OSI - The MIT License (MIT):Licensing},
+  howpublished = {WWW},
+  month = {Sep.},
+  year = {2012},
+  owner = {gaertner},
+  timestamp = {2012.09.14},
+  url = {http://opensource.org/licenses/mit-license.php}
+}
+
+@MISC{ThoughtWorksInc.,
+  author = {{ThoughtWorks, Inc.}},
+  title = {go Help documentation},
+  howpublished = {WWW},
+  note = {Abgerufen am 22.09.2012},
+  owner = {gaertner},
+  timestamp = {2012.09.22},
+  url = {http://www.thoughtworks-studios.com/docs/go/12.3/help/}
+}
+
+@MISC{go_company,
+  author = {{ThoughtWorks, Inc.}},
+  title = {Experience Counts: The Leaders in Agile Software Development},
+  howpublished = {WWW},
+  month = {Sep.},
+  year = {2012},
+  owner = {gaertner},
+  timestamp = {2012.08.16},
+  url = {http://www.thoughtworks-studios.com/company}
+}
+
+@MISC{go_pricing,
+  author = {{ThoughtWorks, Inc.}},
+  title = {Go Pricing and Sales},
+  howpublished = {WWW},
+  month = {Sep.},
+  year = {2012},
+  owner = {gaertner},
+  timestamp = {2012.09.13},
+  url = {http://www.thoughtworks-studios.com/go-agile-release-management/contact-sales}
+}
+
+@MISC{go_product,
+  author = {{ThoughtWorks, Inc.}},
+  title = {One-Click Deployment},
+  howpublished = {WWW},
+  month = {Aug.},
+  year = {2012},
+  owner = {gaertner},
+  timestamp = {2012.08.16},
+  url = {http://www.thoughtworks-studios.com/go-agile-release-management}
+}
+
+@MISC{go_version,
+  author = {{ThoughtWorks, Inc.}},
+  title = {Which edition of Go is right for you?},
+  howpublished = {WWW},
+  month = {Sep.},
+  year = {2012},
+  owner = {gaertner},
+  timestamp = {2012.09.13},
+  url = {http://www.thoughtworks-studios.com/go-agile-release-management/compare}
+}
+
+@MISC{Timberman2012,
+  author = {Timberman, Joshua},
+  title = {What is Knife?},
+  howpublished = {WWW},
+  month = {Sep.},
+  year = {2012},
+  note = {Abgerufen am 23.09.2012},
+  owner = {gaertner},
+  timestamp = {2012.09.23},
+  url = {http://wiki.opscode.com/display/chef/Knife}
+}
+
+@ARTICLE{viega2000,
+  author = {Viega, John and McGraw, Gary and Mutdosch, Tom and Felten, Edward
+	W.},
+  title = {Statically Scanning Java Code: Finding Security Vulnerabilities},
+  journal = {IEEE Softw.},
+  year = {2000},
+  volume = {17},
+  pages = {68--74},
+  number = {5},
+  month = {September},
+  acmid = {626180},
+  address = {Los Alamitos, CA, USA},
+  doi = {10.1109/52.877869},
+  issn = {0740-7459},
+  issue_date = {September 2000},
+  numpages = {7},
+  owner = {gaertner},
+  publisher = {IEEE Computer Society Press},
+  timestamp = {2012.07.11},
+  url = {http://dx.doi.org/10.1109/52.877869}
+}
+
+@MASTERSTHESIS{Weber2012,
+  author = {Weber, Robert},
+  title = {Analyse von Anforderungstest-Automatisierung mithilfe des Behaviour
+	Driven Development Frameworks Cucumber-JVM im Rahmen des Projektes
+	Zensus Merkmalserver der adesso AG},
+  school = {FH-Stralsund},
+  year = {2012},
+  type = {Master-Thesis},
+  month = {Okt.},
+  note = {Zum Zeitpunkt der Verarbeitung noch unveröffentlicht.},
+  owner = {gaertner},
+  timestamp = {2012.09.28}
+}
+
+@BOOK{scrum_wirdemann,
+  title = {Scrum mit User Stories},
+  publisher = {München ; Wien : Hanser},
+  year = {2009},
+  author = {Wirdemann, Ralf},
+  pages = {220},
+  owner = {gaertner},
+  timestamp = {2012.08.15}
+}
+
+@MISC{wolff12,
+  author = {Wolff, Eberhard},
+  title = {From Continous Integration to Continuous Delivery},
+  howpublished = {WWW},
+  month = {Juni},
+  year = {2012},
+  note = {veröffentlichte Präsentationsfolien},
+  owner = {gaertner},
+  timestamp = {2012.07.05},
+  url = {http://www.slideshare.net/ewolff/from-continous-integration-to-continuous-delivery}
+}
+
+@MISC{Wolff2012,
+  author = {Wolff, Eberhard},
+  title = {Was Enterprises von Startups lernen koennen},
+  howpublished = {Online Blog},
+  month = {Aug.},
+  year = {2012},
+  note = {Abgerufen am 28.09.2012},
+  owner = {gaertner},
+  timestamp = {2012.09.28},
+  url = {http://blog.adesso.de/was-enterprises-von-startups-lernen-konnen/}
+}
+
+@MASTERSTHESIS{Zeschke2012,
+  author = {Zeschke, Robert},
+  title = {Big Data und NoSQL - Vergleich von NoSQL-Datenbanksystemen in Bezug
+	auf das Handling und die Analyse-Möglichkeiten von riesigen Datenbestaenden},
+  school = {FH-Stralsund},
+  year = {2012},
+  type = {Master-Thesis},
+  month = {Okt.},
+  note = {Zum Zeitpunkt der Verarbeitung noch unveröffentlicht.},
+  owner = {gaertner},
+  timestamp = {2012.09.28}
+}
+

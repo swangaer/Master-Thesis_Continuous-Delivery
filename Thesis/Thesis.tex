@@ -1,0 +1,163 @@
+\documentclass[12pt,a4paper]{scrreprt}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{ngerman}
+\RequirePackage[ngerman=ngerman-x-latest]{hyphsubst}
+%\usepackage[ngerman]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{pgf}
+\usepackage{listings}
+\usepackage{url}
+\usepackage[babel,german=quotes]{csquotes}
+\usepackage[raggedright]{sidecap}
+\usepackage{tabularx}
+\usepackage[onehalfspacing]{setspace}
+\usepackage{geometry}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{subfigure}
+\usepackage{graphics}
+\usepackage{wrapfig}
+\usepackage{caption}
+\usepackage{tabularx}
+\usepackage[bottom,hang,multiple]{footmisc}
+
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\newcolumntype{Q}{>{\raggedright\arraybackslash}p{.13\linewidth}}
+
+\captionsetup{format=plain,font=small,labelfont=bf}
+
+\lstloadlanguages{bash,sh,Java,Ruby,Ant,XML}
+\lstset{basicstyle=\footnotesize, escapechar={~}, stringstyle=\ttfamily, frameround=fttt, frame=trBL}
+
+\geometry{a4paper, top=26mm, left=26mm, right=26mm, bottom=35mm, headsep=10mm, footskip=15mm}
+
+\newcommand{\mycite}[1]{\enquote{\emph{#1}}}
+\newcommand{\cd}{Continuous"=Delivery}
+\newcommand{\ci}{Continuous"=Integration}
+\newcommand{\devops}{DevOps}
+\newcommand{\zb}{z.~B.}
+\newcommand{\rc}{Release"=Candidate}
+\newcommand{\dpipe}{Deployment"=Pipeline}
+\newcommand{\comstage}{Commit"=Stage}
+\newcommand{\acstage}{Acceptance"=Stage}
+\newcommand{\uastage}{User"=Acceptance"=Stage}
+\newcommand{\capstage}{Capacity"=Stage}
+\newcommand{\prodenv}{Production}
+\newcommand{\hf}{Humble und Farley}
+\newcommand{\go}{\emph{Go}}
+\newcommand{\dr}{\emph{Dreadnot}}
+\newcommand{\dpl}{\emph{Deployinator}}
+\newcommand{\ssp}{Self"=Service"=Portal}
+\newcommand{\verskont}{Versionskontrollsystem}
+%\newcommand{\comment}[1]{\vspace{1.5\baselineskip}\noindent\begin{addmargin}[3cm]{1.5cm}\begin{scriptsize}\textit{\emph{Kommentar:} #1 \vspace{1.5\baselineskip}}\end{scriptsize}\end{addmargin}}
+\newcommand{\comment}[1]{}
+
+\newcommand{\zitat}[1]{\enquote{\emph{#1}}}
+
+\newcommand{\TODO}[1]{\framebox{\begin{minipage}{\linewidth}\begin{footnotesize}\texttt{\color{red}{TODO:\\#1}}\end{footnotesize}\end{minipage}}\\}
+
+\newcommand{\quelle}[1]{\begin{flushright}{\small Quelle: #1 .}\end{flushright}}
+
+\hyphenation{Dev-Ops}
+\hyphenation{Con-tin-uo-us}
+\hyphenation{De-live-ry}
+\hyphenation{In-te-gra-tion}
+\hyphenation{Vor-gehens-mo-dell}
+\hyphenation{wün-sch-ens-wert}
+\hyphenation{Ver-sions-kon-troll-sys-tem}
+\hyphenation{Frame-work}
+\hyphenation{Dri-ven}
+\hyphenation{De-vel-op-ment}
+\hyphenation{De-ploy-ment}
+\hyphenation{Man-age-ment}
+\hyphenation{Feed-ba-ck}
+
+
+\begin{document}
+
+\include{chap_titlepage}
+
+\renewcommand{\thepage}{\Roman{page}}
+\setcounter{page}{1}
+
+\tableofcontents
+
+\listoffigures
+
+\lstlistoflistings
+
+\chapter*{Abkürzungsverzeichnis}
+
+\begin{tabularx}{\linewidth}{LL|LL}
+BGB & Bürgerliches Gesetzbuch & IaaS & Infrastructure as a Service\\
+\end{tabularx}
+
+\newpage
+\renewcommand{\thepage}{}
+
+\part{Master-Thesis}
+
+\renewcommand{\thepage}{\arabic{page}}
+\setcounter{page}{1}
+
+\include{chap_Einleitung}
+
+\comment{In der Einleitung wird die Motivation für das Thema aufgegriffen und erklärt warum dieses wichtig ist. Zudem wird der Bezug zu adesso gesetzt und die Perspektive erläutert, die sich für adesso aus dem Thema ergibt.}
+
+\comment{Welche Projekte werden bei adesso typischer Weise umgesetzt?}
+
+\comment{Woher kommt \cd\ und was für Vorzüge werden versprochen? Hier wird auf die Herkunft eingegangen und der Bezug zum Agilen Minifest gesetzt. \cd\ wird als ein Betrag zu DevOps gesehen und verspricht unter anderem einen qualitativen Softwarelieferprozess. Dies ist wichtig, um zu verstehen, was \cd\ erreichen will und gegen was die zu untersuchenden Werkzeuge zu prüfen sind.}
+
+\include{chap_entstehung_von_cd}
+
+\comment{Auf welche Konzepte setzt \cd\ und welche bekannten Technologien kommen hierfür zum Einsatz? Um eine geeignetes Werkzeug für die Umsetzung von \cd\ in einem adesso Projekt finden zu können, müssen eingesetzte Technologien verstanden und beschrieben werden, die für \cd\ zum Einsatz kommen. Zu den Konzepten von gehören 
+\begin{itemize}
+\item Continuous Integration (CI)
+\item Testautomatisierung
+\item automatisierter Aufbau von Infrastruktur
+\end{itemize}}
+
+\include{chap_Konzepte}
+
+\comment{Wie ist der derzeitige Entwicklungsstand von \cd\ bei adesso und welche Technologien für die Auslieferung von Software werden derzeit verwendet? Hierzu ist ein typisches Web-Projekt hinsichtlich seiner Auslieferung zu untersuchen. Welche Auslieferungsverfahren für Web -Anwendungen gibt es? Der Entwicklungsstand ist eine Voraussetzung, um später Beurteilen zu können, welches Werkzeuge für adesso geeignet ist, weil es sich beispielsweise gut in die bestehende Infrastruktur integrieren lässt.}
+
+\include{chap_entwicklungsstand}
+
+\comment{Es sollen drei Werkzeuge untersucht werden (Thoughtworks Go, Deployinator von Etsy und Dreadnot von Rackspace), die \cd\ maßgeblich unterstützen können. Was leisten diese im Hinblick auf \cd ? Hier ist ein Evaluierungsbogen notwendig, um die Werkzeuge dahingehend untersuchen zu können, in wie weit diese \cd\ unterstützen und für einen Einsatz bei adesso geeignet wären. Die Untersuchung des Entwicklungsstandes bei adesso ist hierfür eine Voraussetzung, um zu verstehen welche Technologien derzeit eingesetzt werden und welche Werkzeuge sich in die bestehende Landschaft am besten integrieren lassen. Die Evaluierung der Werkzeuge kann eine Testinstallation erforderlich machen, in dem eine kleines Web-Testprojekt durch eine Deployment Pipeline schickt.}
+
+\include{chap_werkzeuge}
+
+
+%\comment{Aufbaue und detaillierte Beschreibung einer Delivery Pipeline für eine typisches adesso Projekt. Welche Technologien und Systeme werden verwendet und wie wurden diese Konfiguriert.}
+\include{chap_umsetzung}
+
+\include{chap_fazit}
+
+\chapter*{Eidesstattliche Erklärung}
+%\addcontentsline{toc}{chapter}{Eidesstattliche Erklärung} 
+
+Ich versichere, die von mir vorgelegte Arbeit selbstständig verfasst zu haben. Alle Stellen, die wörtlich oder sinngemäß aus veröffentlichten oder nicht veröffentlichten Arbeiten anderer entnommen sind, habe ich als entnommen kenntlich gemacht. Sämtliche Quellen und Hilfsmittel sind angegeben. Die Arbeit hat mit gleichen bzw. in wesentlichen Teilen gleichem Inhalt noch keiner Prüfungsbehörde vorgelegen.\\\bigskip
+
+Stralsund, den \today \\\vspace{3cm}
+
+André Gärtner
+
+%\TODO{noch einzufügen!}
+
+\bibliographystyle{alphadin}
+\bibliography{bibliographie}
+
+\renewcommand{\thepage}{}
+
+\part{Anhänge}
+
+\renewcommand{\thepage}{A-\arabic{page}}
+\setcounter{page}{1}
+\setcounter{chapter}{0}
+
+\include{fragebogen_ci-team}
+
+\end{document}

@@ -1,0 +1,181 @@
+\chapter{Entwicklungsstand von \cd\ bei adesso}
+
+%\comment{Was ist am Entwicklungsstand interessant, warum soll dieser untersucht werden?}
+
+Dieser Abschnitt geht auf die derzeitige Situation der Auslieferung von Software bei adesso ein. Hierzu gehören der Auslieferungsprozess und die Infrastruktur, die für die Auslieferung bereitsteht. Dies ist notwendig, um Ansatzpunkte für die noch zu untersuchenden Werkzeuge zu finden.
+
+adesso als unabhängiger IT-Dienstleister berät und entwickelt individuelle Software für Kunden aus den Branchen Versicherungen und Rückversicherungen, Banken und Finanzmarkt, Gesundheitswesen, Lotterie, öffentliche Verwaltung, Telekommunikation und Medien.\footnote{Vgl. \cite{ad_branchen}} Jeder Kunde hat dabei bestimmte Anforderungen und Rahmenbedingungen, die er an die Projekte knüpft. Mit einer heterogenen Projektlandschaft hinsichtlich der eingesetzten Verfahren, Technologien oder Prozesse wird nicht zu rechnen sein. Zudem wird angenommen, dass es bei adesso schon parallel Bemühung gibt, den Auslieferungsprozess zu verbessern bzw. \cd\ zu ermöglichen.
+
+\section{Ausgangssituation für die Untersuchung des Entwicklungsstandes}
+
+%\comment{Wird benötigt um das Betriebsszenario für die zu untersuchenden Werkzeuge genauer zu beschreiben. In der Einleitung muss schon erwähnt werden, dass adesso hauptsächlich Web-Projekte im Java realisiert. Hier soll noch einmal ausführlicher dargestellt werden, wie die Projekte genau aufgebaut sind. Diese sollte am bestem am Beispielprojekt erfolgens, an dem später die Deployment Pipeline realisiert wird. Dies ist aber nur einleitend für das anschließende Kapitel und dient der allgemeinen Erhellung, dass es sich um Web-Projekt aus dem Java-Umfeld handelt für z.B. Kunden aus dem Versicherungs- bzw. Banken-Umfeld.}
+
+%\comment{Technologieumfeld bei adesso und Zielprojekte}
+
+%\TODO{Doppelnennungen! Absatz überarbeiten und Bezug zur Einleitung herstellen.}
+
+Technologisch unterscheidet adesso Projekte selbst nach den Kategorien Java, Microsoft, Mainframe sowie Enterprise Content Management.\footnote{Vgl. \cite{ad_tech}} Bei der weiteren Betrachtung des aktuellen Auslieferungsprozesses sowie von \cd\ sollen vornehmlich Projekte aus dem Java bzw. JEE-Umfeld und Web-Umfeld betrachtet werden. Das ist der Bereich, bei dem im Unternehmen eine hohe Aktivität und ein besonderes Interesse an neuen Ansätzen wie \cd , Behavior Driven Develpment (kurz BDD), Big-Data und Cloud-Computing herrscht.\footnote{Vgl. \cite{ad_cloud}} 
+
+Auf technischer Ebene lässt sich ein kontinuierliches Ausliefern von Software mit verschiedenen Plattformen und Softwarearchitekturen verwirklichen, im Zentrum der weiteren Betrachtung stehen hier aber  Web-Anwendungen. Häufig werden WAR und EAR-Files für Web- und Applikations-Container nach der JEE-Spezifikation entwickelt.\footnote{Weitere Informationen zur JEE-Sepzifikation: Vgl. \cite{javaee_spec}}
+
+%\comment{CI-Team und Infrastruktur}
+%\TODO{Integratiosfähigkeit der Werkzeuge sowie Prozesse mehr in den Vordergrund rücken!}
+
+Um Projektrisiken durch späte Integration einzelner Softwarekomponenten zu reduzieren, stellt adesso ein System für \ci , kurz CI-System genant, bereit. Dort können Projektteams den aktuellen Stand ihrer Software automatisiert kompilieren und die Komponenten testen lassen. Besonders bei modularen Softwaresystemen, ist die Integration von mehreren Softwareteilen eine mit hohen Aufwänden verbundene Angelegenheit.
+
+Damit die Konfiguration des CI-Systems für ein neues Projekt reibungslos ablaufen kann, stellt adesso den Projektteams ein Support-Team bereit. Dieses ist mit Spezialisten rund um das Thema \ci\ und Build-Management besetzt. Hauptgrund, ein solches Support-Team zu unterhalten, ist die stetige Wiederholung von Aufgaben, die beim Einrichten eines neuen Projektes anfallen. Das adesso Build-Management stellt eine gemeinsame Integrations- und Test-Umgebung bereit. Zudem können sich Projektteams zu Technologien beraten lassen, die das Build-Management betreffen. Ziel einer Beratung ist die geeignete Wahl eines Build-Werkzeugs und die Erarbeitung von Build-Skripten. Vordergründig werden dabei die Werkzeuge Ant und Maven unterstützt.\footnote{Vgl. \cite{ad_build}}
+
+%\comment{Grund für die Untersuchung des IST-Zustandes?}
+
+%\TODO{Warum dieses Reifegradmodell?}
+
+Wieweit der derzeitige Prozess ausgereift ist und die noch zu untersuchenden Werkzeuge ergänzt werden können, muss die Untersuchung des Istzustandes zeigen. Durch den Einsatz eines Reifegradmodells soll sich der derzeitige Entwicklungsstand abschätzen und beurteilen lassen. Ein Reifegradmodell für \ci\ und \cd\ wurde von der Firma UrbanCode\footnote{Mehr Informationen zu UrbanCode: \url{http://www.urbancode.com/}} veröffentlicht, die sich auf die Entwicklung von Werkzeugen zur Unterstützung von DevOps und \cd\ spezialisiert hat. Da sich UrbanCode auch auf Werkzeuge für \cd\ anbietet, dient das Modell auch zu einem Teil der Eigenwerbung. In seinem Ansatz kann es aber unabhängig genutzt werden, um den eigenen Zustand im Unternehmen zu beschreiben.
+
+%\comment{Ziel von CD und Nutzen für adesso}
+
+%\TODO{Wird schon in der Problemstellung von CD beschrieben!}
+
+Ein Hauptanliegen von \cd\ ist die Ausbeutung von Gewinnchancen, die durch die kurzen Iterationen agiler Vorgehensmodelle entstehen. Wenn neu entwickelte Programmfunktionalitäten unverzüglich am Markt angeboten oder in Unternehmensanwendungen eingesetzt werden können, ergeben sich hieraus strategische Vorteile für das Unternehmen gegenüber anderen Wettbewerbersteilnehmern. Damit adesso seinen Kunden einen solchen Vorteil anbieten kann, müsste der Auslieferungsprozess auf diese Zielstellung angepasst sein.
+
+\section{Erhebungsmethode zum Entwicklungsstand}
+
+%\comment{Ein Einstiegspunkt für die Analyse, wie \cd\ den Auslieferungsstand konkret verbessern kann. Hieraus kann dann auch abgeleitet werden, warum es (möglicherweise) effektiver ist, \cd\ und eine Deployment Pipeline im Auslieferungsprozess einzusetzen.}
+
+%\comment{Ziel einer Erhebung}
+
+% ! OLD
+% Wie in einem adesso-Projekt derzeit fertiggestellte Software ausgeliefert wird, kann durchaus unterschiedlich und an die Rahmenbedingungen des beauftragenden Kunden gebunden sein. Mit dem adesso CI-Team steht ein Ansprechpartner bereit, der über umfassende Kenntnisse der verwendeten Verfahren und Systeme Auskunft geben und somit eine den derzeitigen Stand der Auslieferungspraxis darlegen kann.
+
+%\comment{Möglichkeiten einer Erhebung}
+
+Neben der Recherche der unternehmensinternen Quellen besteht durch das CI-Team die Gelegenheit, einzelne Mitarbeiter zur aktuellen Praxis bei der Auslieferung von Software zu befragen. Die Befragung des CI-Teams kann als Einzelinterview oder in Form eines Fragebogens erfolgen. Ein Einzelinterview bietet dabei die Möglichkeit einer individuell geführten Befragung. Im Gegensatz dazu legt ein Fragebogen einen gleichbleibenden Befragungsrahmen fest und kann zudem den Zeitaufwand der Befragung für den Fragesteller sowie für den Befragten auf ein Minimum reduzieren.
+
+Um den Zeitaufwand so gering wie möglich zu halten, wird auf den Fragebogen als Erhebungsinstrument zurückgegriffen. Der Fragebogen kann dabei so gestaltet werden, dass sich der Befragungsaufwand für die Befragten auf einen Zeitaufwand von 10 bis 15 Minuten reduzieren lässt. Der Aufwand, die formulierten Fragen über ein Telefoninterview zu vermitteln und die Antworten zu notieren, wird auf 45 bis 60 Minuten geschätzt.
+
+Zudem kann der Fragebogen zu einer beliebigen Zeit beantwortet werden und so die individuelle Koordination eines Gesprächstermins mit den Mitgliedern des CI-Teams umgangen werden. Der Fragebogen selbst dient keiner statistischen Auswertung. Vielmehr sollen mit ihm die Meinungen und Standpunkte der Befragten eingesammelt werden.
+
+%\comment{Welche Fragemethoden werden eingesetzt}
+
+Bei der Gestaltung des Fragebogens werden nur zu einem geringen Teil freie Textfelder verwendet. Mehrheitlich ist der Fragebogen so konzipiert, dass der Befragte bestimmten Aussagen zustimmen oder diese ablehnen kann. Zu jeder Frage gibt es weiterhin die Möglichkeit, freie Anmerkungen zu geben. Hierdurch können auch Ideen zu bestimmten Themen durch die Befragten geäußert werden, wie es auch in einem Telefoninterview möglich wäre.
+
+%\comment{Herkunft der Fragen}
+%\comment{Warum sind die Pattern und das Maturity Model für den Fragebogen geeignet.}
+
+Als Grundlage des Fragebogens werden das \emph{Enterprise Continuous Integration Maturity Model} von UrbanCode\footnote{Vgl. \cite{cd_maturitymodel}} sowie die von \hf\ entwickelten Konzepte zu \cd\footnote{Vgl. \cite{CD}}\ genutzt. Das Maturity-Model für \cd\ wurde für eine Selbstevaluierung von Unternehmen entwickelt. Dabei werden Zielvorgaben definiert, an denen sich die Reifegrade bestimmen lassen. Untergliedert ist das Modell in die Einheiten Kompilieren, Ausliefern und Testen einer Anwendung sowie die Berichtserstellung und Visualisierung des Prozesses.
+
+%\TODO{Maturity-Model darstellen!}
+
+Der Fragebogen ist Unterteilt nach \comstage , \acstage und \emph{Deployment}. Dieser orientiert sich damit an der von \hf\ vorgeschlagenen Struktur der \dpipe.\footnote{Vgl. \cite[S. 111]{CD}} Zusätzlich soll der Befragte zu Beginn die Phasen des Auslieferungsprozesses selbst skizzieren. Dies soll das Selbstverständnis über die Phasen der \comstage\ zeigen.
+
+Im Bereich der \comstage\ wird der Reifegrad des Build-Prozesses abgebildet und es werden Fragen zum Konfigurationsmanagement sowie zum Umgang mit Artefakten gestellt. Unter die \acstage\ fallen Fragen zu Verfahren und Werkzeugen, die beim Testen von Quellcode verwendet werden. Die letzte und kritische Phase der \dpipe\ ist das Ausrollen der Anwendung in die Produktivumgebung. Hierzu werden Fragen im Bereich des \emph{Deployments} gestellt. Es wird versucht zu ermittelt, welche Bemühungen es bei adesso derzeit gibt, um eine \dpipe\ aufzubauen.
+
+\section{Auswertung und Darstellung des Entwicklungsstandes}
+
+%\comment{Ergebnisdarstellung des Fragebogen}
+
+Der Fragebogen wurde von drei Mitarbeitern beantwortet, welche den repräsentativen Kern des CI-Teams darstellen. Die konkreten Antworten können dem Anhang~\ref{anhang_entwicklungsstand} entnommen werden. In diesem Abschnitt werden die gegebenen Antworten ausschließlich zusammengefasst und im Zusammenhang mit \cd\ betrachtet.
+
+Da sich nicht alle gegebenen Antworten decken, wird hieraus geschlussfolgert, dass es noch kein durchgehendes standardisiertes Vorgehen für den Auslieferungsprozess gibt und es vom jeweiligen Projekt abhängig ist, welche Phasen und Teilprozesse von \ci\ und \cd\ unterschieden und realisiert werden.
+
+\subsection{Phasen des derzeitigen Entwicklungs- und Auslieferungsprozesses}
+
+Aus dem Fragebogen gehen folgende Phasen des Entwicklungs- und Auslieferungsprozesses hervor:
+
+\begin{itemize}
+\item Aufsetzen der Projektumgebung und Einrichten der Entwicklungsumgebung,
+\item Entwicklung der Software,
+\item Durchführen von Integrationstests und
+\item Auslieferung der Software.
+\end{itemize}
+
+\begin{figure}
+\centering
+\fbox{\includegraphics[width=\linewidth]{Grafiken/04_sw_prozess_adesso.PNG}}
+\caption[Lieferprozess adesso]{Lieferprozess bei adesso.}\label{pic:sw_prozess_adesso}
+\end{figure}
+
+Die Entwicklung unterteilt sich in die Erstellung des Quellcodes und die anschließenden Phasen von Kompilierung, Tests und Analyse. Dieser Prozess wird durch die Änderung der Quellcode-Basis in der Versionsverwaltung als automatisierter Vorgang angestoßen. Abbildung~\ref{pic:sw_prozess_adesso} zeigt diesen Prozess. Optional ist ein automatisiertes Deployment in eine Testumgebung bzw. auf ein Staging-System. In dieser Umgebung können weitere Tests wie \zb\  Akzeptanz- oder Lasttests durchgeführt werden. Sind alle Phasen erfolgreich verlaufen, kann das Release durchgeführt werden und die Software in die Produktivumgebung installiert und ausgeführt werden.
+
+Entwickelt wird zunehmend unter dem TDD-Ansatz, dem Test-Driven-Development. TDD setzt die Erstellung von Test-Fällen vor die Implementierung der Funktionalität. Ziel dieses Vorgehens ist die Fokussierung des Entwicklungsprozesses auf die noch umzusetzenden Funktionalitäten. Deren erwartetes Ergebnis wird zu Beginn der Implementierung einer Funktionalität festgelegt.\footnote{Vgl. \cite{Ambler}}
+
+Da es oftmals keinen direkten Zugriff auf die Produktivumgebung des Kunden gibt, kann \zb\ im JEE-Umfeld nur ein fertiges WAR- oder EAR-File ausgehändigt werden. Die Anwendung wird mit einer Installationsanleitung übergeben. Mitarbeiter des Kunden bzw. ein weiterer Dienstleister in Form eines Rechenzentrums ist dann für die Installation und den reibungslosen Betrieb der Anwendung verantwortlich. Besteht der direkte Zugriff auf die Produktivumgebung, \zb\ weil adesso selbst für den Kunden das System betreibt, sind automatisierte Auslieferungen in die Produktivumgebung möglich.
+
+\subsection{\comstage}
+
+Kompilieren des Quellcodes und erstellen der Softwarepakete ist bei adesso ein standardisierter Prozess. Ob dieser auch ausgenutzt werden kann, hängt allerdings von den Rahmenbedingungen eines Projekte ab. Unterstützung gibt es durch den Jenkins CI-Server. Dieser übernimmt die Aufgaben des Build-Prozesses, der Durchführung der Unit-Test sowie der Integrationstest. Dabei wird auf die Build-Tools wie Maven- oder Ant zurückgegriffen, die das Kompilieren des Quellcodes organisieren können. Projektteams, die das System nutzen wollen, sind angehalten, die Vorgänge und Prozesse, die bei der Erstellung der Softwarepakete notwendig sind, in Skripte zu verfassen, die für eine automatisierte Ausführung notwendig sind.
+
+In Abbildung~\ref{pic:jenkins_all} wird die Übersicht über alle vom Jenkins kontrollierten Projekte sowie die Detailansicht auf Projektebene gezeigt. Die Statusseite des Jenkins ist für alle Mitarbeiter bei adesso zugänglich. Über den konkreten Zustand eines Projektes können sich so alle Beteiligten leicht informieren. Die verwendeten Symbole sind leicht zu interpretieren. In der Detailansicht kann die Historie des Build-Prozesses über alle im Build-Prozess genutzten Revisionen hinweg eingesehen werden. Das rechte Beispiel zeigt die grafische Auswertung der Testtrends. Die letzten drei Änderungen an der Quellcodebasis waren alles Fehlschläge. Obwohl die Identifizierung der Fehlerursache durch dieses System vereinfacht wird, trifft dies in diesem Fall nicht auf die Beseitigung des Fehlverhaltens zu. Der Prozess ermöglicht hier jedoch ein schnelles Feedback an das Entwicklungsteam und alle weiteren Beteiligten.
+
+\begin{figure}
+\centering
+\fbox{\includegraphics[scale=.45]{Grafiken/jenkins_uebersicht.PNG}}\hspace{3pt}
+\fbox{\includegraphics[scale=.45]{Grafiken/jenkins_details.PNG}}
+\caption[Jenkins CI-Server - Übersicht]{Jenkins CI-Seve: Übersicht über alle Build-Porzesse.}\label{pic:jenkins_all}
+\end{figure}
+
+Dieser Prozess ist zentral und kann jederzeit repliziert werden. Hierdurch können Probleme ausgeschlossen werden, die entstehen, wenn ein derartig gestalteter Prozess auf einem Entwicklersystem durchgeführt wird. Die Umgebung, in der ein Entwickler seinen Quellcode erstellt, kann nicht als stabil und verlässlich angesehen werden. Ein solches System unterliegt zu hohen Seiteneinflüssen durch andere Programme und Systeme, als dass ein verlässlicher und wiederholbarer Prozess möglich wäre. Die Verlässlichkeit sowie die Kontrolle über mögliche Seiteneinflüsse wird jedoch für den Build-Prozess vorausgesetzt. Standards, auf die sich verständigt wurde, können so möglicherweise nicht eingehalten werden. Scheitert der Prozess, lassen sich aufgetretene Fehler so nicht vollständig replizieren und die Ursache nicht ohne einen Restzweifel ergründen. Das vorhandene CI-System ist ein wesentlicher Baustein, solche Fehler zu vermeiden.\footnote{Vgl. \cite{cd_maturitymodel}}
+
+%\comment{Negativ-Beispiel für Developer-Build aus CI oder CD heraussuchen.}
+
+Alle erstellten Softwarepakete werden mit einer Versionsnummer versehen und in einem zentralen Repository abgelegt. Nachgeschaltete Tests und Prozesse können so jederzeit auf die unterschiedlichen Versionsstände einer Software zurückgreifen. Zu keinem Zeitpunkt wird eine einmal erstellte Version ein zweites Mal kompiliert. Dies ist ein wichtiger Punkt, um auftretende Fehler im Prozess jederzeit replizieren zu können. Würde ein Paket innerhalb des Prozesses ein zweites Mal erstellt werden, lassen sich die Bedingungen, unter denen die ursprüngliche Version erstellt wurde, möglicherweise nicht mehr herstellen. Der Grund für das Fehlverhalten, \zb\ bei einem Testdurchlauf, ist dann nur mit höherem Aufwand zu ermitteln. Es kann nicht ausgeschlossen werden, dass der Build-Prozess durch eine veränderte Konfiguration selbst den Fehler verursacht hat. Wird ein Paket hingegen nur einmal erstellt und kommt es in einem späteren Test zu einem Fehlverhalten, lässt sich die Fehlerursache auf die letzte Änderung der Quellcodebasis zurückführen. Eine Untersuchung sollte dann den Grund des Fehlverhaltens schnell eingrenzen können.
+
+Das Management von Abhängigkeiten, in Bezug auf 3rd-Party-Bibliotheken, wird in Verbindung mit Maven durch den Nexus Repositroy-Sever unterstützt. Der Nexus-Server stellt ein zentrales Repository für alle benötigten 3rd-Party-Bibliotheken bereit, die in entwickelter Software zum Einsatz kommen. Zudem lassen sich auch die selbst entwickelten Komponenten für beliebige andere Prozesse bereitstellen.\footnote{Vgl. \cite{nexus_book}}
+
+Alle Prozesse im Jenkins CI-Server werden automatisch ausgelöst. Übermittelt ein Entwickler seine Änderungen an den bei adesso genutzten Subversion-Server, startet der Jenkins-Server den Build-Prozess. Der Jenkins-Server vergleicht dann die aktuelle Revisionsnummer der Versionsverwaltung mit der zuletzt bekannten und für das letzte Build genutzten Revisionsnummer.
+
+Der Jenkins CI-Server ist ein wichtiger Baustein für die Realisierung \ci . Er steht jedem Projektteam bereit, welches Technologien verwendet, die durch den Jenkins abgedeckt werden können. Ob dieses Angebot angenommen werden kann, ist von den Bedingungen abhängig, die der Auftraggeber bestimmt. Damit obliegt die genaue Ausgestaltung der \comstage\ den einzelnen Projektteams in Abstimmung mit den speziellen Projektvorgaben.
+
+%Bei kleineren Projekten ist der Aufwand, das Projekte auf die CI-Umgebung vorzubereiten und einheitliche Build-Skripte zu entwerfen, vergleichsweise hoch. Jedoch sind die Schritte die auf der CI-Umgebung durchgeführt werden auch in manuellen Schritten auf den Entwicklersystem notwendig.
+
+\subsection{Qualitätssicherung und \acstage}
+
+Innerhalb der \acstage\ sind die Verfahren zusammengefasst, die sicherstellen, dass eine spezifische Softwareversion den funktionalen sowie nicht-funktionalen Anforderungen genügt. Da sich diese Phase durch den Fragebogen nicht vollständig von den Komponenten- und Integrationstests trennen lässt, werden hier alle Elemente der Qualitätssicherung berücksichtigt.
+
+% --->
+In adesso-Projekten wird generell eine hohe Testabdeckung angestrebt, ein Grad von 100\% jedoch nicht vorausgesetzt. Automatisierte Tests werden zum Teil durch manuelle ergänzt, um die Anwendung hinsichtlich bestimmter Risikoszenarien untersuchen zu können.
+
+\begin{figure}
+\centering
+\fbox{\includegraphics[scale=.5]{Grafiken/sonar_detail.PNG}}
+\caption[Detailansicht im Sonar-Server]{Detailansicht eines Projektes im Sonar-Server.}\label{pic:sonar_detail}
+\end{figure}
+
+Zur statischen Analyse des Quellcodes wird Sonar, eine Plattform um Code-Qualität zu managen, eingesetzt. Sonar bietet die Möglichkeit, Quellcode nach so genanten Coding-Rules zu analysieren. Hierzu gehören Namenskonventionen, bekannte Anti-Pattern und Metriken wie die Testabdeckung oder die zyklomatische Komplexität von Paketen.\footnote{Vgl. \cite{sonar_features}}
+
+Abbildung~\ref{pic:sonar_detail} zeigt die Detailansicht der statischen Code-Analyse eines Projektes. Relevant ist hier die Einhaltung der vereinbarten Regeln, die dieses Projekt mit $99,9\%$ erfüllt. Zudem können Veränderungen zu vorhergehenden Analysen angezeigt werden.
+
+Weitere Werkzeuge zur statischen Code-Analyse sind:
+\begin{itemize}
+\item FindBugs\footnote{Weitere Informationen zu FindBugs unter: \url{http://findbugs.sourceforge.net/}},
+\item PMD\footnote{Weitere Informationen zu PMD unter:\url{http://pmd.sourceforge.net/}},
+\item JaCoCo\footnote{Weitere Informationen zu JaCoCo unter: \url{http://www.eclemma.org/jacoco/trunk/index.html}} und
+\item Cobertura\footnote{Weitere Informationen zu Cobertura unter:\url{http://cobertura.sourceforge.net/}}.
+\end{itemize}
+
+Neben den Komponenten-Tests und der statischen Analyse des Quellcodes werden breitere Testverfahren auf das Gesamtsystem ausgeführt. Ziel dieser Phase ist, das vollständig integrierte System auf die Erfüllung von funktionalen und nicht-funktionalen Anforderungen zu prüfen.
+
+Automatisierte Akzeptanztests stellen eine Möglichkeit dar, dem Entwicklungsteam eine schnelle Rückmeldung zu geben, welche Anforderungen vom aktuellen System erfüllt werden. Auch für adesso-Projekte sind diese deshalb eine wichtige Grundlage im Entwicklungsprozess und heben den Vorteil des CI-Systems hervor.\footnote{Vgl. \cite[S. 86-87]{CD} und \cite[S. 15]{Duvall07}}
+
+Werden Änderungen der Quellcode-Basis an das Subversion-System übermittelt, wird die komplette Anwendung kompiliert und die damit verbundenen Tests ausgeführt. Dass jede Änderung zum Durchlauf aller Teststufen führt, sichert die Qualität zusätzlich durch Regressionstests. Wirkt sich ein neues Feature negativ auf die Gesamtqualität der Anwendung aus, wird dies durch die fortlaufende Qualitätssicherung entdeckt.\footnote{Vgl. \cite[S. 87]{CD}}
+
+%Aus den Testberichten, die bei jedem Durchlauf erstellt werden, lässt sich erkennen, welche Test fehlgeschlagen sind und welche erfolgreich waren. Auf diese Weise 
+
+\subsection{Deployment}
+
+Mit dem Deplyoment wird die Software in eine bestimmte Umgebung ausgeliefert. Dabei kann die Zielumgebung des Deployments eine für Testzwecke bestimmte Umgebung oder die Produktivumgebung sein. Sind \comstage\ und \acstage richtig angelegt, wird nach jeder Änderung der Quellcodebasis eine neue Instanz des Softwarelieferprozesses erzeugt, an deren Ende eine reife Software für den Produktivbetrieb steht. Um die erstellte und geprüfte Software auch in einem automatisierten Prozess in Produktion zu bringen, erfordert es einige Vorbereitung und kann durch weitere Werkzeuge wie Chef unterstützt werden. Für den bei adesso verwendeten Jenkins CI-Server gibt es die Möglichkeit, ein Deployment auf eine laufende Serverinstanz durchzuführen. So kann der Jenkins Deployment-Task \zb\ eine laufende Tomcat- oder JBoss-Instanz ansprechen und mittels Ant-Tasks oder Maven-Goals ein War-File in diese deployen.
+
+Ein komplexeres Deployment, wie z.B. die Auslieferung in eine Infrastruktur, die gegebenenfalls erst installiert und gestartet werden muss, ist nur über eigene Skripte möglich. Hierfür lassen sich \zb\ Shell- oder Ant-Skripte hinterlegen, die derartige Aufgaben und Werkzeuge anstoßen. Zum Teil ist es aber auch üblich, die benötigte Systemumgebung manuell zu konfigurieren und zu installieren. In einigen Projekten konnten auch schon automatische Verfahren in Zusammenhang mit Cloud-Infrastrukturen eingerichtet werden. Das hierbei eingesetzt Werkzeug Chef\footnote{Weitere Informationen zu Opscode Chef unter \url{http://www.opscode.com/chef/}} ermöglicht die Anpassung der Softwarekonfiguration von entfernten Systemen.
+
+%\section{Bewertung nach dem Maturity-Model}
+
+\section{Anknüpfungspunkte für \cd}
+
+Der Prozess, die Anwendung zu kompilieren und zu testen, sollte für alle Projekte, bei denen die Bedingungen bestimmt bzw. angeboten werden können, standardisiert und verpflichtend sein. Manuelle, nicht standardisierte Prozesse, bieten den Entwicklern zwar Flexibilität und Individualität, erhöhen aber das Risiko, Fehler und Schwachstellen beim Zusammenspiel der unterschiedlichen Softwareteile erst viel zu spät zu erkennen. Möglicherweise ist dieser Moment erst kurz vor der geplanten Abnahme der Software durch den Kunden. Dies kann dann zu einer Reihe kurzfristig und nicht ausreichend geprüfter Änderungen an der Anwendung führen. Ein standardisierter Prozess, der bei jeder Änderung auf die gleiche Art und Weise ausgeführt wird, hilft ein Fehlverhalten der Anwendung einzugrenzen.\footnote{Vgl. \cite[S. 29-33]{Duvall07}}
+
+In Projekten, bei denen adesso als Lieferant von War- bzw. Ear-Files auftritt, ist ein direktes Deployment in die Produktivumgebung, z.B. durch Sicherheitsrichtlinien des Rechenzentrumsbetreibers, nicht möglich. Eine voll automatisierte \dpipe\ wäre in diesen Fällen nicht möglich. Für die Sicherstellung der Qualität sollte der interne CI-Prozess verwendet werden und die Software nach jeder Änderung in eine an das Produktivsystem angelehnte Umgebung installiert und getestet werden.
+
+Projekte mit einem agilen Vorgehen setzen in jeder Iteration neue Funktionalitäten um. Auf der Seite des Kunden kann es wünschenswert sein, ein dringend benötigtes Feature schnellstmöglich produktiv einsetzen zu können. Gerade bei Softwaresystemen, bei denen sich auf die Wartung des Systems oder eine kontinuierliche Weiterentwicklung verständigt wurde, kann das automatisierte Deployment einer gut getesteten Software die Kundenzufriedenheit erhöhen und den Prozess in Summe verbessern.
+
+Das Einrichten von Infrastrukturen und Systemen sollte dabei möglichst nach standardisierten Prozessen ablaufen. Die Schritte für Projekte mit einem gleichen Technologie-Stack ähneln sich. Das CI-Team deckt mit seinem Angebot und dem Jenkins CI-Server schon einen großen Teil der notwendigen Prozesse für \cd\ ab. Hinsichtlich des Deployments könnte aber eine vorkonfigurierte \emph{Tool-Chain} den Konfigurationsaufwand für neue Projekte deutlich reduzieren. adesso könnte so in die Fähigkeit versetzt werden, seinen Kunden eine \dpipe\ bei bestimmten Projekten mit anbieten zu können. Die Untersuchung der drei Werkzeuge wird weiteren Aufschluss über die möglichen Ansatzpunkte für \cd\ bieten.
+
+%\comment{Bei adesso werden Systeme wie Jenkins für CI und Chef für den automatisierten Aufbau einer Infrastruktur bereits eingesetzt. Das sollte zumindest erwähnt werden um dann konkrete Vorschläge für andere Tools zu machen, die sich hier eventuell integrieren lassen. Könnte auch sein, dass hier ein Widerspruch mit der derzeitigen Infrastruktur entsteht und kein Tool sich nahtlos integrieren lässt. Z.B. kann das der Fall beim CI-Server sein.}

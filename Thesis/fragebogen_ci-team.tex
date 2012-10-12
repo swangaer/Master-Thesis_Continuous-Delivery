@@ -1,0 +1,272 @@
+\newcommand{\qst}[1]{\noindent\begin{minipage}{\linewidth}\vspace{\baselineskip}\hrule\vspace{5pt}\textbf{\textit{\textsf{#1}}}\end{minipage}}
+
+\newcommand{\answt}[1]{\vspace{\baselineskip}\noindent\textbf{\textsf{#1}}}
+
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+
+\renewcommand{\arraystretch}{1.4}
+
+\newcommand{\Antwort}{\answt{Antwort: }}
+
+\newcommand{\Anmerkung}{\answt{Anmerkung: }}
+
+\newcommand{\Zustimmung}{\answt{Zustimmung: }}
+
+%
+% Dokument
+%
+
+\chapter{Zusammenfassung Fragebogen CI-Team}\label{anhang_entwicklungsstand}
+
+\section{Skizze / Phasen des derzeitigen Entwicklungs- und Auslieferungsprozesses}
+
+\qst{Bitte skizzieren Sie den derzeitigen und Prozess der Softwareerstellung von der Erstellung bis zur Auslieferung.}
+
+\urldef{\adessowiki}{\url}{https://www.adesso.de/wiki/index.php/Continuous_Integration#Build-Pipeline}
+\answt{Antwort:} \emph{Verweis auf das Unternehmens-Wiki von adesso. Hierunter fallen demnach die Phasen Build, Smoke-Test, Integrationstest, Regressionstest und Web-Test}\footnote{Vgl. \adessowiki}
+
+\Antwort
+\begin{itemize}
+\item Setup Entwicklungsumgebung
+\item Entwicklung, Subphasen: Checkin $->$ Build \& Unittests $->$ Automatisierte Deployments $->$ Automatisierte (Integrations-)Tests
+\item Integrationstests
+\item Delivery
+\end{itemize}
+
+\Antwort
+\begin{enumerate}
+\item Entwicklung, meist TDD
+\item Build
+\item Unit-Tests
+\item Integrations Tests
+\item ggf. Deploy auf Testsystem / Staging System
+\item ggf manuelles Testen oder exploratives Testen
+\item Release bzw. Auslieferung manuell, wenn 1-7 ok
+\end{enumerate}
+
+\qst{Welche Phasen, von der Erstellung bis zur Auslieferung von Software, werden unterschieden?}
+
+\Zustimmung
+
+\noindent\begin{tabularx}{\textwidth}{Lrr}
+Kompilierung des Quellcode & 2 & 67\% \\
+Unit- und Komponententests / Analye & 2 & 67\% \\
+automatisierte Akzeptanztests & 1 & 33\% \\
+automatisierte Kapazitätstests & 2 & 67\% \\
+manuelle Testsstage & 1 & 33\% \\
+Konfigurieren von Test- und Produktivumgebung & 1 & 33\% \\
+Installation und der Release der Software & 2 & 67\%
+\end{tabularx}
+
+\Antwort
+Integrations-Tests
+
+\Antwort
+diese sind in jedem Projekt ganz individuell!
+
+\section{Commit-Stage}
+
+\qst{Aussagen zur Commit-Stage}
+
+\Zustimmung
+
+\noindent\begin{tabularx}{\textwidth}{Lrr}
+Gewöhnlich wird die Software auf einem Entwickler-System gebaut und paketiert. & 0 & 0\% \\
+Es gibt einen standardisierten Prozess für das Bauen / Paketieren einer Anwendung. & 2 & 67\% \\
+Wenn Quellcode kompiliert wurde, wird dieser in allen nachfolgenden Phasen verwendet und nicht noch einmal kompiliert. & 3 & 100\% \\
+Erstellte Softwarepakete werden mit einer fortlaufenden Versionsnummer versehen. & 2 & 67\% \\
+Alle im Prozess erstellten Softwarepakete werden mit einer fortlaufenden Versionsnummer versehen. & 1 & 33\% \\
+Alle Artefakte, die beim Kompilieren und Testen entstehen, werden in einem zentralen Repository aufbewahrt. & 3 & 100\% \\
+Dateien und Information zur Konfiguration der erstellten Software werden in einem geschützten Speicher zentral verwaltet. & 2 & 67\% \\
+Es werden übersichtliche Berichte erstellt, die eine qualitative Aussage einer bestimmten Version ermöglichen. & 1 & 33\%
+\end{tabularx}
+
+
+\Anmerkung
+auch hier: ist in jedem Projekt ganz individuell!
+
+\qst{Wie werden Softwareentwicklungsprojekte beim Konfigurationsmanagement unterstützt?}
+
+\Antwort
+Es gibt Vorlagen für Ant und Maven
+
+\Antwort
+Das Startup (vormals CI) team unterstützt durch Beratung und Doing in der Startup-Phase eines Projektes. Weiterhin werden Templates für Buildsysteme z.V. gestellt, damit Projekte einheitlich gebaut werden (ANT bereits vorhanden, Maven und Gradle-Templates in Vorbereitung). 
+
+\Antwort
+\begin{itemize}
+\item Beratung
+\item über Ticketsystem, um Einrichten von CI Jobs oder bsp. Sonar zu triggern
+\end{itemize}
+
+\qst{Wie wird mit Abhängigkeiten zu externen Bibliotheken bzw. Komponenten von Drittanbietern umgegangen?}
+
+\Antwort
+Über einen eigenen Nexus-Server
+
+\Antwort
+3rd-Party Bibliotheken werden auf einem zentralen Nexus in einem dafür vorgesehenen Repository abgelegt. Die Projekte sind verantwortlich für die Einhaltung der Compliance, z.B. dürfen Libs, deren Lizenz eine Auslieferung verhindern (z.B. SUN JDK Bibliotheken, JDBC-Treiber usw.) nicht mit ausgeliefert werden.
+
+\Antwort
+Nexus als Repository Manager und Proxy zu anderen Repositories
+
+\qst{Wie wird der Build-/ Test-Prozess ausgelöst?}
+
+\Zustimmung
+
+\noindent\begin{tabularx}{\textwidth}{Lrr}
+Kompilierung, Paketierung und Test werden jeweils durch einzelne Kommandos auf der Konsole durchgeführt. & 0 & 0\% \\
+Für den Prozess existieren Skripten, die das Bauen, Paketieren und Testen der Anwendung durchführen. & 0 & 0\% \\
+Wir haben automatisierte Prozesse, die durch Ereignisse, z.B. Entwickler-Commit in der Versionsverwaltung, ausgelöst werden. & 2 & 67\%
+\end{tabularx}
+
+\Anmerkung
+individuell
+
+\qst{Anmerkung zur Commit-Stage:}
+
+\Anmerkung
+Jedes Projekt handhabt dies ganz individuell!
+
+\section{Acceptance-Stage}
+
+\qst{Aussagen zum Testbetrieb:}
+
+\Zustimmung
+
+\noindent\begin{tabularx}{\textwidth}{Lrr}
+ & Zustimmung &  Anteil \\
+Es gibt vereinzelt ein paar automatisierte Unit- und Komponententests. & 1 & 33\% \\
+Bei einer Änderung des Softwarestandes werden der größte Teil der Tests wiederholt (Regressionstest). & 3 & 100\% \\
+Es wird eine statische Code-Analyse durchgeführt. & 2 & 67\% \\
+Funktionalen Anforderungen werden automatisiert getestet. & 2 & 67\% \\
+Unit- und Komponententest werden mit einer hohen Abdeckung durchgeführt. & 3 & 100\% \\
+Wenn manuelle Tests durchgeführt werden, basieren diese auf speziellen Risikoszenarien. & 1 & 33\% \\
+Die Anwendung wird nach bestimmten Sicherheitsaspekten analysiert. & 1 & 33\% \\
+Es wird auf eine Testabdeckung von 100\% Wert gelegt. & 0 & 0\% \\
+Test- und Produktivumgebung sind zu großen Teilen identisch. & 1 & 33\% \\
+Testberichte können von allen Projektbeteiligten eingesehen werden. & 1 & 33\%
+\end{tabularx}
+
+\qst{Welche Werkzeuge und Methoden werden zur statischen Analyse des Quellcodes angeboten?}
+
+\Antwort
+Sonar und FindBugs
+
+\Antwort
+Sonar (kapselt Findbugs, Jococo, Checkstyle, PMD, Cobertura)
+
+\Antwort
+Sonar, Findbugs, PMD
+
+\qst{Welche Werkzeuge werden zur Aufdeckung von möglichen Sicherheitslöchern verwendet bzw. angeboten?}
+
+\Antwort
+s. oben (Findbugs hat einige Security-Regeln)
+
+\qst{Welche Werkzeuge nutzen Sie für automatisierte Akzeptanz- und Kapazitätstests?}
+
+\Antwort
+JMeter, Selenium
+
+\Antwort
+JUnit, JBehave
+
+\qst{Welche Informationen können aus den Testberichten entnommen werden?}
+
+\Antwort
+Alle wesentlichen ;-) Abdeckung Erfolg, Nichterfolg 
+
+\Antwort
+Fehlerhafte Tests, Testabdeckung
+
+\qst{Nach welchen architektonischen Vorgaben / Brüchen wird die erstellte Software hin untersucht?}
+
+\Antwort
+Modularität, Complexität, Kohäsion
+
+\qst{Gibt es bestimmte Strategien für den Umgang mit Testdaten?}
+
+\Antwort
+teilweise
+
+\qst{Anmerkungen zur Acceptance-Stage}
+
+\Anmerkung
+Auch hier: in jedem Projekt ganz individuell
+
+\section{Deployment}
+
+\qst{Welche Verfahren werden genutzt, um eine releasefähige Software in die Produktivumgebung auszuliefern?}
+
+\Antwort
+Releases werden über Jenkins ausgeliefert
+
+\Antwort
+manuelles Delivery $\rightarrow$ es ist mir nicht bekannt, dass wir in eine Prod-Umgebung eines Kunden automatisiert zugreifen und deployen könnten. Zudem steht einem automatisierten Deployment in vielen Unternehmen die SOX-Compliance entgegen, die besagt, dass Entwicklung und Produktion strikt zu trennen ist.
+
+\Antwort
+Skripte (Shell, Ant), Manuell
+
+\qst{Wie wird das Software-Deployment durchgeführt?}
+
+\Zustimmung
+
+\noindent\begin{tabularx}{\textwidth}{Lrr}
+ & Zustimmung &  Anteil \\
+Es gibt derzeit keine Deployment-Skripte. & 0 & 0\% \\
+Deployment-Skripte werden vorwiegend über die Konsole angestoßen. & 1 & 33\% \\
+Deployment-Skripte werden automatisch angestoßen, sofern ein bestimmtes Quality-Gate durchschritten wurde. & 0 & 0\% \\
+Es gibt eine Oberfläche von der aus das Deployment einer bestimmten Version angestoßen werden kann. & 1 & 33\%
+\end{tabularx}
+
+\Anmerkung
+individuell, meist über Ant oder Maven
+
+\qst{Werden Projektteams bei der Erstellung eines Deployment-Skriptes unterstützt?}
+
+\Zustimmung
+
+\noindent\begin{tabularx}{\textwidth}{Lrr}
+ & Zustimmung &  Anteil \\
+Es gibt keine Unterstützung, da die Projekte dies selbst regeln. & 0 & 0\% \\
+Es gibt ein paar Skripte aus anderen Projekten, die als Vorlage genutzt werden können. & 1 & 33\% \\
+Es gibt Templates für unsere Standardwerkzeuge. & 1 & 33\% \\
+Es gibt Tools, mit denen sich das Deployment konfigurieren lässt. & 1 & 33\%
+\end{tabularx}
+
+\qst{Welche Werkzeuge werden für das Deployment genutzt?}
+
+\Antwort
+ant und Shell-Skripte
+
+\Antwort
+Ant mit Shellscripten für App-Server, die keine dedizierte Schnittstelle oder Plugin für Ant/Maven bieten. Falls diese Ant-Tasks oder Maven-Plugins anbieten (z.B. Apache Tomcat) werden diese genutzt
+
+\qst{Wie wird mit Konfiguration von Test- / Produktivumgebungen umgegangen?}
+
+\Zustimmung
+
+\noindent\begin{tabularx}{\textwidth}{Lrr}
+ & Zustimmung &  Anteil \\
+Abhängige Komponenten werden vor dem Betrieb bzw. Test manuell installiert. & 1 & 33\% \\
+Projekte erstellen eigene Skripte, um die benötigten Komponenten zu installieren. & 2 & 67\% \\
+Es gibt Template-Skripte, um Standardumgebungen zu installieren und zu konfigurieren. & 0 & 0\%
+\end{tabularx}
+
+\qst{Existieren derzeit Bemühungen eine Delivery-Pipeline in einzelnen Softwareentwicklungsprojekten umzusetzen?}
+
+\Zustimmung
+
+\noindent\begin{tabularx}{\textwidth}{Lrr}
+ & Zustimmung &  Anteil \\
+Es gibt noch kein Einsatzszenario bzw. Interesse. & 0 & 0\% \\
+Es sind Projekte in Zukunft geplant. & 0 & 0\% \\
+Es gab / gibt schon Pilotprojekte. & 1& 33\% \\
+Eine Delivery-Pipeline haben wir schon öfter umgesetzt. & 1 & 33\%
+\end{tabularx}
+
+\qst{Anmerkungen zum Deployment}
+
+\Anmerkung
+Auch hier: alles individuell, insbesondere was die Produktivsetzung angeht. Zur Frage \emph{Wie wird mit Konfiguration von Test- / Produktivumgebungen umgegangen?} Auch hier ganz unterschiedlich, aber meist manuell. Bei der AMS haben wir nun in einer Cloud-Umgebung Chef im Einsatz um Server automatisiert zu provisionieren.

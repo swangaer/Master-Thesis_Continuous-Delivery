@@ -1,0 +1,775 @@
+\chapter{Werkzeuge für \cd}
+
+Als Ziel dieser Arbeit wurde die Evaluierung von drei Werkzeugen, die adesso für die Umsetzung von \cd\ als interessant eingestuft hat, gesetzt. Dabei möchte adesso vornehmlich herausfinden, wie diese Werkzeuge funktionieren und aufgebaut sind und wie sich damit eine \dpipe\ umsetzen lässt. Vor einer genaueren Untersuchung der Eigenschaften ist eine Grobbetrachtung sowie eine Aufstellung von Beurteilungskriterien notwendig. Im Anschluss daran werden die Werkzeuge auf einer Testumgebung installiert und können dann genauer nach ihren Funktionalitäten untersucht werden. 
+
+An \cd\ und den Möglichkeiten einer \dpipe\ besteht bei adesso ein hohes Interesse. Mit dem Jenkins-Server wird bereits ein System für \ci\ verwendet und damit der erste Teil von \cd\ verwirklicht. Untersucht werden soll Go von Thoughtworks, Deployinator von Etsy und Dreadnot von Rackspace. Mit der Evaluierung von Go, Deployinator und Dreadnot möchte adesso herausfinden, ob ein Lückenschluss zwischen dem CI-System und der Verwaltung von Infrastrukturen mit Werkzeugen wie Chef möglich ist.
+
+\section{Kriterien für die Evaluierung}
+
+Für die Evaluierung der Werkzeuge ist kein spezielles Anwendungsszenario vorgegeben, wie \zb\ für ein bestimmtes Projekt eine \dpipe\ mit Hilfe eines dieser Werkzeuge umzusetzen. Aus diesem Grund werden die Fähigkeiten der Werkzeuge nach allgemeinen Kriterien betrachtet und der Rahmen berücksichtigt, in dem sich die adesso Projekte aus dem Umfeld der Web-Technologien bewegen.
+
+adesso sieht in \cd , in Zusammenhang mit Cloud-Techniken, eine mögliche zukünftige Ausrichtung, auf deren Basis sich neuartige Dienstleistungen errichten lassen. Im Zentrum steht hier nicht die Auswahl einer geeigneten Software mit anschließender Einführung, sondern viel mehr eine Betrachtung der sich bietenden Optionen für zukünftige Projekte und Dienstleistungen.
+
+Der genaue Funktionsumfang dieser Werkzeuge als auch die verfolgten Ansätze sind vorerst nicht weiter bekannt. Implikationen für ein Liefersystem ergeben sich aber aus Abschnitt~\ref{konzepte_cd} und \ref{liefersystem} und wurden unter Punkt~\ref{lierfsys_implikation} zusammengefasst. Kriterien für eine Evaluierung können hieraus abgeleitet werden.
+
+\subsection{Einordnung der Werkzeuge}
+
+Eine einführende Grobbetrachtung der zu untersuchenden Werkzeuge zeigt, dass sich die Werkzeuge in unterschiedlichen Klassen befinden und nicht dieselben Ziele verfolgen.
+
+Bei \go\ handelt es sich um ein vollwertiges CI-System in dem die Phasen der \dpipe\ abgebildet werden können. \dr\ und \dpl\ sind vornehmlich Self-Service-Portale, die das Deployment anstoßen sollen.
+
+Ein direkter Vergleich der Werkzeuge wird nicht möglich sein, da der Funktionsumfang zu unterschiedlich ist, um eine objektive Beurteilung zu ermöglichen. Für eine unabhängige Betrachtung der Werkzeuge spricht auch die Implikation, für neue Dienstleistungen und zukünftige Projekte unterschiedliche Ansätze ableiten zu können. 
+
+Die unabhängige Betrachtung schließt aber nicht einen Vergleich von allgemeinen Qualitätsmerkmalen von Software aus sowie die Untersuchung, welche Merkmale einer \dpipe\ konkret abgebildet werden können. Für den derzeitigen Lieferprozess wäre es eine Verbesserung, wenn die automatisierte Auslieferung von Software in die Test- und Produktivumgebung sich über ein Portal besser organisieren lassen würde. 
+
+In einem Kunden-Lieferanten-Verhältnis ist ein direktes Liefern in die Produktivumgebung häufig aus vertragsrechtlichen Einschränkungen oder Gründen der Compliance nicht möglich. adesso als Dienstleister für individuelle Softwarelösungen könnte in diesem Fall aber ein \ssp\ als zusätzliche Dienstleistung bereitstellen, in das sich Mitarbeiter des Kunden einloggen können. Die Testabteilung des Kunden oder der IT-Betrieb dann das Deployment der gewünschten Version anstoßen.
+
+\subsection{Allgemeine Kriterien}
+
+Die Qualität von Software lässt sich durch die definierte Qualitätscharakteristika der DIN/ISO-9126 beschreiben. Durch diese Kriterien lässt sich eine Software nach Funktionalität, Zuverlässigkeit, Benutzbarkeit, Effizienz, Wartbarkeit und Portabilität beurteilen.\footnote{Vgl. \cite[S. 57f]{starke_swa} und \cite[S. 110]{balzert_swt}} Diese Kriterien sollen auch für einen allgemeinen Vergleich von \go , \dpl\ und \dr\ genutzt werden, um eine vergleichende Aussage der Werkzeuge zu ermöglichen.
+
+\paragraph{Funktionalität}
+
+Mit der Funktionalität wird das Vorhandensein von Funktionen einer Anwendung mit festgelegen Eigenschaften und die angemessene Erfüllung der Anforderungen beschrieben. In Bezug auf die Konzepte von \cd\ bedeutet dies die Möglichkeit, eine \dpipe\ abbilden zu können und die Unterstützung einer weitgehenden Automatisierung der dazugehörigen Prozesse. Die Anforderungen leiten sich aus \cd\ ab.
+
+Damit die Anwendung mit den vorgegebenen Systemen zusammenarbeiten kann, muss geprüft werden, wie weit die Anwendung sich in die bestehende Systemlandschaft integrieren lässt. Für adesso ist es erforderlich, dass die betrachtete Anwendung mit dem bestehenden CI-System zusammenarbeitet.
+
+\paragraph{Zuverlässigkeit}
+
+Mit der Zuverlässigkeit wird die Reife des Produktes zum Ausdruck gebracht. Dabei spielen folgende Faktoren eine Rolle:
+
+\begin{itemize}
+\item Eine geringe Versagenshäufigkeit,
+\item die Reaktion des Systems auf Fehlerzustände und 
+\item die Möglichkeit den Zustand des Systems nach einem Versagen wiederherstellen zu können.
+\end{itemize}
+
+Eine Aussage über die Reife kann \zb\ das Entwicklungsstadium der Anwendung sein. Mit einer Versionsnummer kleiner $1.0$ wird signalisiert, dass es sich noch um keine für ein Release freigegebene Version der Software handelt. Zum Vergleich von Reife zwischen Anwendungen ist dies allerdings kein Kriterium.
+
+\paragraph{Benutzbarkeit}
+
+Die Benutzbarkeit einer Anwendung kann über ihre Verständlichkeit, Erlernbarkeit und Bedienbarkeit beurteilt werden. Bei einer verständlichen Anwendung muss ersichtlich sein, welche Funktionen welche Zustände und Prozesse anstoßen. Der Aufwand, das Konzept der Anwendung zu verstehen, muss gering sein. Zudem muss der Einstieg in die Anwendung leicht und schnell erlernbar sein. Konfiguration und Bedienung sollen leicht sein und in verständlichen Schritten erfolgen.
+
+\paragraph{Effizienz}
+
+Mit der Effizienz wird das Zeitverhalten einer Anwendung untersucht. Die Anwendung sollte schnell auf Nutzereingaben reagieren können und die Antwortzeit bei einer Funktionsausführung gering sein. Weiterhin wird hier das Verbrauchsverhalten in Form der benötigten Betriebsmittel untersucht, die das System für den Betrieb benötigt. Als Vergleichsmaßstab können die angegebenen Systemvoraussetzungen herangezogen werdend.
+
+\paragraph{Wartbarkeit und Änderbarkeit}
+
+Der Aufwand, Mängel der Anwendung sowie deren Ursache zu finden, sollte gering sein. Sind Anpassungen der Anwendung notwendig, stellt sich die Frage nach den Voraussetzungen, um eine Anpassung durchführen zu können sowie der damit verbundene Aufwand.
+
+\paragraph{Portabilität und Übertragbarkeit}
+
+Die Anpassbarkeit beschreibt die Möglichkeit, die Anwendung an eine andere Umgebung anzupassen. Demnach sollte das System auf unterschiedlichen Plattformen und Systemkonfigurationen ausgeführt werden können.
+
+Zudem steht hier die Durchführung und der Aufwand von Installation und Inbetriebnahme der Anwendung auf dem Prüfstand. Um eine Anwendung in den Betrieb zu nehmen, muss die Installation gut dokumentiert, verständlich und vollständig sein.
+
+\subsection{Anforderungen für \cd}
+
+Aus \cd\ leiten sich Anforderungen ab, die von einer \dpipe\ berücksichtigt werden müssen. Es wird nicht erwartet, dass es ein Werkzeug gibt, welches alle Anforderungen erfüllt. Vielmehr haben \hf\ bei der Beschreibung der \dpipe\ auf den Einsatz von spezialisierten Werkzeugen und Shell-Skripten verwiesen.
+
+\go , \dpl\ und \dr\ sollen gegen die Anforderungen von \cd\ geprüft werden, damit ersichtlich wird, welche Elemente der \dpipe\ abgebildet werden können und für welche ein ergänzendes Werkzeug gefunden werden muss, um eine vollständige \dpipe\ verwirklichen zu können.
+
+Nach \hf\ besteht die \dpipe\ aus einzelnen Stages, die parallel oder sequenziell verlaufen können. Für die \dpipe\ muss es also Möglichkeiten geben, Prozesse abbilden zu können. Eine Oberfläche für das Management der \dpipe\ sollte anzeigen, welche Version in welche Umgebung deployt wurde und welche Revisionsnummer der Code-Basis genutzt wurde.
+
+Um den Lieferprozess anzustoßen, muss dieser getriggert werden können. Dabei sollte der Teil von \ci\ durch eine neue Version der Code-Basis automatisch angestoßen werden, während es für das Deployment auf das Test- und Produktivsystem automatische oder manuelle Möglichkeiten geben sollte. Letzteres müsste dann über eine Oberfläche zugänglich sein und \zb\ über einen einfachen Knopfdruck angestoßen werden können.
+
+Weitere Komponente sind die Dokumentation sowie ein schnelles Feedback an den Nutzer. Folgende Elemente sollten dokumentiert und dargestellt werden:
+
+\begin{itemize}
+\item Die Durchlaufzeit einer Stage, 
+\item die Fehler, die aufgetreten sind sowie deren Gründe, 
+\item die Anzeige von Test-Reports, die eine qualitative Beurteilung des Builds ermöglichen.
+\end{itemize}
+
+Die \comstage\ und \acstage\ erfordern die Kommunikation und Ausführung verschiedener Systeme und Programme zur Erfüllung der Aufgaben dieser Stage. Hierzu gehören das Laden der aktuellen Quellcode-Basis aus der Versionsverwaltung, das Anstoßen von Build-Tool, die Verwaltung der Binaries in einem Repository, die Ausführung von Test-Skripts und die Vorbereitung der Ausführungsumgebung für Test und Produktion.
+ 
+Die in diesen Bereichen vorhandene Infrastruktur von adesso muss Berücksichtigung finden. So wird für die Verwaltung der Quellcode-Basis Subversion (SVN) eingesetzt und je nach Projekt Ant oder Maven zum Erstellen der Binaries verwendet.
+
+\section{Evaluierung der Werkzeuge}
+
+\subsection{\go\ von Thoughtworks}
+
+\go\ wird von ThoughtsWors Studois\footnote{Informationen zu ThoughtWorks Studios unter \url{http://www.thoughtworks-studios.com/} .} entwickelt. Der Fokus von ThougthWorks liegt auf Software, die agile Methoden unterstützen. \go\ wird unter dem Slogan \mycite{Agile Release Management} angeboten.\footnote{Vgl. \cite{go_company}}
+
+\subsubsection{Konzept von \go}
+
+Mit \go\ können automatisierte Build-, Tests und Releaseprozesse modelliert werden. Dabei wird das Konzept eines \mycite{push-button deployments} unterstützt. Das Konzept von \go\ baut auf \ci\ auf und erweitert dieses um Funktionen für \cd . Dabei können verschiedene Pipelines für verschiedene Projekte und Produkte mit unterschiedlichen Nutzerkreisen verwaltet werden. \go\ kann Pipelines parallel verarbeiten, in dem es ein Netz von verteilten Agents nutzt.
+
+In einer Pipeline können verschiedene Stages angelegt werden, die dann nacheinander abgearbeitet werden. Jede Stage kann einen oder mehrere Jobs definieren. Dabei dienen die Jobs der Bündelung von Tasks. Die Jobs einer Stage werden parallel ausgeführt und auf freie Agents verteilt. Die in einem Job gegliederten Tasks werden dann aber sequenziell abgearbeitet.
+
+\go\ ist eine auf den Jetty-Server\footnote{Der Jetty Server ist seit 2009 ein Teil der Eclipse Foundation. Weitere Informationen unter \url{http://www.eclipse.org/jetty/about.php} .} basierende Web-Applikation, welche diesen in den Anwendungskern einbettet. Die Ausführung einer Stage wird von verteilt oder lokal laufenden Agents durchgeführt, die sich mit dem go-Server verbinden.
+
+\subsubsection{Lizenzvarianten}
+
+\go\ wird in drei Preisvarianten angeboten, eine kostenfreie Community- und zwei proprietäre Enterprise-Versionen. Der wesentliche Unterschied zwischen den Varianten besteht in der Anzahl der erlaubten User und der verteilt laufenden Agents. Agents, die lokal auf dem System des \go -Server ausgeführt werden, können je nach vorhandener Kapazität der Hardware unbegrenzt gestartet werden.
+
+\begin{figure}
+\centering
+\fbox{\includegraphics[scale=0.8]{Grafiken/go_pricing.PNG}}
+\caption[Version und Preise von \go]{Versionen und Preise von \go , Quelle: \cite{go_pricing}.}\label{pic:go_pricing}
+\end{figure}
+
+Abbildung~\ref{pic:go_pricing} zeigt die Unterschiede zwischen den Versionen Community und der Enterprise. Bis einschließlich zur Version $12.2$ war es mit der kostenfreien Community-Version nicht möglich, ein Cluster mit Agents zu betreiben. Zulässig waren bis dahin nur Agents, die auf der Server-Instanz ausgeführt worden sind. Mit Version $12.3$ können in der Community-Version auch bis zu drei verteilt laufende Agents im Go-Server angemeldet werden. In der Enterprise-Version können bis zu 10 oder 25 verteilt laufende Agents betrieben werden. Zudem bietet Thoughtworks hier ein unterstützendes Support-Team, welches bei der Konfiguration des Systems helfen kann.\footnote{Vgl. \cite{go_pricing}}
+
+\subsubsection{Testprojekt und Probeversion}
+
+\hf\ empfehlen für die Umsetzung einer \dpipe\ am Anfang ein funktionierendes Skelett der geplanten Anwendung zu verwenden.\footnote{Vgl.  \cite[S. 132]{CD}} Thoughtworks hat für die Erprobung eine Test-Lizenz für 30 Tage bereitgestellt, mit der sich die Vorteile der Enterpriseversion nutzen lassen.
+
+Für den Probebetrieb von \go\ muss eine Netzwerkinfrastruktur mit mehreren Servern simuliert werden. Dies ist dadurch begründet, dass \go\ Funktionalitäten von \ci\ bietet und Subsysteme wie Versionsverwaltung und Testserver für einen für den Probebetrieb benötigt werden sowie selbst als Server-Agent-Architektur realisiert wurde.
+
+Ausgangspunkt der \dpipe\ ist das Entwicklersystem. Dieser übermittelt seine Änderungen am Quellcode in das Versionsverwaltungssystem. Hierfür wird die Eclipse IDE genutzt und eine einfache Hello-World-Applikation, mit dem Projekt-Wizzard von Eclipse, als dynamisches Web-Projekt angelegt. Ziel des Testprojektes ist die Untersuchung der Konfigurationsfähigkeit und der Funktionalität von \go . Strukturell betrachtet wird \go\ verteilt ausgeführt. Dabei verbinden sich Agents mit dem Server und teilen ihren Status mit. Der Server verteilt neue Aufträge an freie Agents.
+
+Um einen Test dieser Struktur zu ermöglichen, werden drei virtuelle Systeme mit VirtualBox\footnote{Mehr Informationen zu VirtualBox unter \url{https://www.virtualbox.org/} .} erzeugt und die Server-Variante von Ubuntu ohne GUI darauf installiert. Diese Struktur wird angelegt, um ein verteiltes System zu simulieren. Abbildung~\ref{pic:go_test_aufbau} zeigt die Netzkonfiguration für die virtuellen Systeme und den Host. Auf Grund von Kapazitätsbeschränkungen des Host-Systems werden die Test-Umgebung und das Versionsverwaltungssystem zusammengelegt.
+
+\begin{figure}
+\centering
+\fbox{\includegraphics[width=\linewidth]{Grafiken/Test_Konfiguration_Go.PNG}}
+\caption[\go -Testaufbau mit VirtualBox]{Testaufbau mit VirtualBox.}\label{pic:go_test_aufbau}
+\end{figure}
+
+Auf den virtuellen Systemen wird Ubunut~11.10 für 32~Bit Architekturen. Der \go -Server wurde mit 1280~MB Arbeitsspeicher ausgestattet, Systemvoraussetzung sind 1~GB, empfohlen aber 2~GB, die vom Host aber nicht bereitgestellt werden können. Der \go -Agent benötigt weniger Ressourcen und ist mit 256~MB ausgestattet. Gleiches gilt für die Test-Umgebung.
+
+%\begin{wrapfigure}{r}{0.33\textwidth}
+%\centering
+%\fbox{\includegraphics[scale=0.6]{Grafiken/hello_world_projektstruktur.PNG}}
+%\caption[Testprojekt]{Struktur des Testprojektes.}\label{fig:test_project}
+%\end{wrapfigure}
+
+Auf allen Systemen kommt das Java Development Kit in Version~6 Update~31 für 32-Bit-Architekturen zum Einsatz. Zur Zeit der Erprobung war Verison~12.2 aktuell. Die Abarbeitung der Jobs einer Stage wird durch Agents durchgeführt. Da Jobs parallele Abläufe einer Stage verwirklichen, können Jobs einer aktiven Stage auf verschiedene Agents verteilt werden. Für die Umsetzung der in Tasks vorgesehenen Aufgaben müssen auf dem Agent-System alle Voraussetzungen geschaffen werden. Der Build-Prozess des Testprojektes basiert auf Ant und JUnit-Tests für die Komponenten, was eine Installation von Ant und JUnit notwendig werden lässt. Die Quellcode-Basis muss auf das System geladen werden, wofür Subversion genutzt und ein SVN-Client installiert wird. Im weiteren Verlauf werden Akzeptanz- und Kapazitätstests mit Hilfe von Apache JMeter und JWebUnit durchgeführt. Die hierfür benötigen Bibliotheken müssen auf dem Agent-System vorhanden sein. Die Testumgebung wird auch für die Verwaltung der Code-Basis verwendet, was die Installation von Subversion bedingt. Für die automatisierten Akzeptanz-Tests wird ein Tomcat-Server in Version~6 als Deploymentziel verwendet.
+
+\begin{figure}
+\centering
+\fbox{\includegraphics[width=\linewidth]{Grafiken/go_pipeline_und_stages.PNG}}
+\caption[Konzept der Pipelines und Stages in \go]{Konzept der Pipelines und Stages in \go .}\label{pic:go_stages_konzept}
+\end{figure}
+
+Der Ablauf des Testsystems sieht \comstage\ und \acstage\ vor. Für die \acstage\ muss die Testanwendung in das Testsystem deployt werden. Die \dpipe\ endet hier für das Versuchsprojekt, da alle komplexeren Vorgänge sich auf gleiche Art und Weise konfigurieren werden und \go\ dabei ausschließlich das Anstoßen dieser Aufgaben in Form von Skripten ermöglicht. Komplexere Szenarien könnten hier \zb\ mit Hilfe von Werkzeugen wie Chef umgesetzt werden. Infrastructure-As-A-Service, abgekürzt IaaS, ist ein Ansatz, Rechnerinfrastrukturen bei Bedarf benötigter Serverressourcen mieten zu können, welcher als ein Teil des so bezeichneten Cloud-Compunting verstanden wird.\footnote{Vgl.: \cite{Huth2011}} Ein derartiges Szenario ist aber nicht Gegenstand dieser Arbeit und Werkzeuganalyse, sollte mit anderen Arbeiten aber noch weiterführend betrachtet werden.
+
+\subsubsection{Funktionen}
+
+\paragraph{Pipeline Management}
+
+
+
+Eine Pipeline kann in \go , wie es \hf\ empfehlen, durch verschiedene Stages abgebildet werden. Pipelines wiederum können Ausgangsmaterial für andere sein, bzw. selbst durch andere angestoßen werden. Das Konzept von Pipeline, Stages, Jobs und Tasks in \go\ zeigt Abbildung~\ref{pic:go_stages_konzept}. Mehrere Pipelines lassen sich zu einer Baumstruktur verzweigen. Die Stages einer Pipeline werden, je nach Ergebnis der vorhergehenden Pipeline, sequentiell abgearbeitet. In einer Stage werden dann Jobs an freie Agents verteilt. Dieses Konzept ermöglicht die Abarbeitung unterschiedlich lang laufender Akzeptanztests. Dies ist ein Vorgehen, welches \hf\ empfehlen damit Fail-Fast ein frühestmögliches Scheitern der Pipeline bei Fehlern in der Quellcode-Basis ermöglicht wird und ein schnelles Feedback an die Entwickler gegeben werden kann.
+
+\begin{wrapfigure}{r}{0.6\textwidth}
+\centering
+\fbox{\includegraphics[scale=0.5]{Grafiken/go_003_Pipeline_Run_Dependencies_cut.PNG}}
+\caption[Dependencie Graph]{Dependencie-Graph der Pipelines.}\label{pic:go_dependency}
+\end{wrapfigure}
+
+
+
+
+Angestoßen werden kann die Pipeline durch verschiedene Trigger. Trigger können entweder die verwendeten Materialien der Pipeline sein oder ein manuelles Anstoßen über die Oberfläche. Als Materialien werden die Versionsverwaltungssysteme und Pipelines bezeichnet, deren aktueller Stand oder letzte Ergebnisse, Ausgangsmaterial einer Stage sind. Wird \zb\ das Material Subversion verwendet, reagiert das System auf Veränderungen der Code-Basis in der Versionsverwaltung von Subversion und erzeuge eine neue Instanz der Pipeline mit der aktuellen Revisionsnummer des Materials. Abbildung~\ref{pic:go_dependency} zeigt die Abhängigkeiten für die mittlere Pipeline (CI Pipeline) in Zusammenhang mit Up- (Subversion) und Downstream (Deploy-Pipeline).
+
+
+
+%\begin{wrapfigure}{r}{0.5\textwidth}
+%\centering
+%\fbox{\includegraphics[scale=0.5]{Grafiken/go_001_Pipeline_Main_Window_cut.PNG}}\\
+%\vspace{\baselineskip}
+%\fbox{\includegraphics[scale=0.5]{Grafiken/go_002_Pipeline_Activity_cut.PNG}}
+%\caption[Pipelineübersicht und Historie in \go]{Übersicht über die Pipelines und deren Historie.}\label{pic:go_pipelines_overview}
+%\end{wrapfigure}
+
+Die Oberfläche von \go\ gibt dem Entwicklungsteam ein schnelles Feedback über den Zustand der Quellcode-Basis. Abbildung~\ref{pic:go_pipelines_overview} zeigt die Einstiegsseite sowie die Historie der Instanzen einer Pipeline.
+
+\go\ erzeugt beim Durchlauf eines Tasks Log-Dateien, die über die Oberfläche ausgerufen werden können. Werden in einem Task Test-Protokolle im HTML-Format erstellt, können diese in die Oberfläche eingebunden und angezeigt werden. Abbildung~\ref{pic:go_test_report} zeigt auf der rechten Seite das eingebundene Testprotokoll von JUnit, welches während eines Durchlaufs erzeugt wurde. Die Log-Datei ist auf der linken Seite zu sehen. Die Log-Datei hilft Fehler im Durchlauf zu identifizieren.
+
+\begin{figure}
+\centering
+\fbox{\includegraphics[scale=0.5]{Grafiken/go_001_Pipeline_Main_Window_cut.PNG}}\hfill
+\fbox{\includegraphics[scale=0.5]{Grafiken/go_002_Pipeline_Activity_cut.PNG}}
+\caption[Pipelineübersicht und Historie in \go]{Übersicht über die Pipelines und deren Historie.}\label{pic:go_pipelines_overview}
+\end{figure}
+
+
+\paragraph{Stages}
+
+Für die \comstage , welche Teil von \ci\ ist, können die \verskont e von Apache Subversion, Git, Mercurial, Preforce und der Microsoft Team Foundation Server als Materialien genutzt werden. Im Testprojekt wurde Subversion installiert, um die Code-Basis zu verwalten. Das Material gilt für die gesamte Pipeline, welche mit der aktuellen Versionsnummer instantiiert wird. Jeder Job beginnt mit dem Laden der aktuellen Version der Code-Basis in das lokale Verzeichnis des Systems. Alle Tasks können dann auf die dort hinterlegten Dateien zugreifen.
+
+\begin{figure}
+\centering
+\fbox{\includegraphics[scale=0.5]{Grafiken/go_005_Job_Console_cut.PNG}}\hfill
+\fbox{\includegraphics[scale=0.5]{Grafiken/go_008_Job_JUnit-Test_cut.PNG}}
+\caption[Log-Datei und JUnit Test-Report in \go]{Darstellung der Konsolenausgabe und des JUnit Test-Reports.}\label{pic:go_test_report}
+\end{figure}
+
+%\begin{wrapfigure}{r}{0.33\textwidth}
+%\centering
+%\includegraphics[scale=0.6]{Grafiken/go_ant_task.PNG}
+%\caption{Ant-Task}\label{fig:go_ant}
+%\end{wrapfigure}
+
+%In Abbildung~\ref{fig:go_ant} wird die Konfiguration des Ant-Tasks gezeigt.
+
+Für die Test-Pipeline ist der erste Task der \comstage\ das Kompilieren und Packen der Binaries in Form eines War-Files. Hierfür wird der Ant-Taks genutzt. Dieser erwartet die \texttt{build.xml} und das Ant-Target, welches die Ant-Kommandos enthält. Das Target \texttt{compile-and-create-war} muss mit dem in der \texttt{build.xml} übereinstimmen, wie nachfolgendes Listing zeigt.
+\lstset{language=ant}
+\vspace{\baselineskip}
+\begin{lstlisting}[caption={Ant-Target}]
+<target name="compile-and-create-war">
+   <.... />
+</target>
+\end{lstlisting}
+\vspace{\baselineskip}
+Die in diesem Task auszuführenden Aufgaben wie kompilieren, testen, packen werden von Ant übernommen. Auf diese Weise können in \go\ alle Aufgaben für die \comstage\ umgesetzt werden. Neben Ant werden auch NAnt und Rake unterstützt. Müssen andere Tools genutzt werden, \zb\ weil ein Projekt auf Maven setzt, ist dies über ein \emph{Custom-Command} möglich.  Über \emph{Custom-Command} können beliebige Kommandos auf der Systemkonsole ausgeführt werden und so Systemprogramme, Shell-Skripte oder andere Systeme angesprochen werden, die für die \dpipe\ Aufgaben übernehmen.
+
+Für Anwendungen, die auf das Build-Tool Ant setzen, ergeben sich eine ganze Reihe von Möglichkeiten, Tests und Analysen auf der Quellcode-Basis durchführen zu lassen. So kann \zb\ ein Sonar-Server über ein Ant-Plugin eingebunden werden, um die statische Code-Analyse zu ermöglichen und Parameter wie Testabdeckung und Code-Style analysieren zu lassen. Die Testabdeckung lässt sich bei Sonar über den Anteil durch Testfälle abgedeckter Codezeilen als auch über die den Anteil der im Test durchlaufenen Kontrollflusspfade berechnen.\footnote{Vgl. \cite{sonar_testcoverage}}
+
+Aus den durchgeführten Tests lassen sich so Quality-Gates definieren, welche über die Qualität der Anwendung wachen. Dies spielt eine Rolle bei der Entscheidung, ob der neue Stand der Quellcode-Basis die notwendigen Qualitätskriterien erfüllt, um in die nachfolgende Stage oder in die Produktivumgebung weitergereicht werden zu können. Ein Beispiel für ein Quality-Gate ist die Definition eines Merkmals wie die Testabdeckung. Hier könnte dann, je nach Definition, ein Wert von mindestens $70~\%$ bestimmt werden, der erreicht werden muss, bevor die Pipeline von der \comstage\ in die \acstage\ übergehen kann. Dieses Kriterium kann aber nur eines von weiteren sein, um den Weiterfluss innerhalb der \dpipe\ zu steuern.
+
+Die \acstage\ wurde im Testprojekt einfach gehalten. Sie diente vornehmlich der Erprobung der Testversion und wurde aus diesem Grunde nicht weiter vertieft. Umgesetzt wurden im JWebUnit ein einfacher Test, der die Anforderung an die Hello-World-Anwendung prüft und testet, ob die Nachricht \mycite{Continuous Delivery Test Web Project} beim Aufrufen der Seite erscheint. JWebUnit ist ein auf Java basierendes Test-Framework für Web-Anwendungen von SourceForge. JWebUnit vereint dabei die Frameworks HtmlUnit und Selenium durch eine einheitliche Schnittstelle, benötigt aber JUnit zur Ausführung.\footnote{Vgl. \cite{SourceForge}} Für den Aufbau der \dpipe\ besitzt dieser Test aber eine hinreichende Größe, um die Funktionsweise der Pipeline zu testen.
+
+Nachfolgendes Listing zeigt diesen Test:
+\lstset{language=java}
+\vspace{\baselineskip}
+\begin{lstlisting}[caption={Smoke-Test mit JWebUnit}]
+\begin{lstlisting}
+public class IndexPageTest {
+  @Before
+    public void prepare() {
+      setBaseUrl("http://192.168.56.102:8080/HelloWorld");
+    }
+  @Test
+  public void openIndexPage() {
+    beginAt("index.jsp");
+    assertTitleEquals("Continuous Delivery Test Web Project");
+    assertElementPresent("sayHelloTitel");
+  }
+}
+\end{lstlisting}
+\vspace{\baselineskip}
+Die Ausführung wird als Ant-Task in die \dpipe\ von \go\ eingebaut. Auf Ebene von \go\ muss hier lediglich das Ant-Target \texttt{jwebunit-test-run} angegeben werden. Um JWebUnit nutzen zu können, müssen Jar-Dateien von JWebUnit auf dem ausführenden Agent-System verfügbar sein und der Pfad zum Classpath, \zb\ per \texttt{build.xml}, hinzugefügt werden.
+
+\lstset{language=ant}
+\vspace{\baselineskip}
+\begin{lstlisting}[caption={Einbinden von JWebUnit in Ant}]
+...
+<property name="jwebunit-home" value="/opt/JWebUnit" />
+...
+<target name="jwebunit-test-run">
+  <javac srcdir="JWebUnit" destdir="JWebUnit">
+    <classpath>
+      <path refid="junit-jar" /><path refid="jwebunit-classpath" />
+    </classpath>
+  </javac>
+  <mkdir dir="jwebunitTestReports" />
+  <junit haltonfailure="true" includeantruntime="true" 
+      printsummary="true" showoutput="true">
+    <classpath>
+      <pathelement location="JWebUnit"/>
+      <path refid="junit-jar" />
+      <path refid="jwebunit-classpath" />
+    </classpath>
+    <formatter type="xml" />
+    <batchtest fork="yes" todir="jwebunitTestReports">
+      <fileset dir="JWebUnit"><include name="**/*Test*.class" />
+    </batchtest>
+  </junit>
+  <junitreport todir="jwebunitTestReports">
+    <fileset dir="jwebunitTestReports" includes="TEST*.xml" />
+     <report todir="jwebunitTestReports" />
+   </junitreport>
+</target>
+\end{lstlisting}
+\vspace{\baselineskip}
+
+Nach der Kompilierung der Tests wird ein Verzeichnis angelegt, in welches JUnit die generierten Testberichte im XML-Format ablegen kann. Nach dem Durchlauf der Tests werden diese dann von \lstinline$<junitreport>$ in formatierte HTML-Dateien umgewandelt. Abbildung~\ref{pic:go_add_junit_reports} zeigt, wie Berichte im HTML-Format in die Oberfläche eingebunden werden können. Berichte sind dabei Artefakte der \dpipe , die beim Durchlauf dieser entstehen. Artefakte verbleiben, sofern nicht anders spezifiziert, im Arbeitsverzeichnis des Agents und werden bei der nächsten Aktivierung des Agents gelöscht. Um Artefakte für die weitere Verwendung innerhalb der Pipeline verwenden zu können, müssen diese auf den \go -Server übertragen werden. Dies kann über die Konfiguration von \emph{Artifacts} erreicht werden. In der Abbildung werden die Testberichte von JMeter als Test-Artefakte auf den Server übertragen. Über die Konfiguration eines \emph{Custom Tab} kann dann eine beliebige HTML-Seite mit den Testergebnissen eingebunden werden. Das Entwicklerteam hat so einen schnellen Zugriff auf die Testauswertung.
+
+Da jeder so eingefügte Bericht an die Instanz der Pipeline gebunden ist, können auch alle Berichte der vorhergehenden Durchläufe aufgerufen werden. Auf diese Weise werden Regressionen an der Quellcode-Basis festgestellt. Verschlechtern sich die Ergebnisse wie die Anzahl von Fehlschlägen, die Größe der Testabdeckung oder die Durchlaufzeit, kann dies über die Historie näher inspiziert werden und eine bestimmte Änderung an der Code-Basis als Ursache identifiziert werden. \go\ bietet hier eine kontinuierliche Qualitätssicherung, wie sie von \ci\ vorgeschlagen wird.
+
+
+
+Ein effektiver Ansatz, Akzeptanztests in die \dpipe\ einzubauen, ist das \emph{B}ehavior \emph{D}riven \emph{D}evelopment (BDD). Bei BDD werden vor Beginn der Entwicklungsarbeit, Akzeptanzkriterien aus verbaler Sprache in mehreren Iterationen, in ausführbarere Testfälle umgeformt.\footnote{Vgl. \cite{North}} Der Vorteil, Akzeptanzkriterien zu Beginn der Entwicklung einer Anwendung als automatisiert durchführbare Tests zu definieren, kommt bei \cd\ sehr gut zum Tragen. Die so entwickelten Akzeptanztests können verwendet werden, um innerhalb der \dpipe\ entscheiden zu können, ob alle für ein Release notwendigen Akzeptanzkriterien erfüllt werden. Da die \dpipe\ bei jeder Änderung der Quellcode-Basis aktiviert wird, werden auch alle definierten und als Test implementierten Akzeptanzkriterien geprüft. 
+
+\begin{figure}
+ \subfigure[Log-Datei]
+  {\fbox{\includegraphics[scale=0.5]{Grafiken/go_008_Pipeline_Edit_Stage_Job_Artifacts_cut.PNG}}}
+  \hfill
+  \subfigure[JUnit Testbericht]
+  {\fbox{\includegraphics[scale=0.5]{Grafiken/go_009_Pipeline_Edit_Stage_Job_CustomTabs_cut.PNG}}}
+  \caption[Testberichte in \go\ einbinden]{JUnit-Testberichte in die OBerfläche von \go\ einbinden.}\label{pic:go_add_junit_reports}
+\end{figure}
+
+In \go\ lassen sich Akzeptanztests sehr gut in Form der \acstage\ einbauen. Die Entscheidung, ob in die Produktionsumgebung bzw. in die 
+\uastage\ geliefert wird, muss in \go\ durch ein Skript realisiert werden. Dieses muss die vorliegenden Test-Berichte analysieren und aggregieren können. Dieser Vorgang sollte einen Qualitätsindex erzeugen können, der der Pipeline einen Messwert für die Entscheidungsfindung liefert. Weniger Komplex kann dies auch als manueller Vorgang gestaltet werden. Nach dem Durchlauf der Akzeptanztests wird dem Entwicklungsteam eine Nachricht über den Abschluss der Stage zugesandt. Ein Teammitglied prüft dann die Testberichte und entscheidet, ob diese Version reif für die Produktion ist.
+
+\paragraph{Deployment}
+
+Wie das Ausrollen einer Anwendung in eine bestimmte Umgebung organisiert werden kann, gibt \go\ nicht vor. Zur Unterstützung wird aber folgendes geboten:
+
+\begin{itemize}
+\item \emph{Custom-Command} durch die freie Verwendung der Systemkonsole \zb\ in Verbindung mit Shell-Skripten.
+\item \emph{Ant Taks}, bzw. auch die unterstützten Tools NAnt und Rake, in Verbindung mit Plug-Ins für diese Build-Tools, die das Deployment in bestimmte Server-Umgebungen ermöglichen.
+\item \go -Agent selbst als Ausführungsumgebung der Software.
+\end{itemize}
+
+In Verbindung mit \emph{Custom-Command} können Werkzeuge wie Chef angesprochen werden, um ein Deployement zu organisieren. So bietet das Plugin \emph{knife-ec2}\footnote{Mehr Informationen zu knife-ec2 unter: \url{https://github.com/opscode/knife-ec2}} für Chef die Möglichkeit, Instanzen von Amazons EC2 direkt provisionieren zu können\footnote{Vgl. \cite{Stoyanov2012}, interne Quelle und \cite{Timberman2012}}, wie folgendes Kommando zeigt:
+
+\lstset{language=bash}
+\vspace{\baselineskip}
+\begin{lstlisting}[caption={Knife-Anweisung für EC2 Instanz}]
+knife ec2 server create -I ami-3323f25a -S homeKey.pem 
+   -f t1.micro -i ./.chef/homeKey.pem -x ubuntu -r role[programXYZ]
+\end{lstlisting}
+\vspace{\baselineskip}
+Dabei enthält \lstinline$role[programmXYZ]$ Anweisungen, die Teile eines Kochbuchs von Chef sind. Innerhalb einer Rolle werden dann alle Anweisungen zusammengefasst, um ein System zu konfigurieren. Auf diese Weise können \zb\ benötigte Server und Infrastruktur erstellt werden, um die Anwendung zu testen oder in Produktion zu bringen.\footnote{Vgl. \cite{Gheorghiu2010}}
+
+Eine weitere Möglichkeit, die \go\ bietet, aber nicht die Flexibilität von Chef mitbringt, ist die Verwendung eine Plugins für Ant, um eine Web-Anwendung zu deployen. In der Test-Pipeline wird ein Plugin für Tomcat verwendet, um mit dem Tomcat-Manager zu kommunizieren. Nachfolgendes Listing zeigt die Deyploy-Anweisung für Ant, um das War-File der Hello-World-Anwendung in eine Tomcat-Instanz zu deployen: 
+
+\lstset{language=ant}
+\vspace{\baselineskip}
+\begin{lstlisting}[caption={Tomcat-Deployment mit Ant}]
+<property name="tomcat-manager-url" 
+  value="http://~\$~{tomcat-server-ip}:8080/manager" />
+...
+<path id="catalina-ant-classpath">
+  <pathelement location="~\$~{ant-lib-dir}/catalina-ant.jar"/>
+</path>
+...
+<taskdef name="deploy" 
+   classpathref="catalina-ant-classpath"
+   classname="org.apache.catalina.ant.DeployTask" />
+...
+<target name="deploy-tomcat-from-compile-pipe" depends="get-war-file">
+  <deploy url="~\$~{tomcat-manager-url}" username="~\$~{tomcat-username}"
+    password="~\$~{tomcat-password}" path="/HelloWorld"
+    war="file:/home/goclient/pipelines/"
+      "~\$~{go.GO_PIPELINE_NAME}/~\$~{deploy-war-folder}"  
+    update="true">
+  </deploy>
+</target>
+\end{lstlisting}
+\vspace{\baselineskip}
+
+Zumindest für eine Testumgebung und für kleinere Anwendungen mit fixer Infrastruktur ist dies eine einfache Möglichkeit, eine Web-Anwendung zu deployen. Die dritte Möglichkeit bedingt die Nutzung des \go -Agents als Ausführungsumgebung. 
+
+\begin{wrapfigure}{r}{0.33\textwidth}
+\centering
+\fbox{\includegraphics[scale=0.6]{Grafiken/go_010_Pipeline_Edit_Stage_Job_FetchTask_cut.PNG}}
+\caption[Artefakte in \go\ wiederverwenden.]{Artefakt einer anderen Stage wiederverwenden.}\label{fig:go_fetch}
+\end{wrapfigure}
+
+Alle Anweisungen zur Anpassung der Infrastruktur, an die die Ausführung der Anwendung geknüpft ist, können dann über \emph{Custom-Command} oder Shell-Scripte ausgeführt werden. Ein Shell-Skript sollte dann Teil der Versionskontrolle sein. Änderungen können so auch extern, \zb\ in der Entwicklungsumgebung vorgenommen werden. Die aktuelle Version des Shell-Skripts wird durch das Agent-System als Teil des auszuführenden Jobs in das Arbeitsverzeichnis geladen und kann dann von dort aufgerufen werden. Sind alle Anpassungen vorgenommen, können die Binaries ausgeführt oder wie Beispielprojekt in das Arbeitsverzeichnis des Tomcat-Servers kopiert werden. Der Tomcat stoppt die aktuell ausgeführte Version der der Anwendung, entpackt das neue Archiv und startet die Anwendung neu. Um diesen Schritt vollziehen zu können, müssen Binaries, die in einer anderen Stage kompiliert wurden, in das aktuelle Arbeitsverzeichnis kopiert werden. Dieses Szenario ist allerdings nur auf kleinere Projekte mit kleinerer Testinfrastruktur bzw. auf ein paar wenige Projekte begrenzt, da, je nach Lizenz, nur 10 bzw. 25 Agents verwendet werden können. Bei der kostenfreien Communit-Version sind es lediglich drei Agents. 
+
+\subsubsection{Beurteilung}
+
+\paragraph{Funktionalitäten}
+
+\go\ kann auf den Betriebssystemen Microsoft Windows, Mac~OS~X, Linux und Solaris ausgeführt werden. Möglich wird dies durch die Plattformunabhängigkeit der Java-Runtime, auf welcher \go\ läuft. \go\ bietet eine umfassende Abbildung einer \dpipe\ mit der Modellierung der \comstage , \acstage , \uastage , \capstage\ und \prodenv . Jobs können parallel ausgeführt werden, wodurch das Konzept von Fail-Fast möglich wird. Um die Aufgaben \emph{compile}, \emph{test} und \emph{deploy} verwirklichen zu können, wird Ant, NAnt und Rake unterstützt. Andere Tools oder Shell-Skripte können als Kommando für die Systemkonsole mittels \emph{Custom-Command} angestoßen werden.
+
+Die Stages werden der Reihe nach ausgeführt. Eine Pipeline wird durch die Ereignisse Material oder Pipeline angestoßen. Letzteres ermöglicht den Aufbau von Baumstrukturen für Pipelines und die Abbildung komplexerer Lieferprozesse.
+
+Um komplexe Deployment-Szenarien für Test- oder Produktivumgebungen lösen zu können, bietet \go\ mit dem Ant-Taks sowie dem \emph{Custom-Command} verschiedene Möglichkeiten, dieses durchführen zu können. Dabei können Tools wie Chef in Verbindung mit der EC2 von Amazon genutzt werden, um sich auf einfache Weise mit benötigten Infrastrukturen für Test- oder Produktivumgebung versorgen und konfigurieren zu können. Auch über Ant ist das Deployment, \zb\ über den Catalina-Ant-Task, realisierbar. Eine letzte Möglichkeit ist die Verbindung von Ausführungsumgebung und \go -Agent auf einem System. Dabei können die notwendigen Anpassungen als \emph{Custom-Command} in der Pipeline-Konfiguration oder als Shell-Skript in das \verskont\ abgelegt werden. Der Agent hat dann direkte Kontrolle auf das System und kann Anwendungen installieren, starten oder stoppen.
+
+\go\ bietet damit ein vollständiges \cd -System an, welches \ci\ integriert und das Konzept so erweitert, dass entweder externe Deployment-Lösungen angesprochen werden können oder aber der \go -Agent selbst zu Ausführungsumgebung wird.
+
+\paragraph{Zuverlässigkeit}
+
+\go\ wird seit Ende September in der Version $12.3$ angeboten. Für die Erprobung im Juni und Juli 2012 kam dementsprechend Version $12.2$ zum Einsatz. \go\ befindet sich als proprietär vertriebenes Produkt in der ständigen Weiterentwicklung. Es kann davon ausgegangen werden, dass dieses Produkt auch in den nächsten Jahren weiterentwickelt, gewartet und verbessert wird. Treten im Programmablauf Fehler auf, werden diese geloggt. Das Problem mit der Testversion ist vornehmlich durch die geringe Ausstattung des Testsystems mit 1280~MB~RAM aufgetreten.
+
+Die Konfigurationseinstellung von \go\ kann durch ein Back-up im Administrationsbereich der Oberfläche gesichert werden. Hierzu gehören dann alle Einstellungen wie Pipelines, Nutzer, Rollen, Umgebungen, registrierte Agent-Systeme und weitere Informationen. Eine Sicherung von Artefakten erfolgt nicht, was auch nicht notwendig erscheint. Alle Artefakte lassen sich durch Aktivierung einer Instanz der Pipeline mit der gesuchten Revisionsnummer des \verskont\ wiederherstellen.
+
+\paragraph{Benutzbarkeit}
+
+\go\ orientiert sich eng am Konzept von \cd . Pipelines und Stages werden auch in \go\ an das Konzept angelehnt bezeichnet, was den Einstieg in die Konfiguration erleichtert. Die gesamte Anwendung kann über die Oberfläche bedient und konfiguriert werden. Es ist aber auch möglich, die Systemkonfiguration in Form einer XML-Datei in die Anwendung zu laden. Das ermöglicht die Konfigurationen für \go\ selbst unter die Versionskontrolle zu stellen. Diese Möglichkeit lässt die \dpipe\ noch stabiler werden. Schlägt der Lieferprozess nach einer Änderung der Konfiguration fehl, kann die alte Konfiguration sehr schnell wiederhergestellt werden.
+
+Die Oberfläche selbst zeigt den aktuellen Zustand der Pipeline sowie die Ergebnisse der letzten Durchläufe an. Der Nutzer erhält ein sehr schnelles Feedback über die derzeit vom System ausgeführten Aufgaben. Symbole wie \emph{Play} und \emph{Pause}, mit denen ein Prozess manuell angestoßen bzw. pausiert werden kann, erleichtern die Bedienung der Pipelines. Statusinformationen werden über die farbigen Elemente mit den Farben grün, rot und gelb. Wird eine Pipeline bzw. ein Job einer Pipeline ausgeführt, wird dies als gelb-animierter Balken in der Oberfläche gezeigt.
+
+Die Oberfläche ist durch das Layout und die Farbgestaltung klar strukturiert. Der Nutzer kann sich jederzeit orientieren und eine intuitive Bedienung ist möglich. So sind Verbindungen zwischen Übersichten und Detailansichten klar und einheitlich durch Anklicken des Titels geregelt.
+
+Die Dokumentation von \go\ ist nach Rollen gegliedert und erleichtert so den Einstieg in die Anwendung. Mit der Formulierung \mycite{As a developer, i want to ...} werden die typischen Aufgaben eingeleitet, die \zb\ ein Entwickler mit \go\ gerne erledigen möchte, wie \mycite{... watch what's currently building}.\footnote{Vgl. \cite{ThoughtWorksInc.}}
+
+\paragraph{Effizienz}
+
+Die empfohlene Systemkonfiguration für \go\ ist ein 2~GHz Prozessor.  Für den Server werden mindestens 1 bis 2~GB RAM und für das Agent-System 128 bis 256~MB vorausgesetzt.  Der Probebetrieb erfolgte in einer virtuellen Umgebung. Das Host-System war ein mit 4~GB Arbeitsspeicher ausgestatteter Laptop mit Windows~7. Um das Host-System nicht zu überbeanspruchen, konnten die virtuellen Systeme nicht mit der empfohlenen, sondern nur mit der minimal geforderten Speichergröße versehen werden. Zu Beginn ist der Server mit 1024~MB und der Agent mit 256~MB ausgestattet worden. Da der Server am Anfang der Erprobung instabil lief und bei der Ausführung einer Stage Speicherprobleme auf der Konsole ausgab, wurde der Speicher auf 1280~MB angehoben, was die Probleme beseitigte. Der \go -Agent wurde gleich mit der empfohlenen Größe versehen, sodass hier im gesamten Verlauf keine Probleme auftraten.
+
+Ein weiteres Merkmal, welches bei der Planung Berücksichtigung finden sollte, ist der notwendige Plattenplatz, um Artefakte ablegen zu können. Jede Aktivierung der Pipeline produzierte Testberichte, Log-Dateien und Binaries. Je häufiger die Pipeline aktiviert wird, desto mehr Plattenplatz muss zur Verfügung stehen, um die anfallenden Artefakte speichern zu können. Eine Webanwendung, die in ihrer kompilierten Form \zb\ 30 bis 40~MB Platz beansprucht, würde bei geschätzten 100 Änderungen der Quellcodebasis 3 bis 4~GB Speicherplatz benötigen. Ein Team, welches aus 5 Entwicklern besteht und täglich einmal die Änderungen commited, erreicht dieses Volumen in 4 Wochen. Laufen 10 oder 20 Projekte parallel, kommen so in nur 4 Wochen 30 bis 80~GB zusammen.
+
+Da die \dpipe\ in \go\ mit einer beliebigen Version der Quellcode-Basis jederzeit auch die gleichen Ergebnisse produziert, sind nur die zuletzt erzeugten Artefakte von einem besonderen Interesse. Älter Artefakte können gelöscht werden. \go\ bietet die Möglichkeit, den Speicherplatz für Artefakte zu limitieren. Dabei wird regelmäßig geprüft, wie viel Restspeicher auf dem System noch vorhanden ist. Eine entsprechende Konfiguration könnte so beim Erreichen einer Untergrenze von 10~GB Restspeicher alle Artefakte so lange löschen, bis der freie Plattenspeicher wieder mindestens 25~GB beträgt.
+
+\paragraph{Portabilität}
+
+Eine Erweiterung von \go , \zb\ durch Plug-ins, ist nicht möglich. Eine Änderung der Anwendung ist nicht möglich. Im Probelauf wurde aber keine Funktionalität vermisst, welche eine Änderbarkeit der Anwendung erwünscht hätte.
+
+Die Installation von \go\ war einfach und unkompliziert. Sofern die notwendige Infrastruktur in Form der Java-Runtime von Oracle und Subversion installiert ist, kann der \go -Server starten. Je nach Tasks, die in der \dpipe\ ausgeführter werden sollen, müssen zusätzliche Werkzeuge auf dem Agent-System installiert werden. Im Testprojekt waren diese, zusätzlich zu den schon genanten, JUnit Ant-Plugin, JWebUnit Ant-Plugin, Catalina Ant-Plugin und das JMeter Ant-Plugin.
+
+\go\ kann als JAR-File direkt von der Konsole mit \lstinline$java -jar go.jar$ gestartet werden. Der \go -Agent muss zusätzlich noch die Adresse des \go -Servers als Parameter übergeben bekommen: \lstinline$java -jar agent-bootstrapper.jar <go-server-host>:<port>$
+
+Die Dokumentation gibt alle notwendigen Vorgaben zum Systembetrieb, sodass die Installation und die Konfiguration problemlos verlaufen sind. Der \go -Server, im Gegensatz zum \go -Agent, benötigt reichlich Speicherplatz. Bei entsprechender Hardware-Konfiguration können aber mehrerer Agents auf dem selben System parallel gestartet und am Server angemeldet werden.
+
+\subsection{\dpl\ von Etsy}\label{chap_dpl}
+
+\dpl\ wurde von Etsy entwickelt, um Änderungen der eigenen Anwendung, den  Etsy Web-Shop\footnote{Mehr Information zu Etsy unter: \url{http://www.etsy.com/}}, schnellstmöglich in die Produktivumgebung zu bringen. Einen maßgeblichen Anteil an der Entwicklung von \dpl\ hatte Erik Kastner, der \dpl\ über einen Eintrag vom 29.07.2011 auf dem Entwickler-Blog\footnote{Entwickler-Blog von Etsy unter: \url{http://codeascraft.etsy.com/}} von Etsy frei zugänglich\footnote{\dpl\ auf GitHub unter: \url{https://github.com/etsy/deployinator}} machte und unter die MIT-Lizenz\footnote{Mehr Informationen zur MIT-Lizenz unter: \url{http://opensource.org/licenses/mit-license.php}} stellte.\footnote{Vgl. \cite{codeascraft}} Durch diesen Lizenztyp ist es möglich, \dpl\ \zb\ frei zu verwenden, zu kopieren oder zu ändern.\footnote{Vgl. \cite{mit_license}}
+
+Kastner fasst \dpl\ in einem Satz wie folgt zusammen: \mycite{one button web-based deployment app}. Vor \dpl\ benötigte Etsy für ein Deployment ihrer Web-Anwendung in die Produktivumgebung drei Entwickler und einen Verantwortlichen aus dem IT-Betrieb. Mit \dpl , so Kastner, war es Etsy möglich geworden, das Deployment auf unter zwei Minuten zu reduzieren, das nun praktisch von jedem Teammitglied durchgeführt werden kann. Etsy deployt die Anwendung seit dem mehrmals am Tag.\footnote{Vgl. \cite{codeascraft}}
+
+Die Entwicklungsziele von \dpl\ fasst Kastner so zusammen:
+
+\begin{itemize}
+\item Die Anwendung ist Web-basierend,
+\item loggt Ereignisse,
+\item lässt sich in die Infrastruktur von Etsy integrieren,
+\item nutzt IRC und E-Mail, um das Team zu informieren,
+\item ist transparent im Hinblick auf die ausgeführten Aktionen und
+\item die Integration in das Monitoring-System von Etsy ist möglich.
+\end{itemize}
+
+\subsubsection{Konzept von \dpl}
+
+Als Web-Anwendung läuft \dpl\ als Ruby-Anwendung, welche auf das Sinatra-Framework\footnote{Weiter Informationen zum Sinatra-Framework unter: \url{http://www.sinatrarb.com/}} aufbaut. Deployinator ermöglicht die Ausführung von Shell-Skripten und Kommandos auf der Systemkonsole. Um verschiedene Projekte bzw. Anwendungskomponenten wie Web oder Datenbank parallel verwalten zu können, lassen sich Stacks mit eigenen Konfigurationen definieren. Jeder Stack kann wiederum für verschiedene Umgebungen konfiguriert werden. So ist \zb\ die Definition von \emph{Test} und \emph{Produktion} möglich. Technisch ist ein Stack ein Ruby-Modul, für das bestimmte Methoden zu implementieren sind. Durch dieses Modul wird der Stack konfiguriert.
+
+Das Konzept von \dpl\ unterscheidet sich wesentlich von \go . \dpl\ ergänzt ein bestehendes System für \ci . Das Kompilieren und Durchführen automatisierter Tests steht hier nicht im Fokus. Vielmehr soll \dpl\ das Ausrollen einer Anwendung in Produktivumgebung dahin gehend unterstützen, dass es dem Entwicklungsteam eine Oberfläche bereitstellt, Deployment-Skripte anstoßen zu können.
+
+\subsubsection{Funktionen von \dpl}
+
+\paragraph{Management der \dpipe}
+
+\begin{figure}
+\fbox{\includegraphics[width=\linewidth]{Grafiken/dpl_front_page.png}}
+\caption[Oberfläche \dpl]{Oberfläche von \dpl .}\label{dpl_frontpage}
+\end{figure}
+
+Die Modellierung von Pipelines, wie es in \go\ möglich ist, kann derart mit \dpl\ nicht umgesetzt werden. Das bedeutet nicht, dass keine \dpipe\ mit \dpl\ möglich ist. Ferner ist \dpl\ die geeignete Erweiterung eines CI-Systems. Die Hauptseite von \dpl\ ist in Abbildung~\ref{dpl_frontpage} dargestellt. \dpl\ erzeugt je Umgebung eines Stacks einen Button auf der Web-Oberfläche. Bei Betätigung des Buttons werden die im Modul definierten Aktionen, wie der Aufruf von Kommandos auf der Systemkonsole, durchgeführt. Demnach werden alle Prozesse manuell angestoßen. Hat das CI-System alle Testkriterien in Form der Komponenten- und Akzeptanz-Tests sowie der statischen Code-Analyse durchgeführt, kann dies durchaus gewünscht sein. Im Fall der \uastage\ kann sich dann das Testteam die aktuelle Version der Anwendung zum Testen in die Testumgebung deployen. Diese entspricht einem \ssp .
+
+Relevante Ausgaben bei der Durchführung einzelner Aktionen können in ein Log-File geschrieben werden. Es hängt aber von der jeweiligen Konfiguration ab, ob Informationen in das Log-File geschrieben werden. \dpl\ stellt hierfür lediglich Methoden bereit, die dies ermöglichen. Das Log-File selbst wird auf der Weboberfläche eingeblendet. Dabei aktualisiert es sich selbst in kurzen Abständen, wodurch der Eindruck einer aktiven Systemkonsole entsteht.
+
+Obwohl \dpl\ konzeptionell ein CI-System erweitert, ist es möglich, Build und Test-Prozesse auch mit \dpl\ umzusetzen. Allerdings ist dabei kein automatisches triggern durch Änderungen an der Code-Basis möglich. Alle definierten Prozesse müssen über die Oberfläche manuell angestoßen werden.
+
+\paragraph{Stages}
+
+\dpl\ integriert Git für Aufgaben der Versionsverwaltung. Dabei ist es aber auch ohne Probleme möglich, auch andere Systeme wie Subversion zu verwenden und diese über die Systemkonsole von \dpl\ ansprechen zu lassen. Im Testprojekt wird die Code-Basis aus Subversion geladen. Nachfolgendes Listing zeigt die Einbindung von Shell-Skripten in das Stack-Modul:
+
+\lstset{language=ruby}
+\vspace{\baselineskip}
+\begin{lstlisting}[caption={Stack-Modul von Deployinator}]
+def my_test_build_and_deploy(options={})
+  # last deployed version  
+  old_build = %x{cat ~\$~userHome/current_deployed_version}
+  # current version on 
+  cur_build = %x{svn info 
+    svn://192.168.56.102:3690/var/svn/repos/HelloWorld 
+    | grep '^Revision:' | awk '{print ~\$~2}'}
+  # run build-script
+  run_cmd %Q{~\$~userHome/build_war.sh}
+  # log the deploy
+  log_and_shout :old_build => old_build, :build => cur_build
+end
+\end{lstlisting}
+\vspace{\baselineskip}
+Das Build-Skript, welches hier angestoßen wird, lädt zu erst die aktuelle Quellcode-Basis aus dem Versionsverwaltungssystem. Die derzeit ausgeführte Version wird in einer lokalen Verzeichnisstruktur gesichert. Abildung~\ref{fig:dpl_stacks} zeigt zwei implementierte Stacks. Jeder dieser Push-Buttons aktiviert eine eigene Methode im Stack-Modul.
+
+\begin{wrapfigure}{r}{0.33\textwidth}
+\centering
+\fbox{\includegraphics[width.3\linewidth]{Grafiken/dpl_stack.png}}
+\caption[Stacks mit Push-Button in \dpl ]{Stacks mit Push-Button in \dpl .}\label{fig:dpl_stacks}
+\end{wrapfigure}
+
+\paragraph{Deployment}
+
+\dpl\ wurde besonders auf die schnelle Aktivierung von Deployment-Skripten bzw. zur Aktivierung von Werkzeugen, die das Deployment übernehmen, konzipiert. Im Fokus steht hier also viel mehr deren Anstoß, als eine Unterstützung des Deployments selbst. \dpl\ kann aber deshalb als leichtes Self-Service-Portal angesehen werden.
+
+Perspektivisch betrachtet lässt sich \dpl\ auch in einer Situation nutzen, in der ein direktes Deployment in die Ausführungsumgebung des Kunden nicht möglich ist. Dabei kann auf Kundenseite ein vorkonfigurierter \dpl\ installiert werden. Einem Testteam des Kunden kann mit \dpl\ die Möglichkeit in gegeben werden, sich für Testzwecke selbst mit der aktuellen Version zu versorgen. Die aktuelle Version könnte dann durch \dpl\ in die Testumgebung zu deployt und ausgeführt werden. Die Anwendung kann dann durch den Kunden explorativ untersucht und abgenommen werden.
+
+Dieses Szenario ist auch für die Produktivumgebung denkbar. So fern ein neues Feature durch den CI-Prozess gegangen ist und alle vereinbarten Akzeptanzkriterien erfüllt sind, wird die neue Version in ein für den Kunden erreichbares Repository ausgeliefert. Der Kunde kann hierüber durch das CI-System informiert werden. Die Testabteilung des Kunden ruft dann die Oberfläche von \dpl\ auf und kann das Deployment aktivieren und die neue Version testen. Wird die neue Version akzeptiert, kann der Programm-Manager des Kunden bzw. der IT-Betrieb das Deployment in die Produktivumgebung anstoßen. Deployinator kann dann so konfiguriert werden, dass adesso als Lieferant in diesem Szenario über das Ausliefern in die Produktivumgebung durch das System informiert wird. Dies kann \zb\ aus vertragsrechtlichen oder abrechnungstechnischen Gründen erforderlich sein.
+
+In der Erprobung von \dpl\ wurde ein vereinfachtes Deployment mit einer lokalen Testumgebung durchgeführt. Dabei wird das in der ersten Stufe erzeugte War-File aus dateiorientierten Repository in die aktive Tomcat-Instanz kopiert. Der Tomcat-Server registriert diesen Vorgang und führt ein redeploy mit der neuen Anwendung durch. Der Vorgang wird, ähnlich wie das Build-Script, über die Methode \lstinline$run_cmd %Q{~/deploy_last_stable.sh}$ aufgerufen. Folgendes Listing zeigt das Deploy-Skript:
+
+\lstset{language=bash}
+\vspace{\baselineskip}
+\begin{lstlisting}[caption={Deployment-Skript für lokale Tomcat-Instanz}]
+last_stable_file=~\$~USER_HOME/last_stable_version
+current_deployed_file=~\$~USER_HOME/current_deployed_version
+last=0
+current=0
+if [ -f ~\$~last_stable_file ] && [ -f ~\$~current_deployed_file ]
+then
+  last=`cat ~\$~last_stable_file`
+  current=`cat ~\$~current_deployed_file`
+  if ! [ ~\$~last -eq  ~\$~current ]
+  then
+    cp ~\$~USER_HOME/artefactRepo/~\$~last/HelloWorld_~\$~last.war 
+      /var/lib/tomcat7/webapps/HelloWorld.war
+    echo ~\$~last > ~\$~current_deployed_file
+  fi
+fi
+\end{lstlisting}
+\vspace{\baselineskip}
+Werkzeuge wie Chef können das Deployment maßgeblich unterstützen und verwaltete Knoten für eine neue Version rekonfigurieren. Ein aktiven Server-Cluster für ein Update vom Netz nehmen zu können, erfordert eine entsprechende Konfiguration im Vorfeld. Besteht dies aus Apache~HTTPD als Load-Balancer und mehreren Tomcat-Instanzen, kann \zb\ die Synchronisierung von aktiven Nutzer-Sessions zwischen den Servern ermöglicht werden. Voraussetzung hierfür ist die Definition des Clusters in der \lstinline$server.xml$ und die Verwendung von \emph{sticky sessions} durch den Load-Balancer. Alle verwendeten Session-Attribute müssen das Interface \lstinline$java.io.Serializable$ implementieren. Informationen zu Sessions werden dann über ein Multicast über alle Instanzen des Clusters verteilt.\footnote{Vgl. \cite{tomcat_cluster_session}} Werden einzelne Instanzen nun der Reihe nach herrunter gefahren und die Aktualisierung durchgeführt, gehen keine Informationen aktiver Nutzer verloren.
+
+\subsubsection{Qualitative Beurteilung}\label{chap_dpl_quali}
+
+\paragraph{Funktionalitäten}
+
+\dpl\ bietet selbst nicht die Implementierung einer vollständigen \dpipe . \dpl\ ist allerdings geeignet ein bestehendes CI-System um die fehlenden Funktionalitäten, die für die Umsetzung einer \dpipe\ benötigt werden, zu erweitern. Dennoch kann \dpl\ frei verwendet und konfiguriert werden, sodass auch mit \dpl\ CI-Prozesse möglich wären. Fehlen würde in dieser Verwendung aber die Fähigkeit, aktiv die Version im \verskont\ zu überwachen und bei einer Änderung den CI-Prozess anzustoßen. Der Einsatz von \dpl\ kann sich deshalb nur auf die Funktionalität eines \ssp s einschränken lassen, in dem das Testteam, der IT-Betrieb oder das Entwicklungsteam in Lage versetzt werden Deployments jederzeit anstoßen können. 
+
+Das System kann über verschieden Shell-Kommandos wie \zb\ \emph{ssh}, \emph{wget} oder \emph{curl} entfernte Systeme erreichen und Konfigurationen ändern bzw. die Anwendung deployen. So kann die Ermittlung der aktuellen Revisionsnummer der Code-Basis oder der neusten Version in einem zentralen Repository abgefragt werden.
+
+\dpl\ ist für eine Integration in die Systemlandschaft von Etsy konzipiert worden. Bei Etsy wird ein Single-Sign-On-Verfahren (SSO) genutzt, welches als Proxy die Attribute \lstinline$HTTP_X_USERNAME$ und \lstinline$HTTP_X_GROUPS$ in jedem Request an die Subsysteme setzt. Für einen korrekten Betrieb erwartet \dpl\ diese Parameter im Request. Für die Testversion konnten diese in der Konfigurationsdatei \lstinline$config.ru$ durch die Vordefinition dieser Parameter umgangen werden. In einem realen Liefersystem muss hierdurch eine Instanz vorgeschaltet werden, um SSO zu nutzen und unbefugte Nutzer auszuschließen.
+
+Was in \dpl\ fehlt, ist die Möglichkeit eine spezifische Version in die Produktivumgebung liefern zu können. \dpl\ ist so konzipiert, dass entweder die neuste Version zu ausliefert wird oder die letzte stabile Version der Anwendung mit einem Rollback wiederhergestellt werden kann. Für ein Testteam kann es aber durchaus von Interesse sein nicht die neuste Version, sondern eine ältere Version in die Testumgebung zu deployen. Als Beispiel könnte es der Fall sein, dass in der aktiven Testversion ein Verhalten entdeckt wurde, dessen Vorkommen nun bei älteren Versionen verifiziert werden soll. So kann es sein, dass dieses Verhalten auch schon bei vorhergehenden Versionen auftrat, bisher aber nicht entdeckt wurde. Dem Testteam soll die Flexibilität gegeben werden, auch ältere Versionen noch deployen zu können. \dpl\ bietet, durch die Open-Source-Lizenz, die Möglichkeit den Quellcode anzupassen. Prinzipiell besteht hier also die Möglichkeit \dpl\ beliebig zu erweitern. Dies soll nachfolgend für das angeführte Szenario eines Auswahlfeldes beschrieben werden.
+
+Um das Auswahlfeld in der Oberfläche zu ermöglichen, muss das Template für Singe-Push angepasst werden und ein Form-Element hinzugefügt werden:
+
+\lstset{language=xml}
+\vspace{\baselineskip}
+\begin{lstlisting}[caption={Anpassung des Templates}]
+templates/generic_single_push.mustache:
+<select name="selected_version">{{version_as_html_option}}</select>
+\end{lstlisting}
+\vspace{\baselineskip}
+Eine weitere Anpassung ist im Helper-File von \dpl\ notwendig, um den Request-Parameter der aktuellen Version auszulesen und in anderen Modulen zugänglich machen zu können. 
+
+\lstset{language=ruby}
+\vspace{\baselineskip}
+\begin{lstlisting}[caption={Extrahieren der Versionsnummer aus dem HTTP-Request}]
+helpers.rb:
+def init(env)
+  ...
+  @version = form_hash(env, "selected_version")
+  ...
+end
+...
+def version_to_deploy @version end
+\end{lstlisting}
+\vspace{\baselineskip}
+Letzte Änderung betrifft die Auswahlmöglichkeiten in der Oberfläche. Die Liste möglicher Versionen könnte \zb\ bei Nutzung von Artifactory zur Verwaltung der lieferbaren Binaries über eine REST-Schnittstelle abgerufen werden.\footnote{Vgl. \cite{atrifactory_jfrog_doc_rest}} Eine Methode, die die Auswahlelemente im Stack-Modul hinzufügt, sieht dann wie folgt aus:
+
+\lstset{language=ruby}
+\vspace{\baselineskip}
+\begin{lstlisting}[caption={Extrahieren der verfügbaren Versionen über die Artifactory REST-API}]
+def version_as_html_option 
+json_response = x%{curl http://server:port/
+  artifactory/api/storage/libs-release-local/org/acme/}
+result_hash = JSON.parse(json_response)
+children = result_hash["children"]
+result = ""
+children.each do |ch|
+  a = ch.["uri"].[/[^\\]/]
+  result << "<option>#{a}</option>"
+end
+return result
+end
+\end{lstlisting}
+\vspace{\baselineskip}
+Artifactory liefert einen String im JSON-Format zurück. Ruby bietet hier eine einfache Möglichkeit, das Ergebnis der Abfrage zu parsen. In der folgenden For-Each-Schleife werden alle Elemente von \lstinline$children$ durchlaufen und das Element \lstinline$uri$ in die HTML-Tags gesetzt. Die Rückgabe von \lstinline$version_as_html_option$ wird dann bei der Verarbeitung des Templates an die dort zuvor definierte Position gesetzt.
+
+\paragraph{Zuverlässigkeit}
+
+\dpl\ wird auf GitHub sporadisch gepflegt. Seit der initialen Bereitstellung im Juli 2011 wurden Änderungen an 6 Stellen im Quellcode durchgeführt und Bugs beseitigt. Sofern Fehler bei der Ausführung von Shell-Scripten auftreten, werden diese in die Log-Datei geschrieben. Das Log-File kann über die Oberfläche angezeigt werden. Anwendungsfehler werden je nach betroffener Ebene entweder als Fehlerseite vom Sinatra-Framework angezeigt oder auf der Konsole ausgegeben, wenn es sich um einen Compiler-Fehler handelt.
+
+Es empfiehlt sich, zu Beginn des Aufbaus eines Liefersystems mit \dpl , einen Fork auf GitHub zu erstellen, bzw. \dpl\ in ein selbstverwaltetes Git-Repository zu überführen. Alle notwendigen Änderungen an der Konfiguration und dem Programmablauf können dann über eine integrierte Entwicklungsumgebung wie \zb\ Eclipse oder rudimentärer mit Werkzeugen wie Notepad++ durchgeführt und anschließend in Git versioniert werden. Auf dem Zielsystem kann die Anweisung zum Starten von \dpl\ wie folgt aussehen, wenn das Repository initial dort ausgecheckt wurde:
+
+\lstset{language=bash}
+\vspace{\baselineskip}
+\begin{lstlisting}[caption={Deployinator aktualisieren und starten}]
+deployinator_home ~\$~ git fetch upstream
+deployinator_home ~\$~ rackup
+\end{lstlisting}
+\vspace{\baselineskip}
+Änderungen am Lieferprozess können so jederzeit rückgängig und überwacht werden.
+
+\paragraph{Benutzbarkeit}
+
+Um \dpl\ für eine \dpipe\ konfigurieren zu können sind Sprachkenntnisse von Ruby und der Linux-Shell erforderlich. Zudem sind Kenntnisse des Konzeptes von Ruby-on-Rails hilfreich. Die Bedienung der Anwendung ist klar und verständlich. Werden die Buttons entsprechend betitelt, was sich im Stack-Modul konfigurieren lässt, kann dem Anwender die Folge der Ausführung verständlich gemacht werden. Ausgaben während der Ausführung werden in eine HTML-Datei geschrieben, die so formatiert ist, dass diese einer Systemkonsole optisch ähnelt. 
+
+\paragraph{Effizienz}
+
+Das Zeitverhalten der Anwendung ist unter Umständen abhängig von verschiedenen Subsystemen wie der Abfrage nach der aktuellen Revisionsnummer im Versionskontrollsystem. In der Erprobung antwortete das System schnell und ohne Zeitverzögerung. Eine Speicheranalyse zeigte, dass Ruby und Rack nach dem Start 38~MB Speicherplatz belegen. Dadurch ist eine Ausführung von \dpl\ auch auf kleineren Systemen möglich, bzw. kann auf anderen Systemen wie der Versionsverwaltung parallel betrieben werden.
+
+\paragraph{Wartbarkeit}
+
+Ist Know-How in der Kombination Ruby, Ruby-on-Rails und Linux-Shell vorhanden, lassen sich Fehler schnell identifizieren und beseitigen. Eine Anpassung des Systems ist durch die Quellenoffenheit problemlos möglich.
+
+Änderungen an der Anwendung sollten jedoch mit Tests der Funktionalitäten einhergehen. In \dpl\ selbst sind schon Testmodule hinterlegt. Diese können durch \lstinline$rake test$ aufgerufen werden. Dabei werden alle Testdateien mit dem Pattern \lstinline$*_test.rb$ unter dem Pfad \lstinline$test$ ausgeführt. Für eigene Erweiterungen sollten hier Testmodule hinterlegt werden.
+
+\paragraph{Portabilität}
+
+Als in Ruby geschriebene Anwendung lässt sich \dpl\ in verschiedenen Umgebungen wie Windows, Linux, Mac~OS~X und Solaris ausführen. Die Installationsanweisungen von \dpl\ sind mangelhaft und unvollständig. Für den Betrieb erforderliche Pakete und infrastrukturelle Maßnahmen sind nicht angegeben. Die Dokumentation von \dpl\ bezieht sich lediglich auf einen Verweis auf Rack\footnote{Informationen zu Rack unter: \url{http://rack.github.com/}} und Sinatra als erforderliche Komponenten, ohne jedoch zu erwähnen, in welchem Zusammenhang \dpl\ zu diesen Komponenten steht.\footnote{Vgl. \cite{depOnGithub}} Rack selbst bietet eine API für Ruby und Ruby-Frameworks, welches Web-Server und Frameworks verbindet.\footnote{Vgl. \cite{Neukirchen2007}} Sinatra ist ein Framework mit dem sich Web-Anwendungen schnelle entwickeln lassen sollen. Zum Betrieb benötigt Sinatra Rack für das Loggen, Debugging, URL-Routing, Authentifizierung und Session-Handling.\footnote{Vgl. \cite{Mizerany}}
+
+Folgende Installationsanweisung konnte nach einer zweiwöchigen Recherchephase auf einem Ubuntu-Server mit Version $12.04$ erfolgreich durchgeführt werden:
+
+\lstset{language=sh}
+\vspace{\baselineskip}
+\begin{lstlisting}[caption={Deployinator installieren}]
+cd <User-Home>
+sudo -su
+apt-get install ruby1.8-dev ruby1.8 ri1.8 rdoc1.8 irb1.8
+apt-get install libreadline-ruby1.8 libruby1.8 libopenssl-ruby
+apt-get install libxslt-dev libxml2-dev
+apt-get install rubygems
+gem install bundler
+wget https://github.com/etsy/deployinator/zipball/master
+unzip master
+cd etsy-deployinator-<Version>
+bundle install
+rackup
+\end{lstlisting}
+\vspace{\baselineskip}
+\subsection{\dr\ von Rackspace}
+
+\dr\ wurde vom Cloud-Monitoring-Team von Racksapce entwickelt und ist stark von \dpl\ inspiriert worden. Nach dem \dpl\ öffentlich zugänglich gemacht wurde, begann man bei Rackspace mit der Erprobung. Dabei stellte Rackspace allerdings fest, dass \dpl\ nicht den speziellen Anforderungen von Rackspace genügt. Ein wesentliches Problem war die konzeptionelle Ausrichtung von \dpl , als System das sich auf ein einzelnes Produkt beschränkt. Die Teams, die \dpl\ nutzen wollten, mussten regelmäßig umständliche Anpassungen an \dpl\ vornehmen, um die verschiedenen Umgebung und Regionen von Rackspace nutzen zu können. Aufbauend auf dem Konzept von \dpl\ entwickelte Rackspace daher ein eigenes Werkzeug, welches sich besser in die Infrastruktur von Rackspace eingliedern lässt und verschiedene Server-Regionen und Produkte unterstützt. \dr\ ist seit dem 5.~Januar 2012 unter die Apache~License Version~2.0 gestellt und über GitHub\footnote{\dr\ auf GitHub unter: \url{https://github.com/racker/dreadnot}} frei zugänglich gemacht worden.\footnote{Vgl. \cite{racker_os_dreadnot}}
+
+Das Konzept der Stacks von \dpl\ wurde auch in \dr\ aufgegriffen. Der Stack definiert den Ablauf des Deployments. Rackspace definiert bei sich \zb\ einen Stack für Monitoring-Dienste und einen anderen für API-Services. Für jeden Stack können verschiedene Regionen angegeben werden, auf denen das Deployment durchgeführt wird. Dabei ist ersichtlich, welche Version der Anwendung in welcher Region deployt ist sowie welche Version auf dem Git-Repository verfügbar ist. \dr\ ist so konzipiert, dass es ausschließlich mit einem Git-Repository zusammenarbeiten kann. Je Region können Log-Files und Diff-Ansichten zweier Versionen, in Verbindung mit dem Git-Repository, betrachtet werden.
+
+Neben Git setzt \dr\ auf weitere Infrastrukturen, deren Schnittstellen bereits integriert sind. So wird das CI-System Buildbot\footnote{Informationen zu Buildbot unter: \url{http://trac.buildbot.net/}} unterstützt, welches die Anwendungen kompilieren, packen und testen kann. Zudem kann \dr\ den Load-Balancer\footnote{Informationen zu mod\_proxy des Apache 2 unter: \url{http://httpd.apache.org/docs/2.2/mod/mod_proxy_balancer.html#balancer_manager}} eines Apache HTTPD konfigurieren sowie mit Hilfe von Chef die Anwendung ausliefern oder Anpassungen an der Infrastruktur vornehmen. Wird der Verkehr einer laufenden Anwendung in eine andere Region umgeleitet, kann der Chef-Server für diese Region modifiziert werden. Die Client-Systeme des Chef-Servers, werden in der betroffenen Region getriggert. Das Ausrollen der neuen Chef-Rezeptur wird damit angestoßen. Ist die Infrastruktur angepasst worden, ist die Konfiguration aber noch zu verifizieren, bevor die Region über den Load-Balancer wieder verfügbar gemacht wird. Scheitern die Testfälle, meldet das System über E-Mail und IRC-Dienst den kritischen Zustand, je nach Verantwortlichkeit, sofort an das Entwicklungsteam oder an den IT-Betrieb. Ein Rollback auf die vorhergehende Version ist dann manuell anzustoßen.
+
+Technisch nutzt \dr\ \emph{nodejs}\footnote{Infromationen zu nodejs unter: \url{http://nodejs.org/}}, einem auf der Java-Script-Runtime von Chrome aufbauenden Framework, mit sich schnelle und skalierbare Netzwerkanwendungen aufbauen lassen. Eine typische Struktur für die Konfiguration der Stacks ist wie folgt aufgebaut:
+
+\lstset{language=sh}
+\vspace{\baselineskip}
+\begin{lstlisting}[caption={Stack in Dreadnot}]
+# Pfad zum lokalen Git-Repository:
+./data/local_git/<repos_name>/
+# Warnhinweis vor dem Deplyomkent:
+./data/warnings.txt
+# Alle Stacks werden hier abgelegt:
+./stacks/
+# Pattern für Dateibezeichnung:
+./stacks/<my_stack_name>_stack.js
+# Passwort für Git-Repository:
+./htpasswd        
+# Lokale Einstellungen:
+./local_settings.js
+\end{lstlisting}
+\vspace{\baselineskip}
+In den lokalen Einstellungen werden Angaben zum Projekt bzw. der Produktname, die Umgebung, in die deployt werden soll, der Ort der Passwortdatei für den Zugriff auf Git, für jeden Stack die Git-URL, der genutzte Branch und in welche Region deployt werden soll, angegeben. Installiert werden kann \dr\ über folgendes Kommando:
+
+\lstset{language=sh}
+\vspace{\baselineskip}
+\begin{lstlisting}[caption={Dreadnot installieren und starten}]
+sudo -su
+apt-get install git
+apt-get install nodejs
+apt-get install npm
+dreadnot -c ./local_settings.js -s ./stacks -p 8000
+\end{lstlisting}
+\vspace{\baselineskip}
+Die letzte Zeile dient dem Start der Anwendung, was allerdings erst nach der Konfiguration eines Stacks und dem Anlegen eines lokalen Git-Repositories möglich ist.
+
+\subsubsection{Funktionen}
+
+\dr\ ist, so wie \dpl\ auch, für die Ergänzung eines bestehenden CI-Systems konzipiert. Dementsprechend ist die Qualitätssicherung der neuen Version in einer vorhergehenden Stufe durchzuführen. Um den konzeptionellen Aufbau einer \dpipe\ ermöglichen zu können, müssen Binaries nach dem Build-Prozess in einem von der Quellcode-Basis unabhängigen Git-Repository abgelegt werden. Nur auf diese Weise kann \dr\ erkennen, ob eine neue Version für ein Deployment, unabhängig ob in Test- oder Produktionsumgebung, bereit steht. Im Gegensatz zu \dpl , das verschiedene Repository-Systeme über Scripte und Kommandos auf der Systemkonsole ansprechen kann, ist dies für \dr\ nicht möglich, da die aktuelle Revisionsnummer nur aus Git abgerufen wird. Dies führt zu drei Lösungsszenarien, um eine \dpipe\ mit \dr\ umsetzen zu können:
+
+\begin{enumerate}
+\item Die \dpipe\ mit Build, Test und Deployment wird ausschließlich von \dr\ angestoßen. Das entspricht einer Umkehrung des Kontrollflusses, wie ihn \hf\ vorgeschlagen haben. Build und Test, als Teil des CI-Systems, würden dann nicht automatisch durch eine Veränderung der Quellcode-Basis, angestoßen, sondern auf menschliche Interaktion warten. Ein entscheidender Vorteil von \ci , negative Auswirkungen einer Änderung sofort zu erkennen, würde dann allerdings verschwinden.
+\item Ein CI-System wird durch eine Veränderung der Code-Basis getriggert. Anschließend wird der Quellcode kompiliert und getestet. War dieser Vorgang erfolgreich, werden Binaries in ein zusätzliches Git-Repository geladen. Die Revisionsnummer des Git-Repository ändert sich und \dr\ kann diese Information durch die eingebauten Routinen abrufen und in der Oberfläche anzeigen. Die aktuelle Version kann anschließend vom Git-Repository geladen und auf das Zielsystem deployt werden.
+\item \dr\ wird \zb\ nur in Verbindung mit interpretierbaren Sprachen wie Ruby oder PHP verwendet. Test- als auch Produktionsumgebung können dann, ohne Zwischenschritte mit der selben Quellcode-Basis arbeiten. Dieser Ansatz bringt aber den Nachteil, dass es so noch keine Qualitätsschranke im Prozess gibt. Jederzeit könnte auch die ungetestete Version ohne Zwischenprüfung in die Produktion geliefert werden. Um dies zu verhindern, müssten Qualitätsmerkmale einer Version in eine extra Datei gespeichert werden, die vor Ausführung des Deployments in der \dr -Routine ausgewertet wird. Alle Versionen, die in die Testumgebung ausgeliefert worden sind und die Qualitätskriterien erfüllt haben, werden in einer solchen Datei erfasst.
+\end{enumerate}
+
+Eine Umstellung der Anwendung auf andere Versionskontrollsysteme ist möglich, bedingt aber den Umbau von \dr . Durch den Aufsatz von \dr\ auf nodejs können, so wie in \dpl\ auch, verschiedene Kommandos auf der Systemkonsole abgesetzt werden. Nach einer Entkopplung der Git-Bindung könnte auch Artifactory oder ein anderes System genutzt werden.
+
+\dr\ integriert Knife, das eine Interaktion mit dem Chef-Server ermöglicht. Mit Knife können die wesentlichen Chef-Komponenten manipuliert werden.\footnote{Vgl. \cite{Timberman2012}}
+
+\subsubsection{Qualitative Beurteilung}
+
+\paragraph{Funktionalität}
+
+Eine \dpipe\ für Java-Anwendungen ist möglich, bedingt jedoch andere Strukturen. So muss ein Konzept erstellt werden, auf welche Weise in \dr\ neue Versionen markiert werden und anhand welcher Kriterien die Freischaltung in die Produktivumgebung erfolgen kann. Eine Möglichkeit ist die Verwendung eines separaten Git-Repositories für kompilierte Pakete. Sollen andere Tools Verwendung finden, muss \dr\ angepasst werden. Diese ist aber durch die Anwendung einer Open-Soruce-Lizenz möglich.
+
+\paragraph{Zuverlässigkeit}
+
+Die letzten größeren Aktivität an der Quellcode-Basis von \dr\ waren von Dezember 2011 bis Januar 2012. Danach sind nur noch kleinere Bugs beseitigt.
+
+Fehler bei der Ausführung des Deployments werden in eine Log-Datei geschrieben. Ist ein Stack falsch konfiguriert, bricht das Programm ab. Die Zuverlässigkeit von \dr\ hängt zum großen Teil von den verwendeten Werkzeugen und Shell-Skripten ab.
+
+\paragraph{Benutzbarkeit}
+
+Das Konzept der Oberfläche ist einfach gehalten. Die Unterteilung nach Produkten und Regionen ist ersichtlich. Der Nutzer erhält auf einen Blick Informationen zum aktuellen Vorgang und Information über den Erfolg vorhergehender Aktivitäten. Die Log-Datei eines Deployments kann leicht aufrufen werden. Diese enthält Informationen zu durchgeführten Aktivitäten sowie die während eines Vorgangs erzeugten Meldungen. Vor der Ausführung eines Deployments kann für die Nutzer des Portals eine Warnmeldung hinterlassen werden.  Diese müssen dann bei Durchführung des Deployments die Warnmeldung bestätigen. So ist es \zb\ möglich, während eines Datenbank-Updates eine Warnmeldung zu hinterlassen und eine ungewollte Durchführung des Deployments zu verhindern.
+
+\paragraph{Effizienz}
+
+Die Antwortzeit von \dr\ ist in der Erprobung besonders niedrig gewesen. Alle Abläufe waren schnell und flüssig. Eine Speicheranalyse ergab, dass \dr\ nur 25~MB Arbeitsspeicher belegt. Das nodejs-Framework, als unterliegende Plattform, selbst schläft, so fern keine Anfrage bearbeitet werden muss. Eine Verbindung benötigt nur geringen dynamischen Speicherbereich.\footnote{Vgl. \cite{nodejs_about}} \dr\ kann so auch in einer minimalistisch ausgestatteten Systemumgebung ausgeführt werden.
+
+\paragraph{Wartbarkeit und Portabilität}
+
+Da \dr\ quellenoffen ist, können Anpassungen jederzeit vorgenommen werden. Hilfreich ist dann \zb\ das Anlegen eines Forks auf GitHub.
+
+Wie auch \dpl\ kann \dr\ auf mehreren Umgebungen ausgeführt werden. Anwendungen, die auf nodejs aufbauen, können unter Windows, Mac~OS~X, Linux und Solaris ausgeführt werden.
+
+\section{Gegenüberstellung}
+
+\subsection{Modellierung der \dpipe}
+
+\subsubsection{Prozessmodellierung}
+
+Mit dem Commit einer Änderung an der Quellcode-Basis bis hin zur abgenommenen und laufenden Anwendung, bietet \go\ dem Entwicklungsteam, für die Modellierung einer \dpipe , eine einheitliche Oberfläche an. Der gesamte Prozess kann in \go\ modular untergliedert abgebildet werden. Die Kleinste Einheit in \go\ ist der Tasks. Ein Task kapselt eine einzelne Aufgaben innerhalb der \dpipe . Tasks werden in Jobs zusammengefasst, um parallele Pfade in einer Stage abbilden zu können. Eine Stage ist das Hauptelement der \dpipe . In einer Pipeline ist nur die sequenzielle Ausführung von Stages möglich. Es ist aber auch möglich, von einer Pipeline mehrere weitere Pipelines zu verzweigen. Über die Oberfläche ist jederzeit ersichtlich, in welchem Zustand sich die Pipeline befindet und welche Tasks ausgeführt werden.
+
+\dr\ und \dpl\ bieten hier keine Möglichkeit einer vollständigen Umsetzung einer \dpipe . Vielmehr bauen sie auf ein vorhandenes CI-System auf. Dadurch ist keine zentrale Visualisierung der \dpipe , wie \go\ es bietet, möglich. \dr\ und \dpl\ können lediglich den Ausschnitt des Deployments darstellen.
+
+\subsubsection{Trigger}
+
+Ein Triggern der Prozesse durch eine Änderung der Code-Basis oder durch Aktivitäten einer anderen Pipeline ist nur in \go\ möglich. Dies spielt vornehmlich bei der Realisierung von \ci\ in Form der \comstage und \acstage\ eine Rolle. In \dr\ und \dpl , aber auch in \go , können Prozesse über Schaltflächen in der Oberfläche manuell angestoßen werden.
+
+\subsubsection{Quality-Gate}
+
+\dr\ als auch \dpl\ kennen keine Qualitätsschranken. Als Erweiterung eines bestehenden CI-Systems müssen \dr\ und \dpl\ davon ausgehen, dass nur gut getestet Software in diese Stage weitergereicht wird, welche alle Akzeptanzkriterien erfüllt. Die vorhergehende Prüfung dieser Kriterien muss vorausgesetzt werden können. Vor einem Einsatz, müssen Strategien gefunden werden, die einen Schutz der Produktivumgebung vor unreifen Deployments schützt. Besonders bei \dr\ aber auch bei \dpl\ würde der Einsatz unterschiedlicher Git-Repositories einen Lösungsansatz bieten. Gut getestete Version, werden anschließend in ein separates Repository überführt. In einem mehrstufigen Testverfahren, reagiert eine Teststufe auf das Repository der vorhergehenden Stufe und legt bei einem erfolgreichen Durchlauf der Testfälle die geprüfte Version in das zur Stage gehörende Repository ab. Das Repository könnte so als Quality-Gate verwendet werden.
+
+In \go\ können Qualitätsschranken definiert werden, in dem die Tasks einer Pipeline einen Fehler erzeugen. \go\ bietet \ci\ und die Ausführung von Komponenten-, Akzeptanz- und Kapazitätstests an. In \go\ hängt die Durchführung eines Tasks, einer Stage oder einer Pipeline vom Erfolg des vorher aufgerufenen Tasks ab. Kommt es in einem Task zu einem Fehler, bricht die Ausführung unmittelbar ab, wovon auch parallel laufende Jobs betroffen sind. Bei der Verwendung von Ant und JUnit, wird dies \zb\ durch einen Fehler in der Prüfung einer Annahme hervorgerufen. Ein als nachfolgend konfiguriertes Deployment wird dann nicht mehr ausgeführt. Die Produktivumgebung wird so vor einem Ausrollen einer unreifen Version geschützt.
+
+\subsubsection{Skript-Ausführung}
+
+Eine wesentliche Fähigkeit, Aufgaben innerhalb einer \dpipe\ durchführen zu können, ist die Unterstützung anderer Werkzeuge, Systeme oder Programme, die die benötigten Fähigkeiten besitzen. Dies kann durch die Möglichkeit realisiert werden, auf der Systemkonsole Kommandos abzusetzen oder durch eine Erweiterung der Anwendung selbst. In \go\ können das Build-Tool Ant, NAnt und Rake genutzt werden, um Aufgaben wie Build, Test oder Deployment zu realisieren. Zudem besteht bei allen drei Werkzeugen die Möglichkeit, Kommandos auf der Systemkonsole abzusetzen. \dr\ und \dpl\ werden mittels Java-Script bzw. Ruby konfiguriert. Hier besteht die unmittelbare Möglichkeit, die vorbereitenden Vorgänge für ein Deployment direkt in der Konfiguration zu organisieren.
+
+\subsection{Staging}
+
+\subsubsection{Versionskontrolle}
+
+\dr\ bedingt Git. Ohne ein Git-Repository kann \dr\ nicht ausgeführt werden. Um die Funktionalität von \dr\ auch im Zusammenhang mit einer anderen Versionsverwaltung zu ermöglichen, müsste \dr\ im Kern verändert werden. Dies ist zwar durch die Qpen-Source-Lizenz möglich, jedoch mit Aufwänden für die Anpassung verbunden.
+
+\dpl\ unterstützt Subversion, in dem einige Methoden für den Zugriff auf Subversion bereitgestellt werden. Diese müssen allerdings nicht Verwendung finden. In der Konfiguration der Stacks können verschiedene Typen von Versionsverwaltungssystemen eingebunden und genutzt werden, sofern es für diese eine Programmbibliothek für das genutzte Betriebssystem gibt und das Programm über die Konsole ausgeführt werden kann.
+
+\go\ unterstützt die Versionsverwaltungssysteme Apache Subversion, Git, Mercurial, Perforce und den Microsoft Team-Foundation Server. Andere Verwaltungssysteme können nicht genutzt werden, sofern der Prozess durch eine Änderung der Code-Basis automatisch getriggert werden soll.
+
+\subsubsection{Artefakt-Repository}
+
+Für \dr\ sollte Git zur Verwaltung von Artefakten genutzt werden, wie schon im Zusammenhang mit dem Quality Gate beschrieben wurde. Artefakte in Form der Log-Dateien werden im Arbeitsverzeichnis von \dr\ gespeichert. \dpl\ sieht für Log-Dateien Ähnliches vor. Zu deployende Versionen können aus verschiedenen Systemen geladen werden. Eine Möglichkeit, Artifactory sowie das lokale Dateisystem zu nutzen wurde bereits in Abschnitt~\ref{chap_dpl} beschrieben. \go\ stellt hier ein eigenes Repository für Artefakte bereit. Artefakte, die bei der Ausführung einer Stage entstehen, können dort zentral abgelegt und in anderen Stages oder Pipelines weiterverwendet werden. Zudem bietet \go\ eine REST-Schnittstelle und ermöglicht so die Interoperabilität mit anderen Systemen.
+
+\subsection{Feedback}
+
+\dr\ und  \dpl\ geben die Ergebnisse einer Aktivität in eine Log-Datei aus, welche auf der Oberfläche angezeigt wird. Durchgeführte Deployments werden in einer Liste aufgeführt. \dr\ zeigt das Ergebnis eines Durchlaufs mit \emph{success} oder \emph{fail} an. Bei \dpl\ kann dies durch die Konfiguration im Stack-Modul bestimmt werden. Elemente wie das Zeitverhalten des Deployments können für \dpl\ und \dr\ beim Aufrufen des Deployments gemessen und in die Log-Datei ausgegeben werden, welche in der Oberfläche dargestellt wird. Welche Version in welcher Umgebung ausgeführt wird, ist in der Oberfläche ersichtlich. \dr\ als auch \dpl\ erwarten die Bereitstellung dieser Informationen durch das Stack-Modul.
+
+\go\ zeigt alle derzeit ausgeführten Aktivitäten auf der Startseite an. Kam es in einer Phase der \dpipe\ zu einem Fehler, wird der betroffene Task rot markiert. Die Log-Datei des Tasks, die in der Detailansicht angezeigt wird, listet alle Ausgaben, die während der Bearbeitung auf Konsole ausgegeben wurden, auf. Der Zeitverbrauch für die Abarbeitung einer Stage wird in einem Diagramm aufgetragen. Im Zusammenhang mit den Funktionalitäten eines CI-Systems können in \go\ die Protokolle der Testläufe eingebunden werden. Die Möglichkeit, Testprotokolle bei \dr\ und \dpl\ anzeigen zu lassen, ist nicht gegeben.
+
+Alle drei System informieren einen bestimmbaren Nutzerkreis über E-Mail und IRC. Fehlerzustände und Abbrüche werden über diese Systeme kommuniziert.
+
+\subsection{Konfiguration}
+
+Einstellungen des Systems sollten gesichert werden können und zu einem späteren Zeitpunkt wiederherstellbar sein. Zudem muss klar sein, welche Parameter welche Auswirkungen haben und welche Möglichkeiten bestehen das System zu konfigurieren.
+
+\dr\ und \dpl\ werden auf ähnliche Weise konfiguriert. So müssen bei beiden Werkzeugen Stacks implementiert werden, die der Schnittstellenbeschreibung des Systems genügt. Innerhalb der Stacks sind Methoden bzw. Funktionen zu implementieren, die vom Hauptsystem aufgerufen werden, um notwendige Informationen wie \zb\ die Bezeichnung des Stacks, zu letzte deployte Version oder, wie bei \dr , die URL zum Git-Repository bereitzustellen. Eine Konfiguration über die Oberfläche ist nicht möglich. Es empfiehlt sich, die Stacks in einer Versionsverwaltung wie Subversion oder Git zu halten. Vor jedem Start der Anwendung können dann die lokalen Dateien aktualisiert werden und \dr\ bzw. \dpl\ starten mit der aktuellen Konfiguration.
+
+\go\ bietet den Ansatz, die Konfiguration des Systems in Dateien zu halten. Dabei nutzt \go\ ein XML-Dokument, welches auch der Versionsverwaltung unterliegen sollte. Weiterhin besteht aber die Möglichkeit, \go\ durch das integrierte Admin-Modul über die Oberfläche zu konfigurieren. Hier können alle Informationen schrittweise zusammengetragen werden. Zudem bietet \go\ dem Nutzer Hilfefunktion für die korrekte Konfiguration der Felder an. Über die Oberfläche veränderte Konfigurationseinstellungen werden in die interne XML-Datei übertragen. Über den Admin-Bereich lässt sich diese jederzeit abrufen und sichern. Die Möglichkeit, das System über die Oberfläche zu konfigurieren, fehlt \dr\ und \dpl .
+
+Alle drei System bieten die Möglichkeit, die Systemkonfiguration zu sichern und wiederherstellen zu können. Welche Parameter bei \dr\ und \dpl\ konfigurierbar sind und wie und wo diese zu konfigurieren sind, ist nur knapp und unvollständig über das Readme-File des Projektes auf Github dokumentiert. Abhilfe können aber die Beispielstacks geben, an denen sich bei der ersten Konfiguration eines Stacks orientiert werden kann. Mehr Informationen über die Systemkonfiguration können nur durch Inspektion des Quellcodes erlangt werden. Bei \go\ sind alle Parameter und Möglichkeiten ausführlich dokumentiert. Zudem sind alle Einstellungen des Systems sowie die Konfiguration der \dpipe\ über die Oberfläche möglich. Durch die Eingabefelder als auch durch eine Hilfefunktion ist ersichtlich, was eine Einstellung bewirkt und welche Möglichkeiten es gibt.
+
+\subsection{Deployment}
+
+Das Deployment einer Anwendung ist im Gegensatz zu anderen Phasen der \dpipe\ sehr individuell. Dabei hängt es von der Art der Anwendung, von der Ausführungsumgebung, von der genutzten Sprache ab, ob sie interpretiert oder kompiliert wird und auch von den vertraglichen Anforderungen, die sich aus einer Kunden-Lieferanten-Beziehung ergeben können. Eine universelle Lösung, das Deployment zu organisieren, kann daher keine Werkzeuge anbieten. Für bestimmte Konstellationen im Bereich der Web-Anwendungen haben sich spezielle Werkzeuge etabliert, welche die Verwaltung einer verteilten Infrastruktur erleichtern.
+
+\dpl\ und \dr\ bieten daher keine tiefere Unterstützung für ein Deployment an, als andere Werkzeuge oder Shell-Skripte anstoßen zu können. \dr\ bietet noch ein Modul, um Knife einfacher ansprechen zu können und die geänderte Konfiguration der Ausführungsumgebung an einen Chef-Server zu übertragen. \dpl\ und \go\ können diese Werkzeuge aber auch genauso einbinden, in dem die Kommandozeile der Systemkonsole angesteuert werden kann.
+
+\go\ bietet noch eine weitere Möglichkeit das Ausführungssystem zu konfigurieren und ein Deployment durchzuführen. Das Konzept der Agents eröffnet die Möglichkeit, auch lokale Änderungen an der Infrastruktur vorzunehmen und benötigte Komponenten zu installieren. Dieses Konzept eignet sich gut für die Testumgebung. Die Verwendung der Agents für die Produktivumgebung scheint aber nicht geeignet. Ein Agent ist nur für die Durchführung eines Jobs zeitlich an die Pipeline gebunden. Nach einem Deployment steht dieser dem \go -Server für die Vermittlung weiterer Aufgaben zur Verfügung. Zu dem ist die Anzahl der Agents begrenzt. Für die Testdurchführung ergibt sich aus diesem Konzept jedoch eine leicht umzusetzende Alternative zu Chef und Knife.
+
+%Mit \go\ kann eine komplette \dpipe\ realisiert werden. Die Stufen der \comstage\ und der \acstage\ können vollständig abgebildet werden. Ferne ist die Aneinanderreihung von Pipelines möglich und Aufgaben können bei Bedarf parallelisiert werden. 
+
+
+\section{Zusammenfassung}
+%\subsection{Allgemein}
+
+Die eingehende Einordnung der zu untersuchenden Werkzeuge zeigte wesentliche Unterschiede im Ansatz und in der Zielausrichtung dieser. Während \go\ ein vollständiges CI-System bietet, mit dem sich auch die \acstage\ und \uastage\ modellieren lassen, stellen \dpl\ und \dr\ die Ergänzung eines solchen Systems dar. Da adesso bereits ein CI-System betreibt, stellen \dpl\ und \dr\ daher die generelle Möglichkeit einer Ergänzung des bestehenden Systems dar.
+
+Trotz der unterschiedlichen Ansätze konnten Beurteilungskriterien gefunden werden, die eine Betrachtung der Werkzeuge zulassen. Diese Kriterien waren durch die Anforderungen an \cd , der Benutzbarkeit und der Wartbarkeit ausgerichtet.
+
+Die Anforderungen aus \cd , die ausgewählt wurden um eine Beurteilung der betrachteten Werkzeuge zuzulassen, konzentrierten sich auf die Funktionalität der Prozesssteuerung einer \dpipe . Für \dr\ und \dpl\ bedeutet diese, die Fähigkeit ein Deployment anstoßen und mit anderen Systemen zusammenarbeiten zu können. Für \go\ als CI-System kamen Build-Prozess und Testdurchführung hinzu.
+
+\dr\ scheint für eine Verwendung bei adesso derzeit weniger geeignet, da es durch die Voraussetzung des Git-Repository nicht in die derzeitige Infrastruktur passt. Es würden zu viele Anpassungen des Quellcodes durchgeführt werden müssen, um diese Anpassung zu erreichen. Für \go\ als auch \dpl\ gibt es bei adesso Integrations- als auch Verwendungsmöglichkeiten. Beide Ansätze dieser Werkzeuge werden im nachfolgenden Abschnitt noch einmal aufgegriffen, um zwei Verwendungsszenarien darstellen zu können.
+
+Die Untersuchung des Lieferprozesses bei adesso hat gezeigt, dass \ci\ durch den Jenkins-Server bereits auf einer breiten Ebene betrieben wird. Allerdings ist längst nicht jedes Projekt Teil dieser Umgebung. Hier kommen die unterschiedlichen Bedingungen der Projekte zum tragen. Eine Abhängigkeit ist  \zb\ die Rolle, in der adesso als Dienstleiter auftritt. Als Dienstleister, ist es für adesso oft nicht möglich, eine Integration der Projekte in die eigene Systemlandschaft vorzunehmen. Dies tritt besonders dann auf, wenn die Entwicklungsarbeit in der Umgebung des Kunden durchgeführt wird.
+
+In einer derartigen Projektsituation kann \go\ eine Chance darstellen, ein CI-System nach projektspezifischen Kriterien mit einer kleinen Infrastruktur aufzubauen. Die Community-Version von \go\ mit einem \go -Server, speziell für diese Projekte, kann bis zu drei Agents anbinden. Die Agents könnten dann auf der Testumgebung laufen. Dem Testteam des Kunden wird so ein zusätzlicher Nutzen gegeben, sich selbst, die zu testenden Versionen der Anwendung auf die Testumgebung zu deployen und manuelle und explorative Tests durchzuführen.
+
+Für Projekte, die auf dem bestehenden CI-System von adesso verwaltet werden, stellt \dpl\ eine Erweiterung des Systems um die Funktionalität des automatisierten Deployments dar. Skripte, mit denen bisher das Ausrollen einer neuen Version in die Testumgebung organisiert wird, kann dann über die Oberfläche von \dpl\ eingebunden und ausgeführt werden. Für Projekte, bei denen adesso direkt in die Produktivumgebung des Kunden ausliefern kann, sollte das Deployment analog zur Testumgebung angestoßen werden können. Selbst wenn keine Auslieferung der Anwendung nach jeder Änderung der Quellcode-Basis vereinbart ist, stellen diese Werkzeuge die Möglichkeit bereit, ein Liefersystem auf einfache Weise aktivieren zu können.

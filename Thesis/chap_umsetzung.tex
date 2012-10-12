@@ -1,0 +1,187 @@
+\chapter{Szenarien eines Auslieferungsprozesses}
+
+Nach dem \dpl\ und \go\ als mögliche Werkzeuge für die Prozessteuerung einer \dpipe\ bei adesso eingesetzt werden könnten, soll dieser Abschnitt zwei mögliche Szenarien für einen solchen Einsatz näher erörtern. Der kritische Bereich, die technische Umsetzung des Deployments in die Test- und Produktivumgebung, wird hier aber nur abstrakt angerissen. Der Fokus soll hier vielmehr auf der Realisierung des Prozessablaufs und der Integration in die bestehende Umgebung liegen.
+
+\section{Szenario 1}
+
+% Web-Anwendung (JETTY)
+% go.ci + go.deploy
+% internes Portal ohne DB
+
+% Szenariobeschreibung
+% - internes Projekt, Portal mit unternehmesinternen Diensten für MA
+% - Web-Anwendung stellt Service bereit
+% - in stetiger Weiterentwicklung
+
+\subsection{Beschreibung und Projektaufbau}
+
+Szenario~1 unterstellt ein internes Software-Projekt. Entwickelt wird ein Portal für Mitarbeiter, in dem ein hier nicht näher definierter Service bereitgestellt wird. Das Portal wird als Web-Anwendung entwickelt. Es ist zu erwarten, dass in den nächsten Monaten und Jahren eine kontinuierliche, wenn auch sporadische Weiterentwicklung betrieben wird. Je nach freien Kapazitäten werden Mitarbeiter und Studenten im Rahmen der Ausbildung die Anwendung weiterentwickeln.
+
+Die Implementierung einer \dpipe\ erscheint für dieses Szenario als geeignet. Die wechselnden Teammitglieder und sporadischen Wartungs- und Entwicklungsarbeiten führen zu einem Know-how Verlust von Build- und Release-Prozess. \cd\ kann hier mit einer \dpipe\ den einmal aufgebauten Lieferprozess sicher und verlässlich gestalten. Neue Teammitglieder benötigen für ein Deployment von Änderungen zunächst keine tieferen Kenntnisse über den Lieferprozess. Zudem gibt die \dpipe\ durch Quality-Gates die Sicherheit, nur geprüfte Versionen in die Produktion zu bringen. Dieser Prozess läuft für ein normales Release in der gleichen Qualität ab, wie für das kurzfristige Beseitigen eines kritischen Fehlers.
+
+% Aufbau des Projektes
+% - Single-Instanz
+% - Embedded Jetty startet mit Anwnedung
+% - Parsitenz mit JSON
+% - Konfiguration extern mit CP
+
+Technisch betrachtet ist das System von Szenario~1 eine JEE-Anwendung, welche als einzelne Instanz auf einem virtuellen System ausgeführt wird. Die Anwendung wird mit einem eingebetteten Jetty-Server ausgeliefert, der durch die Main-Methode gestartet wird. Die Konfigurationsdatei des Systems wird beim Start der Anwendung über den Klassenpfad initiiert. Ein Apache~2 wird als Forward-Proxy eingesetzt. Eine Datenbank wird hier nicht benötigt, da es nur wenig Daten gibt, die dauerhaft gehalten werden. Persistenz erhält das System durch eine einfache Textdatei, in der die benötigten Daten mit Hilfe der JavaScript Object-Notation\footnote{Weite Informationen zu JSON: \url{http://www.json.org/}} (JSON) gespeichert werden.
+
+Als Versionskontrollsystem wird Subversion eingesetzt. Alle Änderungen an der Quellcode-Basis werden dort verwaltet. Die Umsetzung der \dpipe\ erfolgt auf der Basis von \go . Der Prozess von \ci\ und das anschließende Deployment in Test- und Produktivumgebung werden von \go\ gesteuert.
+
+Dem Projekt stehen zwei Linux-Server zur Verfügung. Auf einem System wird das Produktivsystem ausgeführt, auf dem anderen die Testumgebung und die benötigten \go -Instanzen für die \dpipe . Auf Test- und Produktivsystem wird die Laufzeitumgebung von Java als Vorbedingung installiert. Das Produktivsystem benötigt zusätzlich das Java-Development-Kit, Maven zur Organisation des Build-Prozesses und einen Subversion-Client.
+
+% Beschreibung der Pipeline
+% Commit-Stage:
+% - Checkout aus SVN
+% - Build mit Maven (install assembly:single)
+% - Komponententests
+% Ac-Stage:
+% - start der Instanz lokal mit Test-Konfiguration
+% - Smoke-Test
+% - AC-Tests
+% - stoppen der Instanz
+% Deploy in Produktion
+% - stop-Skript
+%	-> stopp an App senden
+% 	-> App beendet alle aktivitäten und entfernt lock für Single-Instanz
+% - warten bis Lock entfernt wurde
+% - aktuelle Version in VZ kopieren
+% - start-script
+%	-> App startet
+
+\subsection{Ablauf der \dpipe}
+
+\begin{figure}
+\fbox{\includegraphics[width=\linewidth]{Grafiken/szenario_1.png}}
+\caption{Deployment Pipeline für Szenario+1}
+\end{figure}
+
+\subsubsection{\comstage}
+
+Ein Entwickler übermittelt die durchgeführten Änderungen am Quellcode der Versionsverwaltung (svn commit). In der Versionsverwaltung wird die Revisionsnummer erhöht. Die letzte Version, die für eine Instanz der Pipeline genutzt wurde, ist \go\ bekannt. Durch eine Abfrage der Versionsverwaltung prüft \go\ in einem festen Zeitintervall, ob es Änderungen der Revisionsnummer gibt (svn poll). Ist dem so, wird eine neue Instanz der Pipeline mit der aktuellen Revisionsnummer erzeugt.
+
+Obwohl es in \go\ möglich ist, in einer Stage Aufgaben durch Jobs zu parallelisieren, gibt es in dieser Pipeline hierfür keinen Bedarf. Unterhalb der \comstage\ befindet sich deshalb nur ein einziger Job. Ein freier Agent wird mit der Job-Konfiguration initialisiert. Der Agent beginnt mit dem Checkout der aktuellen Quellcode-Basis aus Subversion heraus. Alle Dateien werden im Arbeitsverzeichnis des Agents unter dem Pfad \url{/pipelines/<PIPELINE_NAME>/} abgelegt. Anschließend wird Maven über den \emph{Custom Command} mit \texttt{mvn install assembly:single} angestoßen. Maven lädt dabei alle Pakete, von denen die Anwendung abhängt, aus dem zentralen Repository, kompiliert den Quellcode, führt die Komponententests durch und pakt alle Abhängigkeiten in ein einziges Jar-File zusammen. 
+
+Ein Nachweis der technischen Korrektheit der Version wird dadurch erbracht, dass die Anwendung kompiliert und alle Komponententests durchlaufen. Die \comstage\ beendet erfolgreich und das erste Quality-Gate wurde passiert. 
+
+\subsubsection{\acstage}
+
+Vor der Ausführung der Akzeptanztests wird die Umgebung auf ihre Konfiguration hin untersucht. Jede Änderung der Infrastruktur wird in einem Update-Skript festgehalten. Ein Update-Skript ist durch die Versionsnummern gekennzeichnet, die das System von einer älteren auf eine neuere Version heben. Folgendes Muster sei als Beispiel gegeben: \texttt{system\_update\_0005\_0006} hebt die Systemumgebung von Version 5 auf 6. Die letzte Versionsnummer wird auf dem System in einer Datei gehalten. Das Update-Skript enthält alle Änderungen von einer Infrastruktur-Version auf die nächste. Die aktuelle Version wird ausgelesen und geprüft, ob ein Update-Skript für diese Version existiert. Nach der Änderung durch das Skript wird die aktuelle Versionsnummer des Scripts in eine Datei geschrieben, damit spätere Änderungen möglich bleiben.
+
+Da das Testsystem und \go\ sich eine Umgebung teilen, können das neue Jar-File sowie das Startskript direkt in das Ausführungsverzeichnis kopiert werden. Die Anwendung wird von \go\ gestartet. Hierfür wird der \emph{Custom Command} genutzt, um das Startscript aufzurufen und ausführen zu lassen. Alle Ausgaben der Systemkonsole werden an das Log-File weitergeleitet, dieses kann später über die Oberfläche von \go\ eingesehen werden.
+
+Nach dem Start wird ein Smoke-Test durchgeführt, welcher prüft, ob das System grundlegend einsatzbereit ist. Hierfür wird das Kommandozeilenwerkzeug \emph{curl} genutzt, um ein \emph{GET} der Status-Seite über HTTP auszuführen. Als Antwort wird ein Response-Status-Code 200 im HTTP-Header erwartet.
+
+Das System ist nun bereit, auf die Erfüllung aller funktionalen und nicht-funktionalen Anforderungen hin untersucht zu werden. Die Testfälle werden vom Test-Framework geladen und ausgeführt. Reagiert das System wie verlangt, kann die \acstage\ abgeschlossen werden.
+
+Die Anwendung öffnet beim Start einen Eingabekanal auf der Systemkonsole. Über diesen kann die Anwendung gestoppt und Status-Informationen abgerufen werden. Bei Start des Systems wurde der Eingabekanal auf eine Named-Pipe gelegt und die Anwendung im Hintergrund gestartet. Über die Named-Pipe kann \go\ der Anwendung nun das Stopp-Kommando geben. Die Anwendung beendet den Server und schließt. Anschließend wird ausgewertet, ob Fehlermeldungen während der Tests in das Error-Log geschrieben wurden.
+
+An dieser Stelle kann festgestellt werden, dass die neue Version der Anwendungen auf ihre technische Korrektheit und Erfüllung der Akzeptanzkriterien hin überprüft wurde. Werden bestimmte Akzeptanzkriterien nicht erfüllt, verhindert dies die Auslieferung in die Produktivumgebung. Auch die Auswertung der Fehlerprotokolle spielt hier eine Rolle. Gibt es Einträge im Fehler-Log der Anwendung oder in der Fehlerausgabe auf der Systemkonsole, verhindert dies die Auslieferung. \go\ ist so konfiguriert, dass es dann eine Nachricht an das Entwicklerteam sendet. 
+
+Der Entwickler, der die letzte Änderung vorgenommen hat, ist in der Verantwortung, die Fehlerprotokolle durchzusehen. Zusammen mit dem Projektleiter wird entschieden, ob das Release in die Produktion dennoch stattfinden sollte. Dies geschieht unter Abwägung aller Risiken.
+
+\subsubsection{\prodenv}
+
+Wenn alle Tests positiv verlaufen sind, wird die Anwendung in die Produktivumgebung ausgerollt. Je nach Art der Umgebung stellt dies einen mehr oder minder komplexen Prozess dar. Das in diesem Szenario genutzte System ist kein kritischer Geschäftsprozess mit einer sporadischen Nutzung für spezielle Aufgaben. Um einen direkten Systemzugriff zu verhindern, wurde ein Apache HTTP-Server vorgeschaltet, der Anfragen an das System weiterleitet. Der HTTP-Server ist so konfiguriert, dass dieser mit dem Parameter \texttt{-DClosedForNow} neu gestartet wird und anschließend Anfragen mit einer Wartungsseite beantwortet. Damit kann das zu aktualisierende System heruntergefahren werden. Der Zugriff auf das Produktivsystem erfolgt über  SSH\footnote{SSH: \emph{S}ecure \emph{Sh}ell ermöglicht eine Verbindung zur Kommandozeile entfernter Systeme.}. Ist das System heruntergefahren, wird die neue Version eingespielt. Die alte Version wurde zuvor in das Verzeichnis \texttt{Recover} kopiert, um im Notfall das Recover-Skript starten zu können und die vorhergehende Version wiederherzustellen.
+
+\section{Szenario 2}
+
+% Web-Anwendung (HTTPD + TOMCAT + SQL)
+% jenkins.ci + deployinator.deploy
+% langlaufendes Wartungprojekt + DB
+
+% Szenariobeschreibung
+% - Wartung und Weiterentwicklung für nächste 2 Jahre, alle 4 Wochen deployment neuer Funktionen + Hot-Fix, wird von adesso gehosted
+% - Web-Anwendung
+% Aufbau des Projektes
+% - JEE + Maven
+% - Produktion: Cluster aus 4 Tomcat-Instanzen + HTTPD als Load-Balancer + SQL-DB
+% - Test: 1 Tomcat + Test-DB
+
+% Beschreibung der Pipeline
+% Jenkins-CI
+% - Checkout aus SVN
+% - Build mit Maven
+% - Komponenten-Tests
+% - statische Code-Analyse
+% - Repository
+% Deployinator.DeployToTest
+% - Check Version in Repository
+% - Test-Deploy
+% 	-> check DB-Update-Skript
+%	-> update DB
+%	-> Test DB-Health
+%	-> Deploy war-file
+% 	-> Smoke-Test
+% 	-> Run AC-Test ? copy to Good-Rpos : break
+% - Ready for manuell Test -> Mail versand
+% Deployinator.DeployToProd
+% - Check Version in Good_Repos
+% - Show something new
+% - Deploy
+% 	-> check DB-Update-Skript
+%	-> Backup DB
+% 	-> update DB
+% 	-> Test DB-Health
+% 	-> Use Sticky Session und Session-sync
+% 	-> for (server Server : servers) { server.stop deploy(to.server.home) server.start }
+% Deployinator.ProdRollBack
+
+\subsection{Beschreibung und Projektaufbau}
+
+Szenario~2 nimmt ein Kundenprojekt als Ausgangspunkt. Dabei handelt es sich um eine Web-Anwendung für Mitarbeiter einer Rückversicherung, die diese nutzen, um Risikokalkulationen durchführen zu können. Das System befindet sich in einer kontinuierlichen, wenn auch nicht ununterbrochenen, Weiterentwicklung. \cd\ und eine \dpipe\ sollen den Lieferprozess erheblich verkürzen und den Nutzern alle zwei Wochen neu entwickelte Funktionalitäten bereitstellen können. Zudem sollen kurzfristige Fehlerbeseitigungen (Hot-Fix) in die Produktivumgebung eingespielt werden können.
+
+Als Ausführungsumgebung der Anwendung wird ein JBoss Application Server verwendet sowie das JSF 2.0 Framework eingesetzt. Die Testumgebung besteht aus einer einzelnen Serverinstanz mit angegliederter Testdatenbank. Bei der Produktivumgebung werden vier Instanzen zu einem Cluster verbunden und HTTP-Server als Load-Balancer vorgeschaltet.
+
+Die bestehenden Maßnahmen der Qualitätssicherung sind schon als automatisierte Komponenten und Akzeptanztests realisiert worden. Der Build-Prozess wird auf dem CI-System von adesso, dem Jenkins CI-Server, durchgeführt. Jede Änderung der Quellcode-Basis in der Versionsverwaltung (SVN) führt zum Anstoßen des Build-Prozesses und zur Ausführung der Komponententests. Akzeptanztests, die in automatisierter Form vorliegen, wurden bisher manuell angestoßen und gegen das Testsystem ausgeführt. Auf dem Testsystem existiert ein Hilfsskript. Dieses stoppt den Web-Server, kopiert das neue WAR-File vom Arbeitsverzeichnis des Nutzers in das des Servers und startet dieses neu. Voraussetzung ist das Laden der aktuellen Version aus dem unternehmensinternen Repository. Dieser Schritt wurde so weit automatisiert, als das ein anderes Skript nur noch mit der aktuellen Versionsnummer aufgerufen werden muss. Das Laden der aktuellen Version übernimmt dann jenes Skript. All diese Aufgaben müssen aber manuell aufgerufen werden und benötigen die Administrationsrechte für den Testserver. Dies gilt analog auch für das Produktivsystem.
+
+Ein Teil der \dpipe\ wird bereits durch das CI-System umgesetzt. Build-Prozess und Test der Komponenten können dort verbleiben. Mit \dpl\ wurde ein Werkzeug evaluiert, welches die bestehenden Ansätze aufgreifen und miteinander verbinden kann. \dpl\ soll hier genutzt werden, um auf Test- und Produktivumgebung zu deployen und die Erfüllung der funktionalen und nicht-funktionalen Anforderungen zu prüfen.
+
+\subsection{Aufbau der \dpipe}
+
+Da die \comstage\ schon durch das bestehende CI-System abgebildet wird, werden hier nur \acstage\ und \prodenv\ näher beschrieben. Bei jedem Durchlauf des CI-Systems werden die erstellten Softwarepakete in einem Repository abgelegt.
+
+\dpl\ als \ssp\ stellt dem Team die Möglichkeit bereit, die aktuelle Version der Anwendung, deren technische Korrektheit mittels Komponententests untersucht wurde, in die Testumgebung zu deployen. Die automatisierten Akzeptanztests können anschließend durchlaufen werden. Nach dem eine Version erfolgreich getestet wurde, kann das Deployment in die Produktivumgebung, am Tag des Release, von einem Mitglied des Entwicklungsteams über die Oberfläche von \dpl\ angestoßen werden.
+
+\dpl\ wurde, wie in Abschnitt~\ref{chap_dpl} beschrieben, um die Möglichkeit erweitert, eine spezifische Version für das Deployment auswählen zu können.
+
+\subsubsection{\acstage}
+
+Ein Mitglied des Entwicklungsteams ruft die Oberfläche von \dpl\ auf. \dpl\ ermittelt dabei die im Repository abgelegten Versionen und stellt diese in der Auswahlliste bereit. Soll nicht die zuletzt erstellte Version deployt werden, kann eine andere im Drop-Down-Menü ausgewählt werden. Mit dem Button \emph{Deploy to test} wird der Deployment-Prozess angestoßen. An der Infrastruktur werden während der Entwicklung keine Änderungen erwartet, sodass dieser Schritt im automatisierten Deployment nicht weiter berücksichtigt wird. Da die Anwendung mit einer Datenbank zusammenarbeitet und hier, im Gegensatz zur Infrastruktur, Änderungen zu erwarten sind, muss der Deployment-Prozess dieses berücksichtigen können. Alle Schritte, die während des Deployments durchgeführt werden, sind im Stack-Modul von \dpl\ definiert. Dabei werden die hinterlegten Skripte auf der Systemkonsole über \lstinline$run_cmd$ aufgerufen.
+
+Der erste Schritt des Deployments ist die Aktualisierung der Deployment-Skripte, welche in der Versionsverwaltung von Subversion in der aktuellen Version hinterlegt sind. Die Änderungen an der Datenbank werden durch ein Update-Skript organisiert. Auch diese werden in der Versionsverwaltung gehalten und gepflegt. 
+
+Update und Rollback der Datenbank werden inkrementell durchgeführt. Die Datenbank speichert hierfür die aktuelle Versionsnummer. Ist die Datenbank von einer Version auf die nächste anzuheben, wird ein Update-Skript erstellt, welches die notwendigen Anweisungen enthält. Auch der inverse Vorgang, ein Rollback, muss berücksichtigt werden. Auch hierfür muss ein Skript existieren, welches die inversen Operationen des Update-Skriptes enthält. Soll eine Softwareversion deployt werden, wird geprüft, welche Version der Datenbank für die Version der Anwendung benötigt wird. Diese Information kann dem Softwarepaket selbst über die Datei \texttt{db.info} durch den Parameter \texttt{db\_version} entnommen werden. Für das Datenbankupdate existiert ein Skript, welches die Notwendigkeit einer Veränderung prüft und diese dann ausführt.
+
+Verlangt die neue Version \zb\ Version $6$ der Datenbank, diese aber den Stand der Version $4$ hat, muss zuerst das Skript \texttt{db\_update\_4\_5.sql} ausgeführt werden, um anschließend das Update \texttt{db\_update\_5\_6.sql} ausführen zu können. Wird ein Rollback notwendig, so ist \zb\ zuerst das Skript \texttt{db\_rollback\_6\_5.sql} und dann das Skript \texttt{db\_rollback\_5\_4.sql} ausgeführt werden.
+
+Bevor die Datenbank aktualisiert werden kann, ist zu prüfen, ob die Instanz des Testservers aktiv ist. In diesem Fall wird der Server heruntergefahren. Anschließend wird eine Sicherung der Datenbank durchgeführt. Nach dem Update ist eine Überprüfung des Zustandes der Datenbank notwendig. Der Health-Check und die Sicherung sind Teil des Skriptes.
+
+Nachdem die Überprüfung des Zustandes der Datenbank den erfolgreichen Verlauf des Updates bestätigt hat, kann die Software auf dem Testserver aktualisiert werden. Der Server wird wieder hochgefahren. Alle Befehle werden hierzu über SSH ausgeführt. Die Datenbankaktivitäten können \zb\ über \emph{SQL*Plus}\footnote{Weitere Informationen zu SQL*Plus unter: \url{http://docs.oracle.com/cd/B19306_01/server.102/b14357/toc.htm}} ausgeführt werden.
+
+Das Testsystem hat nun den notwendigen Zustand, um die neue Version auf die Einhaltung der Anforderungen zu überprüfen. Die automatisierten Akzeptanztests können nun durchgeführt werden. Die hierfür genutzten Testframeworks sind auf dem System, auf dem auch \dpl\ ausgeführt wird, installiert. Alle Testfälle sind am Anfang der \acstage\ aus der Versionsverwaltung geladen worden.
+
+Die Testprotokolle, die bei einem Durchlauf der Akzeptanztests entstehen, werden gepackt und für eine spätere Auswertung in das Repository des Servers kopiert. Das Testteam erhält die Testprotokolle ferner als Anhang der E-Mail-Nachricht, die zum Abschluss der Phase versandt wird.
+
+Sofern im Testprozess Fehler auftreten, kann dies erfasst und darauf reagiert werden. Laufen alle Tests fehlerfrei durch, wird die Versionsnummer des geprüften Softwarepaketes in einer Liste mit erfolgreich getesteten Versionen eingetragen.
+
+\subsubsection{\prodenv}
+
+Die Schritte beim Deployment in die Produktivumgebung verlaufen ähnlich wie beim Deployment in die Testumgebung. Gleich sind das Laden der Skripte aus der Versionsverwaltung und das Update der Datenbank. 
+
+Während des Aktualisierungsvorgangs steht die Anwendung nicht zur Verfügung. Der Proxy-Server leitet alle Anfragen für den Zeitraum der Aktualisierung auf eine Wartungsseite. Dieses läuft dabei genauso ab, wie in Szenario~1 schon beschrieben.
+
+Nachdem der Proxy konfiguriert wurde, können die Web-Server angehalten werden, damit das Datenbankupdate eingespielt werden kann. Ist dies erfolgreich verlaufen, werden die Web-Server aktualisiert und neu gestartet. Der Proxy-Server wird dann wieder normal konfiguriert.
+
+Da die Anwendung nicht bei jeder Änderung, sondern nur alle zwei Wochen, in die Produktivumgebung ausliefert, ist der Deployment-Prozess weniger komplex gestaltet. Dies sollte \zb\ für eine Anwendung, die einem stetigen Zugriff unterliegt, nicht der Fall sein. Das gleichzeitige Herunterfahren aller Produktivinstanzen wäre dann keine Option. Das System von Szenario~2 wird aber nicht mehr am Freitag nach 17~Uhr verwendet, sodass der Aktualisierungsvorgang danach auch mit geringerer Komplexität durchgeführt werden kann.
+
+Alternativ könnte dies in anderen Anwendungssituationen so gestaltet sein, dass die Datenbank vor einem Update auf ein Zweitsystem gespiegelt wird. Alle Änderungen würden dann auf dem Zweitsystem ausgeführt. Das Update der Anwendung wird dann inkrementell auf allen Servern durchgeführt. Die neue Anwendung arbeitet mit der neuen Datenbankversion, der alte Softwarestand mit der alten Version der Datenbank. Nach dem alle Server aktualisiert worden sind, müssen die Änderungen, die in der Zeitspanne des Updates durchgeführt worden sind, auf die neue Datenbank übertragen werden. Eine weitere Voraussetzung ist der Austausch von Informationen aktiver Nutzer-Sessions zwischen den Servern, damit ein Herunterfahren einer Instanz nicht zu einem Informationsverlust führt.
+
+\section{Zusammenfassung}
+
+Grundlage der hier beschriebenen Szenarien waren Projekte, mit denen der Verfasser der Arbeit während seiner Tätigkeit im Unternehmen in Berührung gekommen war. Die Szenarien wurden so angepasst, dass diese als Ausgangspunkt für eine mögliche Umsetzung von \cd\ durch die untersuchten Werkzeuge aufzuzeigen konnten.
+
+Beide Szenarien stellen Möglichkeiten der Verwendbarkeit der untersuchten Werkzeuge dar und sind noch keine optimalen Lösungen. Diese können nur durch das Zusammenwirken von IT-Betrieb, Entwicklungsteam und Kundenvertretern gemeinsam erarbeitet werden.
+
+Die Umsetzung einer \dpipe\ ist mit \go\ einfacher, da Quality-Gates einfacher in den Prozess einzurichten sind. Kann das CI-System aus bestimmten Gründen nicht genutzt werden, bietet sich \go\ als eine Alternative an, alle Elemente von \cd\ in einer Umgebung konfigurieren und steuern zu können. \dpl\ hingegen ergänzt das CI-System. Die Umsetzung einer \acstage\ ist jedoch nicht sehr komfortabel. In \dpl\ können keine Testprotokolle angezeigt werden. Das System muss um eine Liste geprüfter Versionen ergänzt werden, um ermitteln zu können, welche Version aus dem Repository  die notwendige Reife besitzt, um in die Produktivumgebung ausgeliefert werden zu können.
